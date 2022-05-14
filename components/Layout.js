@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
+import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import localStorageService from '../lib/localStorage';
 import { initPengguna } from '../reducers/penggunaReducer';
-import { useRouter } from 'next/router';
+import NavBar from '../components/NavBar';
 
-const Home = () => {
+const Layout = ({ title = '', children }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const pengguna = useSelector((state) => state.pengguna);
@@ -17,23 +19,23 @@ const Home = () => {
         dispatch(initPengguna(penggunaLocal));
       }
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    router.push(pengguna ? '/dashboard' : '/login');
+    !pengguna && router.push('/login');
+    // eslint-disable-next-line
   }, [pengguna]);
 
   return (
     <>
-      <div className='fixed inset-0 bg-black/50 flex'>
-        <div className='lds-facebook m-auto'>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
+      <Head>
+        <title> {title} | Jemput Antar Kota Tegal dan Sekitarnya</title>
+      </Head>
+      <NavBar />
+      <div className='my-[6rem] px-5'>{children}</div>
     </>
   );
 };
 
-export default Home;
+export default Layout;

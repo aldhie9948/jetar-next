@@ -1,0 +1,4 @@
+.input {
+  @apply block outline-none border py-1 px-2 w-full placeholder:text-sm focus:shadow-lg;
+}
+/*# sourceMappingURL=Dashboard.module.css.map */

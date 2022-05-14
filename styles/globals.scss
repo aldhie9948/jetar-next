@@ -1,14 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 body {
   @apply w-full lg:w-2/3 mx-auto bg-slate-100 text-slate-600;
   font-family: 'Inter', sans-serif;
-}
-
-.input {
-  @apply block outline-none border border-accents rounded shadow p-2 w-full caret-accents placeholder:text-sm focus:shadow-md;
 }
 
 .lds-facebook {
@@ -17,47 +14,26 @@ body {
   width: 80px;
   height: 80px;
 }
-
 .lds-facebook div {
   display: inline-block;
   position: absolute;
   left: 8px;
   width: 16px;
   background: #fff;
-  -webkit-animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-          animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 }
-
 .lds-facebook div:nth-child(1) {
   left: 8px;
-  -webkit-animation-delay: -0.24s;
-          animation-delay: -0.24s;
+  animation-delay: -0.24s;
 }
-
 .lds-facebook div:nth-child(2) {
   left: 32px;
-  -webkit-animation-delay: -0.12s;
-          animation-delay: -0.12s;
+  animation-delay: -0.12s;
 }
-
 .lds-facebook div:nth-child(3) {
   left: 56px;
-  -webkit-animation-delay: 0;
-          animation-delay: 0;
+  animation-delay: 0;
 }
-
-@-webkit-keyframes lds-facebook {
-  0% {
-    top: 8px;
-    height: 64px;
-  }
-  50%,
-  100% {
-    top: 24px;
-    height: 32px;
-  }
-}
-
 @keyframes lds-facebook {
   0% {
     top: 8px;
@@ -73,4 +49,3 @@ body {
 .link {
   @apply capitalize font-black text-green-800 hover:text-slate-50 hover:drop-shadow transition-all duration-200 sm:text-base text-xs;
 }
-/*# sourceMappingURL=globals.css.map */
