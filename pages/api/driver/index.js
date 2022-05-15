@@ -1,6 +1,6 @@
 import connect from '../../../lib/connect';
 import nc from 'next-connect';
-import Pelanggan from '../../../models/pelanggan';
+import Driver from '../../../models/driver';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
 
@@ -17,8 +17,8 @@ const handler = nc({
     await connect();
     try {
       verifyToken(req);
-      const pelanggan = await Pelanggan.find({});
-      res.status(200).json(pelanggan);
+      const driver = await Driver.find({});
+      res.status(200).json(driver);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
@@ -31,12 +31,11 @@ const handler = nc({
       const body = {
         ...data,
         nama: trimmer(data.nama),
-        keterangan: trimmer(data.keterangan),
       };
 
-      const pelanggan = new Pelanggan(body);
-      const savedPelanggan = await pelanggan.save();
-      res.status(201).json(savedPelanggan);
+      const driver = new Driver(body);
+      const savedDriver = await driver.save();
+      res.status(201).json(savedDriver);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });

@@ -1,6 +1,6 @@
 import axios from 'axios';
+const baseURL = '/api/order';
 import { config } from '../lib/service';
-const baseURL = '/api/pelanggan';
 
 const get = async (token) => {
   const res = await axios.get(baseURL, config(token));
@@ -27,10 +27,5 @@ const remove = async (id, token) => {
   return res.data;
 };
 
-const like = async (keyword, token) => {
-  const res = await axios.post(`${baseURL}/fuzzy`, { keyword }, config(token));
-  return res.data;
-};
-
 // eslint-disable-next-line
-export default { get, find, save, update, remove, like };
+export default { get, find, save, update, remove };

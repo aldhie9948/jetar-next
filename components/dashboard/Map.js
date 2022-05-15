@@ -1,4 +1,34 @@
-import React, { useRef, useEffect, useImperativeHandle } from 'react';
+import React, { useRef, useEffect, useState, useImperativeHandle } from 'react';
+import { localCurrency } from '../../lib/currency';
+
+const cekOngkir = (distance) => {
+  distance = distance === 0 ? 1 : distance;
+  const OngkirPrice = [
+    { range: 1, value: 6000 },
+    { range: 2, value: 7000 },
+    { range: 3, value: 8000 },
+    { range: 4, value: 9000 },
+    { range: 5, value: 10000 },
+    { range: 6, value: 11000 },
+    { range: 7, value: 12000 },
+    { range: 8, value: 13000 },
+    { range: 9, value: 14000 },
+    { range: 10, value: 15000 },
+    { range: 11, value: 2000 },
+  ];
+  let ongkir = 0;
+  OngkirPrice.forEach((m) => {
+    const fixedDistance = Math.ceil(distance / 1000);
+    if (fixedDistance >= m.range && fixedDistance <= 10) {
+      ongkir = m.value;
+    }
+    if (fixedDistance > 10 && m.range > 10) {
+      const longerDistance = fixedDistance - 10;
+      ongkir = OngkirPrice[9].value + longerDistance * m.value;
+    }
+  });
+  return ongkir;
+};
 
 const MyMapComponent = React.memo(
   React.forwardRef(
@@ -64,9 +94,7 @@ const MyMapComponent = React.memo(
           directionsRenderer.setMap(map);
         },
         func: {
-          route: ({ origin, destination }) => {
-            console.log(origin, destination);
-
+          route: ({ origin, destination, callback }) => {
             directionsService
               .route(
                 {
@@ -83,10 +111,11 @@ const MyMapComponent = React.memo(
                 },
                 async (response, status) => {
                   if (status === 'OK') {
-                    console.log('response route: ', response);
                     const route = response.routes[0].legs[0];
-                    directionsRenderer.setMap(map);
+                    const distance = route.distance;
+                    const ongkir = cekOngkir(distance.value);
                     directionsRenderer.setDirections(response);
+                    callback && callback({ ongkir, route });
                   } else {
                     window.alert('Directions request failed due to ' + status);
                   }
@@ -115,8 +144,8 @@ const MyMapComponent = React.memo(
       });
 
       useImperativeHandle(ref, () => ({
-        route: ({ origin, destination }) => {
-          main.func.route({ origin, destination });
+        route: ({ origin, destination, callback }) => {
+          main.func.route({ origin, destination, callback });
         },
       }));
 

@@ -18,7 +18,6 @@ const SelectPelanggan = React.forwardRef(
     };
     const loadOptions = async (inputText, callback) => {
       const response = await PelangganService.like(inputText, pengguna?.token);
-      console.log(response);
       callback(response.map((i) => ({ label: i.nama, value: i.id, obj: i })));
     };
 
@@ -34,6 +33,7 @@ const SelectPelanggan = React.forwardRef(
         onChange={onChangeHandler}
         placeholder='Pilih Pelanggan..'
         loadOptions={loadOptions}
+        isClearable
         {...args}
       />
     );

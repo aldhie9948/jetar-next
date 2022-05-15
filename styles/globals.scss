@@ -51,7 +51,7 @@ body {
 }
 
 .link {
-  @apply px-1 capitalize font-black text-green-800 hover:text-slate-50 hover:drop-shadow transition-all duration-200 sm:text-base text-xs;
+  @apply px-1 capitalize font-black text-green-800 hover:text-slate-50 hover:drop-shadow-lg transition-all duration-200 sm:text-base text-xs;
 }
 .link-active {
   @apply drop-shadow-lg w-max relative hover:after:w-full;

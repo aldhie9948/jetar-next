@@ -1,11 +1,6 @@
 import axios from 'axios';
 const baseURL = '/api/pengguna';
-
-const config = (token) => {
-  return {
-    headers: { Authorization: token },
-  };
-};
+import { config } from '../lib/service';
 
 const get = async (token) => {
   const res = await axios.get(baseURL, config(token));

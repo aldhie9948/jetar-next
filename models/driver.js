@@ -2,18 +2,17 @@ import mongoose from 'mongoose';
 import validator from 'mongoose-unique-validator';
 import mongooseFuzzySearching from 'mongoose-fuzzy-searching';
 
-const pelangganSchema = mongoose.Schema({
+const driverSchema = mongoose.Schema({
   nama: { required: true, type: String, index: true },
-  alamat: { required: true, type: String },
   noHP: { required: true, type: String, index: true },
-  keterangan: { required: true, type: String },
-  softDelete: { type: Boolean },
+  foto: { type: String },
+  softDelete: Boolean,
 });
 
-pelangganSchema.plugin(validator);
-pelangganSchema.plugin(mongooseFuzzySearching, { fields: ['nama', 'noHP'] });
+driverSchema.plugin(validator);
+driverSchema.plugin(mongooseFuzzySearching, { fields: ['nama', 'noHP'] });
 
-pelangganSchema.set('toJSON', {
+driverSchema.set('toJSON', {
   transform: (doc, obj) => {
     obj.id = obj._id;
     delete obj.nama_fuzzy;
@@ -24,4 +23,4 @@ pelangganSchema.set('toJSON', {
 });
 
 module.exports =
-  mongoose.models.Pelanggan || mongoose.model('Pelanggan', pelangganSchema);
+  mongoose.models.Driver || mongoose.model('Driver', driverSchema);

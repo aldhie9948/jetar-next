@@ -1,6 +1,7 @@
 import connect from '../../../lib/connect';
 import nc from 'next-connect';
 import Pelanggan from '../../../models/pelanggan';
+import { verifyToken } from '../../../lib/token';
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -14,6 +15,7 @@ const handler = nc({
   const body = req.body;
   try {
     const { keyword } = body;
+    verifyToken(req);
     const pelanggan = await Pelanggan.fuzzySearch(keyword);
     res.status(200).json(pelanggan);
   } catch (error) {

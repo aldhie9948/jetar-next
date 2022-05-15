@@ -15,7 +15,6 @@ const Layout = ({ title = '', children }) => {
     const penggunaLocal = localStorageService.get('pengguna', true);
     if (penggunaLocal) {
       if (!pengguna) {
-        console.log('dispatched');
         dispatch(initPengguna(penggunaLocal));
       }
     }

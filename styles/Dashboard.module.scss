@@ -9,3 +9,7 @@
     @apply block w-5 border-b-4 border-slate-900 transition-all duration-150;
   }
 }
+
+.btn {
+  @apply border w-full py-[0.4rem] hover:shadow-none shadow-lg;
+}

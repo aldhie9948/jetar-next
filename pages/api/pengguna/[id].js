@@ -59,7 +59,13 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const pengguna = await Pengguna.findByIdAndRemove(id);
+      const pengguna = await Pengguna.findByIdAndUpdate(
+        id,
+        { softDelete: true },
+        {
+          new: true,
+        }
+      );
       res.status(200).json(pengguna);
     } catch (error) {
       console.error(error.toString());

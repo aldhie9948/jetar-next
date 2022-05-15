@@ -1,6 +1,6 @@
 import connect from '../../../lib/connect';
 import nc from 'next-connect';
-import Pelanggan from '../../../models/pelanggan';
+import Driver from '../../../models/driver';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
 
@@ -20,8 +20,8 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const pelanggan = await Pelanggan.findById(id);
-      res.status(200).json(pelanggan);
+      const driver = await Driver.findById(id);
+      res.status(200).json(driver);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
@@ -35,12 +35,8 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const body = {
-        ...body,
-        nama: trimmer(data.nama),
-        keterangan: trimmer(data.keterangan),
-      };
-      const save = await Pelanggan.findByIdAndUpdate(id, body, {
+      const body = { ...data, nama: trimmer(data.nama) };
+      const save = await Driver.findByIdAndUpdate(id, body, {
         new: true,
       });
       res.status(201).json(save);
@@ -55,14 +51,14 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const pelanggan = await Pelanggan.findByIdAndUpdate(
+      const driver = await Driver.findByIdAndUpdate(
         id,
+        { softDelete: true },
         {
-          softDelete: true,
-        },
-        { new: true }
+          new: true,
+        }
       );
-      res.status(200).json(pelanggan);
+      res.status(200).json(driver);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
