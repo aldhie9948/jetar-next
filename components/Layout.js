@@ -32,7 +32,7 @@ const Layout = ({ title = '', children }) => {
       <Head>
         <title> {title} | Jemput Antar Kota Tegal dan Sekitarnya</title>
       </Head>
-      <NavBar />
+      {router.pathname !== '/login' && <NavBar />}
       <div className='my-[6rem] px-5'>{children}</div>
     </>
   );

@@ -1,3 +1,11 @@
 .input {
-  @apply block outline-none border py-1 px-2 w-full placeholder:text-sm focus:shadow-lg;
+  @apply block outline-none border py-[0.4rem] px-2 w-full placeholder:text-sm focus:shadow-lg text-sm;
+}
+
+.header-form {
+  @apply font-black text-lg mb-2 block w-max transition-all duration-150 cursor-pointer hover:after:w-full hover:after:border-blue-500 hover:text-blue-500;
+  &:after {
+    content: '';
+    @apply block w-5 border-b-4 border-slate-900 transition-all duration-150;
+  }
 }

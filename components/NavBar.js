@@ -25,7 +25,7 @@ const NavBar = () => {
                 <div
                   key={i}
                   className={`link ${
-                    router.pathname === n && '!text-slate-50 drop-shadow'
+                    router.pathname === n && 'link-active !text-blue-500'
                   }`}
                 >
                   <Link href={n}>

@@ -1,166 +1,258 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useImperativeHandle } from 'react';
 import Layout from '../../components/Layout';
 import { onChangeHandler, borderInputHandler } from '../../lib/handler';
 import styles from '../../styles/Dashboard.module.css';
+import dateFormat from '../../lib/date';
+import Select from 'react-select';
+import { apiKeyGoogle } from '../../utils/api';
+import { Wrapper, Status } from '@googlemaps/react-wrapper';
+import MapComponent from '../../components/dashboard/Map';
+
+const driverOptions = [
+  { value: 'aldi', label: 'Aldi' },
+  { value: 'riski', label: 'Riski' },
+  { value: 'dicky', label: 'Dicky' },
+];
+
+const selectStyles = {
+  control: (styles) => ({ ...styles, borderRadius: 'none', border: 'none' }),
+};
 
 const Dashboard = () => {
+  const render = (status) => {
+    switch (status) {
+      case Status.LOADING:
+        return console.log(status);
+      case Status.FAILURE:
+        return console.log(status);
+    }
+  };
+
+  const Input = ({ label = '', value, setter, isNumber = false, ...rest }) => {
+    return (
+      <div className='mb-2'>
+        <span className='text-sm capitalize'>{label} :</span>
+        <input
+          className={`${styles.input} ${borderInputHandler(value)}`}
+          required
+          autoComplete='off'
+          value={value}
+          onChange={(e) => onChangeHandler(setter, e, isNumber)}
+          {...rest}
+        />
+      </div>
+    );
+  };
+  const Textarea = ({ label = '', value, setter, ...rest }) => {
+    return (
+      <div>
+        <span className='text-sm capitalize'>{label} :</span>
+        <textarea
+          className={`${styles.input} ${borderInputHandler(value)}`}
+          required
+          autoComplete='off'
+          value={value}
+          onChange={(e) => onChangeHandler(setter, e)}
+          {...rest}
+        ></textarea>
+      </div>
+    );
+  };
+
   const FormOrder = () => {
+    const formRef = useRef();
+    const mapsRef = useRef();
+
+    const [idPengirim, setIdPengirim] = useState('');
     const [namaPengirim, setNamaPengirim] = useState('');
     const [noHPPengirim, setNoHPPengirim] = useState('');
     const [alamatPengirim, setAlamatPengirim] = useState('');
     const [keteranganPengirim, setKeteranganPengirim] = useState('');
+    const [idPenerima, setIdPenerima] = useState('');
     const [namaPenerima, setNamaPenerima] = useState('');
     const [noHPPenerima, setNoHPPenerima] = useState('');
     const [alamatPenerima, setAlamatPenerima] = useState('');
     const [keteranganPenerima, setKeteranganPenerima] = useState('');
+    const [tanggalOrder, setTanggalOrder] = useState(
+      dateFormat(new Date(), 'yyyy-MM-dd')
+    );
+    const [waktuOrder, setWaktuOrder] = useState(
+      dateFormat(new Date(), 'HH:mm')
+    );
+    const [driver, setDriver] = useState('');
+    const [ongkir, setOngkir] = useState(0);
+    const [talang, setTalang] = useState(0);
+
+    const submitHandler = (e) => {
+      e.preventDefault();
+    };
+
     return (
       <>
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4'>
-          <div className='bg-white rounded-md shadow-md'>
-            <div className='p-4'>
-              <strong className='block font-black'>Pengirim</strong>
-              <div className='grid grid-cols-2 gap-2 mb-2'>
-                <div>
-                  <span>Nama :</span>
-                  <input
-                    className={`${styles.input} ${borderInputHandler(
-                      namaPengirim
-                    )}`}
-                    required
-                    autoComplete='off'
-                    type='text'
-                    placeholder='masukkan nama pengirim'
+        <form ref={formRef} onSubmit={submitHandler}>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4'>
+            <div className='bg-white rounded-md'>
+              <div className='px-6 py-10'>
+                <strong className={`${styles['header-form']}`}>Pengirim</strong>
+                <div className='grid grid-cols-2 gap-2'>
+                  <Input
                     value={namaPengirim}
-                    onChange={(e) => onChangeHandler(setNamaPengirim, e)}
+                    setter={setNamaPengirim}
+                    label='Nama Lengkap'
+                    placeholder='masukkan nama pengirim'
                   />
-                </div>
-                <div>
-                  <span>No. HP :</span>
-                  <input
-                    className={`${styles.input} ${borderInputHandler(
-                      noHPPengirim
-                    )}`}
-                    type='text'
-                    required
-                    autoComplete='off'
-                    placeholder='masukkan no hp pengirim'
+                  <Input
                     value={noHPPengirim}
-                    onChange={(e) => onChangeHandler(setNoHPPengirim, e)}
+                    setter={setNoHPPengirim}
+                    label='No. HP'
+                    placeholder='masukkan no hp pengirim'
+                  />
+                </div>
+                <div className='mb-2'>
+                  <Input
+                    value={alamatPengirim}
+                    setter={setAlamatPengirim}
+                    onBlur={(e) => {
+                      setAlamatPengirim(e.target.value);
+                    }}
+                    label='Alamat Lengkap'
+                    placeholder='masukkan alamat pengirim'
+                    id='alamatPengirim'
+                  />
+                  <Textarea
+                    value={keteranganPengirim}
+                    setter={setKeteranganPengirim}
+                    label='Keterangan'
+                    placeholder='masukkan keterangan pengirim'
+                    rows='3'
                   />
                 </div>
               </div>
-              <div className='mb-2'>
-                <span>Alamat :</span>
-                <input
-                  className={`${styles.input} ${borderInputHandler(
-                    alamatPengirim
-                  )}`}
-                  required
-                  autoComplete='off'
-                  type='text'
-                  placeholder='masukkan alamat pengirim'
-                  value={alamatPengirim}
-                  onChange={(e) => onChangeHandler(setAlamatPengirim, e)}
-                />
-              </div>
-              <div className='mb-2'>
-                <span>Keterangan :</span>
-                <textarea
-                  className={`${styles.input} ${borderInputHandler(
-                    keteranganPengirim
-                  )}`}
-                  required
-                  autoComplete='off'
-                  type='text'
-                  placeholder='masukkan keterangan pengirim'
-                  value={keteranganPengirim}
-                  onChange={(e) => onChangeHandler(setKeteranganPengirim, e)}
-                ></textarea>
-              </div>
             </div>
-          </div>
-          <div className='bg-white rounded-md shadow-md'>
-            <div className='p-4'>
-              <strong className='block font-black'>Penerima</strong>
-              <div className='grid grid-cols-2 gap-2 mb-2'>
-                <div>
-                  <span>Nama :</span>
-                  <input
-                    className={`${styles.input} ${borderInputHandler(
-                      namaPenerima
-                    )}`}
-                    required
-                    autoComplete='off'
-                    type='text'
-                    placeholder='masukkan nama penerima'
+            <div className='bg-white rounded-md'>
+              <div className='px-6 py-10'>
+                <strong className={`${styles['header-form']}`}>Penerima</strong>
+                <div className='grid grid-cols-2 gap-2'>
+                  <Input
                     value={namaPenerima}
-                    onChange={(e) => onChangeHandler(setNamaPenerima, e)}
+                    setter={setNamaPenerima}
+                    label='Nama Lengkap'
+                    placeholder='masukkan nama penerima'
                   />
+                  <Input
+                    value={noHPPenerima}
+                    setter={setNoHPPenerima}
+                    label='No. HP'
+                    placeholder='masukkan no hp penerima'
+                  />
+                </div>
+                <div className='mb-2'>
+                  <Input
+                    value={alamatPenerima}
+                    setter={setAlamatPenerima}
+                    label='Alamat Lengkap'
+                    placeholder='masukkan alamat penerima'
+                    id='alamatPenerima'
+                    onBlur={(e) => {
+                      setAlamatPenerima(e.target.value);
+                    }}
+                  />
+                  <Textarea
+                    value={keteranganPenerima}
+                    setter={setKeteranganPenerima}
+                    label='Keterangan'
+                    placeholder='masukkan keterangan penerima'
+                    rows='3'
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white rounded-md'>
+            <div className='px-6 py-10'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
+                <div>
+                  <strong className={`${styles['header-form']}`}>
+                    Detail Order
+                  </strong>
+                  <div className='grid grid-cols-2 gap-2'>
+                    <Input
+                      label='tanggal'
+                      type='date'
+                      value={tanggalOrder}
+                      setter={setTanggalOrder}
+                    />
+                    <Input
+                      label='waktu'
+                      type='time'
+                      value={waktuOrder}
+                      setter={setWaktuOrder}
+                    />
+                  </div>
+                  <div className='grid grid-cols-2 gap-2'>
+                    <div>
+                      <span className='block text-sm'>Driver :</span>
+                      <Select
+                        options={driverOptions}
+                        className={`${borderInputHandler('a')}`}
+                        styles={selectStyles}
+                        onChange={(v) => {
+                          setDriver(v.value);
+                        }}
+                        value={driverOptions.find((f) => f.value === 'aldi')}
+                      />
+                    </div>
+                    <div className='box-border'>
+                      <span className='block text-sm'>Ongkir :</span>
+                      <button
+                        type='button'
+                        className='bg-green-200 border border-green-200 w-full py-[0.4rem] hover:shadow-none shadow-lg'
+                        onClick={() => {
+                          mapsRef.current.route({
+                            origin: alamatPengirim,
+                            destination: alamatPenerima,
+                          });
+                        }}
+                      >
+                        Cek Ongkir
+                      </button>
+                    </div>
+                    <Input
+                      label='Ongkir'
+                      value={ongkir}
+                      setter={setOngkir}
+                      isNumber={true}
+                      placeholder='ongkir order'
+                    />
+                    <Input
+                      label='Dana Talang'
+                      value={talang}
+                      setter={setTalang}
+                      isNumber={true}
+                      placeholder='talangan order'
+                    />
+                    <div className='col-span-2 flex justify-end'>
+                      <button className='bg-blue-200 border border-blue-200 w-full py-[0.4rem] hover:shadow-none shadow-lg'>
+                        Simpan
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div>
-                  <span>No. HP :</span>
-                  <input
-                    className={`${styles.input} ${borderInputHandler(
-                      noHPPenerima
-                    )}`}
-                    type='text'
-                    required
-                    autoComplete='off'
-                    placeholder='masukkan no hp penerima'
-                    value={noHPPenerima}
-                    onChange={(e) => onChangeHandler(setNoHPPenerima, e)}
-                  />
+                  <Wrapper
+                    libraries={['places']}
+                    region='ID'
+                    language='id'
+                    apiKey={apiKeyGoogle()}
+                    render={render}
+                  >
+                    <MapComponent ref={mapsRef} />
+                  </Wrapper>
                 </div>
               </div>
-              <div className='mb-2'>
-                <span>Alamat :</span>
-                <input
-                  className={`${styles.input} ${borderInputHandler(
-                    alamatPenerima
-                  )}`}
-                  required
-                  autoComplete='off'
-                  type='text'
-                  placeholder='masukkan alamat penerima'
-                  value={alamatPenerima}
-                  onChange={(e) => onChangeHandler(setAlamatPenerima, e)}
-                />
-              </div>
-              <div className='mb-2'>
-                <span>Keterangan :</span>
-                <textarea
-                  className={`${styles.input} ${borderInputHandler(
-                    keteranganPenerima
-                  )}`}
-                  required
-                  autoComplete='off'
-                  type='text'
-                  placeholder='masukkan keterangan penerima'
-                  value={keteranganPenerima}
-                  onChange={(e) => onChangeHandler(setKeteranganPenerima, e)}
-                ></textarea>
-              </div>
             </div>
           </div>
-        </div>
-        <div className='bg-white rounded-md shadow-md'>
-          <div className='p-4'>
-            <div className='grid grid-cols-1 sm:grid-cols-2 gap-2'>
-              <div>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores
-                repellat iusto quis aliquid id, aut totam nisi quos soluta
-                repellendus ipsa eligendi blanditiis voluptatem labore unde
-                dolores saepe culpa ex?
-              </div>
-              <div>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores
-                repellat iusto quis aliquid id, aut totam nisi quos soluta
-                repellendus ipsa eligendi blanditiis voluptatem labore unde
-                dolores saepe culpa ex?
-              </div>
-            </div>
-          </div>
-        </div>
+        </form>
       </>
     );
   };

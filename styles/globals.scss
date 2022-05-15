@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply scroll-smooth;
+}
+
 body {
   @apply w-full lg:w-2/3 mx-auto bg-slate-100 text-slate-600;
   font-family: 'Inter', sans-serif;
@@ -47,5 +51,20 @@ body {
 }
 
 .link {
-  @apply capitalize font-black text-green-800 hover:text-slate-50 hover:drop-shadow transition-all duration-200 sm:text-base text-xs;
+  @apply px-1 capitalize font-black text-green-800 hover:text-slate-50 hover:drop-shadow transition-all duration-200 sm:text-base text-xs;
+}
+.link-active {
+  @apply drop-shadow-lg w-max relative hover:after:w-full;
+  &:after {
+    content: '';
+    @apply block w-10 bg-white h-full absolute inset-0 z-[-99] transition-all duration-150;
+  }
+}
+
+.border-error {
+  @apply border border-red-500;
+}
+
+.border-success {
+  @apply border border-green-500;
 }

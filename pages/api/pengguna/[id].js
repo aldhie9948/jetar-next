@@ -2,6 +2,7 @@ import connect from '../../../lib/connect';
 import nc from 'next-connect';
 import Pengguna from '../../../models/pengguna';
 import bcrypt from 'bcrypt';
+import { getToken, verifyToken } from '../../../lib/token';
 
 const saltRounds = 10;
 
@@ -19,8 +20,9 @@ const handler = nc({
     const {
       query: { id },
     } = req;
-    console.log(req.query);
     try {
+      const token = getToken(req);
+      verifyToken(token);
       const pengguna = await Pengguna.findById(id);
       res.status(200).json(pengguna);
     } catch (error) {
@@ -35,7 +37,12 @@ const handler = nc({
       query: { id },
     } = req;
     try {
-      const password = await bcrypt.hash(body.password, saltRounds);
+      verifyToken(req);
+
+      const password = await bcrypt.hash(
+        body?.password || 'default',
+        saltRounds
+      );
       const pengguna = { ...body, password };
       const save = await Pengguna.findByIdAndUpdate(id, pengguna, {
         new: true,
@@ -51,11 +58,12 @@ const handler = nc({
       query: { id },
     } = req;
     try {
+      verifyToken(req);
       const pengguna = await Pengguna.findByIdAndRemove(id);
       res.status(200).json(pengguna);
     } catch (error) {
       console.error(error.toString());
-      res.status(500).json({ error: 'data tidak ditemukan' });
+      res.status(500).json({ error: error.message });
     }
   });
 

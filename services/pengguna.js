@@ -1,28 +1,34 @@
 import axios from 'axios';
 const baseURL = '/api/pengguna';
 
-const get = async () => {
-  const res = await axios.get(baseURL);
+const config = (token) => {
+  return {
+    headers: { Authorization: token },
+  };
+};
+
+const get = async (token) => {
+  const res = await axios.get(baseURL, config(token));
   return res.data;
 };
 
-const find = async (id) => {
-  const res = await axios.get(`${baseURL}/${id}`);
+const find = async (id, token) => {
+  const res = await axios.get(`${baseURL}/${id}`, config(token));
   return res.data;
 };
 
-const save = async (obj) => {
-  const res = await axios.post(baseURL, obj);
+const save = async (obj, token) => {
+  const res = await axios.post(baseURL, obj, config(token));
   return res.data;
 };
 
-const update = async (obj) => {
-  const res = await axios.put(`${baseURL}/${obj.id}`, obj);
+const update = async (obj, token) => {
+  const res = await axios.put(`${baseURL}/${obj.id}`, obj, config(token));
   return res.data;
 };
 
-const remove = async (id) => {
-  const res = await axios.delete(`${baseURL}/${id}`);
+const remove = async (id, token) => {
+  const res = await axios.delete(`${baseURL}/${id}`, config(token));
   return res.data;
 };
 
