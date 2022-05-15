@@ -7,6 +7,8 @@ import Select from 'react-select';
 import { apiKeyGoogle } from '../../utils/api';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import MapComponent from '../../components/dashboard/Map';
+import { useDispatch, useSelector } from 'react-redux';
+import SelectPelanggan from '../../components/dashboard/SelectPelanggan';
 
 const driverOptions = [
   { value: 'aldi', label: 'Aldi' },
@@ -19,6 +21,9 @@ const selectStyles = {
 };
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+  const pengguna = useSelector((state) => state.pengguna);
+  const selectPelangganRef = useRef();
   const render = (status) => {
     switch (status) {
       case Status.LOADING:
@@ -27,7 +32,6 @@ const Dashboard = () => {
         return console.log(status);
     }
   };
-
   const Input = ({ label = '', value, setter, isNumber = false, ...rest }) => {
     return (
       <div className='mb-2'>
@@ -87,13 +91,45 @@ const Dashboard = () => {
       e.preventDefault();
     };
 
+    const onChangePengirim = (pelanggan) => {
+      setterValue(pelanggan.obj);
+    };
+    const onChangePenerima = (pelanggan) => {
+      setterValue(pelanggan.obj, false);
+    };
+
+    const setterValue = (obj, isPengirim = true) => {
+      const { nama, alamat, noHP, keterangan, id } = obj;
+      if (isPengirim) {
+        setIdPengirim(id);
+        setNamaPengirim(nama);
+        setAlamatPengirim(alamat);
+        setKeteranganPengirim(keterangan);
+        setNoHPPengirim(noHP);
+      } else {
+        setIdPenerima(id);
+        setNamaPenerima(nama);
+        setAlamatPenerima(alamat);
+        setKeteranganPenerima(keterangan);
+        setNoHPPenerima(noHP);
+      }
+    };
+
     return (
       <>
         <form ref={formRef} onSubmit={submitHandler}>
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4'>
             <div className='bg-white rounded-md'>
               <div className='px-6 py-10'>
-                <strong className={`${styles['header-form']}`}>Pengirim</strong>
+                <div className='flex justify-between gap-10 mb-4'>
+                  <strong className={`${styles['header-form']} my-auto`}>
+                    Pengirim
+                  </strong>
+                  <SelectPelanggan
+                    onChange={onChangePengirim}
+                    ref={selectPelangganRef}
+                  />
+                </div>
                 <div className='grid grid-cols-2 gap-2'>
                   <Input
                     value={namaPengirim}
@@ -131,7 +167,15 @@ const Dashboard = () => {
             </div>
             <div className='bg-white rounded-md'>
               <div className='px-6 py-10'>
-                <strong className={`${styles['header-form']}`}>Penerima</strong>
+                <div className='flex justify-between gap-10 mb-4'>
+                  <strong className={`${styles['header-form']} my-auto`}>
+                    Penerima
+                  </strong>
+                  <SelectPelanggan
+                    onChange={onChangePenerima}
+                    ref={selectPelangganRef}
+                  />
+                </div>
                 <div className='grid grid-cols-2 gap-2'>
                   <Input
                     value={namaPenerima}

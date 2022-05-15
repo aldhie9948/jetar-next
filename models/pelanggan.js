@@ -1,18 +1,22 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import validator from 'mongoose-unique-validator';
+import mongooseFuzzySearching from 'mongoose-fuzzy-searching';
 
 const pelangganSchema = mongoose.Schema({
-  nama: { required: true, type: String },
+  nama: { required: true, type: String, index: true },
   alamat: { required: true, type: String },
-  noHP: { required: true, type: String },
+  noHP: { required: true, type: String, index: true },
   keterangan: { required: true, type: String },
 });
 
 pelangganSchema.plugin(validator);
+pelangganSchema.plugin(mongooseFuzzySearching, { fields: ['nama', 'noHP'] });
 
 pelangganSchema.set('toJSON', {
   transform: (doc, obj) => {
     obj.id = obj._id;
+    delete obj.nama_fuzzy;
+    delete obj.noHP_fuzzy;
     delete obj._id;
     delete obj.__v;
   },

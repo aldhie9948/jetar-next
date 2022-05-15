@@ -14,22 +14,43 @@ const handler = nc({
 })
   .get(async (req, res) => {
     await connect();
+    const {
+      query: { id },
+    } = req;
     try {
       verifyToken(req);
-      const pelanggan = await Pelanggan.find({});
+      const pelanggan = await Pelanggan.findById(id);
       res.status(200).json(pelanggan);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
     }
   })
-  .post(async (req, res) => {
+  .put(async (req, res) => {
     await connect();
     const body = req.body;
+    const {
+      query: { id },
+    } = req;
     try {
-      const pelanggan = new Pelanggan(body);
-      const savedPelanggan = await pelanggan.save();
-      res.status(201).json(savedPelanggan);
+      verifyToken(req);
+      const save = await Pelanggan.findByIdAndUpdate(id, body, {
+        new: true,
+      });
+      res.status(201).json(save);
+    } catch (error) {
+      console.error(error.toString());
+      res.status(500).json({ error: error.message });
+    }
+  })
+  .delete(async (req, res) => {
+    const {
+      query: { id },
+    } = req;
+    try {
+      verifyToken(req);
+      const pelanggan = await Pelanggan.findByIdAndRemove(id);
+      res.status(200).json(pelanggan);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });

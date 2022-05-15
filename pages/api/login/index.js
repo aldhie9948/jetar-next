@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken';
 
 const handler = nc({
   onError: (err, req, res, next) => {
-    console.error(error.stack);
     res.status(500).end('Terjadi kendala error di server');
   },
   onNoMatch: (req, res) => {
