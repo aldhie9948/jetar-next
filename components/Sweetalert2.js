@@ -4,8 +4,15 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 export const toast = ({ title, icon = 'warning' }) => {
+  const popup =
+    icon === 'error' ? 'toast-red' : icon === 'success' ? 'toast-green' : '';
+
   const Toast = Swal.mixin({
     toast: true,
+    customClass: {
+      popup,
+      title: 'toast-title',
+    },
     position: 'top-end',
     showConfirmButton: false,
     timer: 3000,

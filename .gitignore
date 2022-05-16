@@ -31,4 +31,7 @@ yarn-error.log*
 # vercel
 .vercel
 
+# image map orderan
+/public/assets/image/map-orderan
+
 

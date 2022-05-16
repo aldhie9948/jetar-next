@@ -150,7 +150,11 @@ const MyMapComponent = React.memo(
       }));
 
       return (
-        <div ref={mapRef} className='rounded-md shadow h-full' id='map'></div>
+        <div
+          ref={mapRef}
+          className='rounded-md shadow sm:h-full h-64'
+          id='map'
+        ></div>
       );
     }
   )

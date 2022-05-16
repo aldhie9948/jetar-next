@@ -12,6 +12,6 @@
 }
 
 .btn {
-  @apply border w-full py-[0.4rem] hover:shadow-none shadow-lg;
+  @apply border w-full py-[0.4rem] hover:shadow-none shadow-lg whitespace-nowrap px-4;
 }
 /*# sourceMappingURL=Dashboard.module.css.map */

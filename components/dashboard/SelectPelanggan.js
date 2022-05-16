@@ -27,6 +27,7 @@ const SelectPelanggan = React.forwardRef(
 
     return (
       <AsyncSelect
+        cacheOptions
         styles={selectStyles}
         className='flex-grow border-2 shadow-lg'
         value={selectedPelanggan}

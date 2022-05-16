@@ -3,6 +3,8 @@ import nc from 'next-connect';
 import Order from '../../../models/order';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
+import getStaticMap, { removeMaps } from '../../../lib/getStaticMap';
+import Pelanggan from '../../../models/pelanggan';
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -20,8 +22,8 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const driver = await Driver.findById(id);
-      res.status(200).json(driver);
+      const order = await Order.findById(id).populate('driver');
+      res.status(200).json(order);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
@@ -35,11 +37,51 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const body = { ...data, nama: trimmer(data.nama) };
-      const save = await Driver.findByIdAndUpdate(id, body, {
+
+      let body = { ...data };
+
+      const dataPengirim = {
+        ...data.pengirim,
+        nama: trimmer(data.pengirim.nama),
+      };
+
+      const dataPenerima = {
+        ...data.penerima,
+        nama: trimmer(data.penerima.nama),
+      };
+
+      if (!data.pengirim.id) {
+        const pengirim = new Pelanggan(dataPengirim);
+        const savedPengirim = await pengirim.save();
+        body.pengirim = { ...dataPengirim, id: savedPengirim._id };
+      } else if (data.pengirim.id) {
+        await Pelanggan.findByIdAndUpdate(dataPengirim.id, dataPengirim, {
+          new: true,
+        });
+        body.pengirim = { ...dataPengirim };
+      }
+
+      if (!data.penerima.id) {
+        const penerima = new Pelanggan(dataPenerima);
+        const savedPenerima = await penerima.save();
+        body.penerima = { ...dataPenerima, id: savedPenerima._id };
+      } else if (data.penerima.id) {
+        await Pelanggan.findByIdAndUpdate(dataPenerima.id, dataPenerima, {
+          new: true,
+        });
+        body.penerima = { ...dataPenerima };
+      }
+
+      const updatedOrder = await Order.findByIdAndUpdate(id, body, {
         new: true,
       });
-      res.status(201).json(save);
+      getStaticMap({
+        name: updatedOrder.id,
+        origin: updatedOrder.pengirim.alamat,
+        destination: updatedOrder.penerima.alamat,
+      });
+      const order = await Order.findById(updatedOrder.id).populate('driver');
+      res.status(201).json(order);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
@@ -51,14 +93,9 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const driver = await Driver.findByIdAndUpdate(
-        id,
-        { softDelete: true },
-        {
-          new: true,
-        }
-      );
-      res.status(200).json(driver);
+      const order = await Order.findByIdAndRemove(id).populate('driver');
+      removeMaps(order.id);
+      res.status(200).json(order);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });

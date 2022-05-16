@@ -8,7 +8,7 @@ const selectStyles = {
   control: (styles) => ({ ...styles, borderRadius: 'none', border: 'none' }),
 };
 
-const SelectDriver = React.forwardRef(({ onChange = null }, ref) => {
+const SelectDriver = React.forwardRef(({ onChange = null, ...rest }, ref) => {
   const dispatch = useDispatch();
   const driver = useSelector((s) => s.driver);
   const pengguna = useSelector((s) => s.pengguna);
@@ -35,6 +35,7 @@ const SelectDriver = React.forwardRef(({ onChange = null }, ref) => {
           className={`border ${borderInputHandler(selectedDriver)}`}
           options={options()}
           onChange={onChangeHandler}
+          {...rest}
         />
       )}
     </>

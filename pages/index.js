@@ -16,10 +16,12 @@ const Home = () => {
         dispatch(initPengguna(penggunaLocal));
       }
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     router.push(pengguna ? '/dashboard' : '/login');
+    // eslint-disable-next-line
   }, [pengguna]);
 
   return (

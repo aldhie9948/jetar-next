@@ -3,12 +3,14 @@ import validator from 'mongoose-unique-validator';
 
 const orderSchema = new mongoose.Schema({
   pengirim: {
+    id: { type: String },
     nama: { type: String, required: true },
     noHP: { type: String, required: true },
     alamat: { type: String, required: true },
     keterangan: { type: String, required: true },
   },
   penerima: {
+    id: { type: String },
     nama: { type: String, required: true },
     noHP: { type: String, required: true },
     alamat: { type: String, required: true },

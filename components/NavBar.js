@@ -8,7 +8,7 @@ const nav = [
   '/driver',
   '/pelanggan',
   '/pengaturan',
-  '/keluar',
+  '/logout',
 ];
 
 const NavBar = () => {
