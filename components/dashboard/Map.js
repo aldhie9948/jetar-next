@@ -115,7 +115,8 @@ const MyMapComponent = React.memo(
                     const distance = route.distance;
                     const ongkir = cekOngkir(distance.value);
                     directionsRenderer.setDirections(response);
-                    callback && callback({ ongkir, route });
+                    callback && callback({ ongkir, response });
+                    console.log(response);
                   } else {
                     window.alert('Directions request failed due to ' + status);
                   }

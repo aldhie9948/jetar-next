@@ -71,6 +71,7 @@ const handler = nc({
         name: savedOrder.id,
         origin: savedOrder.pengirim.alamat,
         destination: savedOrder.penerima.alamat,
+        polyline: body.polyline,
       });
       const newOrder = await Order.findById(savedOrder.id).populate('driver');
       res.status(201).json(newOrder);

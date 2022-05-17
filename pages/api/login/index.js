@@ -22,7 +22,11 @@ const handler = nc({
     if (!(pengguna && passwordCorrect))
       return res.status(401).json({ error: 'username atau password salah' });
 
-    const penggunaToken = { username: pengguna.username, id: pengguna._id };
+    const penggunaToken = {
+      username: pengguna.username,
+      id: pengguna._id,
+      level: pengguna.level,
+    };
 
     const token = jwt.sign(penggunaToken, process.env.SECRET_KEY, {
       expiresIn: 60 * 60 * 60,
@@ -30,7 +34,12 @@ const handler = nc({
 
     res
       .status(200)
-      .json({ token, username: pengguna.username, name: pengguna.name });
+      .json({
+        token,
+        username: pengguna.username,
+        name: pengguna.name,
+        level: pengguna.level,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

@@ -88,6 +88,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
   const [talang, setTalang] = useState(0);
   const [visible, setVisible] = useState(false);
   const [defaultDriver, setDefaultDriver] = useState({});
+  const [polyline, setPolyline] = useState(null);
 
   // handle saat form di submit
   const submitHandler = (e) => {
@@ -116,6 +117,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
       waktuOrder,
       ongkir: currencyNumber(ongkir),
       talang: currencyNumber(talang),
+      polyline,
     };
     try {
       confirm(() => {
@@ -185,7 +187,8 @@ const FormOrder = React.forwardRef(({}, ref) => {
     const origin = alamatPengirim;
     const destination = alamatPenerima;
     const callback = (args) => {
-      const { ongkir } = args;
+      const { ongkir, response } = args;
+      setPolyline(response.routes[0].overview_polyline);
       setOngkir(localCurrency(ongkir));
     };
     mapsRef.current.route({ origin, destination, callback });
@@ -204,6 +207,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
     setDefaultDriver('');
     setTanggalOrder(dateFormat(new Date(), 'yyyy-MM-dd'));
     setWaktuOrder(dateFormat(new Date(), 'HH:mm'));
+    setPolyline(null);
   };
 
   // fn untuk update/edit order dan mengisinya di form order

@@ -16,9 +16,11 @@ import {
   BiTrash,
   BiEdit,
   BiSend,
+  BiImage,
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
+import Image from 'next/image';
 
 const StatusBadge = ({ status }) => {
   let classBadge = '';
@@ -78,6 +80,7 @@ const selectOptions = {
 };
 const CardOrder = ({ order, onEdit }) => {
   const [visibleCard, setVisibleCard] = useState(false);
+  const [visibleMaps, setvisibleMaps] = useState(false);
   const pengguna = useSelector((s) => s.pengguna);
   const drivers = useSelector((s) => s.driver);
   const dispatch = useDispatch();
@@ -194,6 +197,7 @@ const CardOrder = ({ order, onEdit }) => {
       {visibleCard && (
         <div className='mt-4'>
           <div className='grid sm:grid-cols-3 grid-cols-2 gap-2 text-xs mb-2'>
+            {/* pengirim section */}
             <div className='capitalize'>
               <div className='flex gap-2 items-center w-full font-black mb-3'>
                 <BiStoreAlt className='flex-shrink-0 text-lg' />
@@ -219,6 +223,7 @@ const CardOrder = ({ order, onEdit }) => {
                 <div className='truncate-3'>{order.pengirim.keterangan}</div>
               </div>
             </div>
+            {/* penerima section */}
             <div className='capitalize'>
               <div className='flex gap-2 items-center w-full font-black mb-3'>
                 <FaPeopleCarry className='flex-shrink-0 text-lg' />
@@ -244,6 +249,7 @@ const CardOrder = ({ order, onEdit }) => {
                 <div className='truncate-3'>{order.penerima.keterangan}</div>
               </div>
             </div>
+            {/* quickedit section */}
             <div className='sm:col-span-1 flex sm:flex-col flex-row col-span-2 capitalize'>
               <div className='flex gap-2 w-full font-black mb-2'>
                 <BiCar className='flex-shrink-0 self-start text-lg' />
@@ -339,7 +345,33 @@ const CardOrder = ({ order, onEdit }) => {
               </div>
             </div>
             <div className='sm:col-span-3 col-span-2 capitalize'>
+              {visibleMaps && (
+                <>
+                  <div className='relative w-full'>
+                    {/* eslint-disable-next-line */}
+                    <img
+                      src={`/assets/image/map-orderan/${order.id}.png`}
+                      alt={order.id}
+                      className='rounded-lg border-2 border-white shadow-lg'
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+            {/* button section */}
+            <div className='sm:col-span-3 col-span-2 capitalize'>
               <div className='order-last flex justify-end gap-2'>
+                <div className='group relative flex gap-1 items-center flex-col'>
+                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                    Maps Orderan
+                  </div>
+                  <button
+                    onClick={() => setvisibleMaps(!visibleMaps)}
+                    className='py-[0.4rem] px-2 flex justify-center items-center'
+                  >
+                    <BiImage className='group-hover:drop-shadow-lg text-xl text-blue-800' />
+                  </button>
+                </div>
                 <div className='group relative flex gap-1 items-center flex-col'>
                   <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
                     Edit Orderan

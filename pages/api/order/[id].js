@@ -79,6 +79,7 @@ const handler = nc({
         name: updatedOrder.id,
         origin: updatedOrder.pengirim.alamat,
         destination: updatedOrder.penerima.alamat,
+        polyline: body.polyline,
       });
       const order = await Order.findById(updatedOrder.id).populate('driver');
       res.status(201).json(order);
@@ -94,7 +95,7 @@ const handler = nc({
     try {
       verifyToken(req);
       const order = await Order.findByIdAndRemove(id).populate('driver');
-      removeMaps(order.id);
+      removeMaps({ name: order.id });
       res.status(200).json(order);
     } catch (error) {
       console.error(error.toString());
