@@ -71,6 +71,7 @@ const selectOptions = {
     }),
     valueContainer: (base) => ({ ...base, paddingLeft: 0, paddingRight: 0 }),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    menu: (base) => ({ ...base, textTransform: 'capitalize' }),
   },
 };
 const CardOrder = ({ order, onEdit }) => {

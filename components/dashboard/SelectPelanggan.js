@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 const selectStyles = {
   control: (styles) => ({ ...styles, borderRadius: 'none', border: 'none' }),
+  menu: (base) => ({ ...base, textTransform: 'capitalize' }),
 };
 
 const SelectPelanggan = React.forwardRef(

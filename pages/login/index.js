@@ -9,6 +9,7 @@ import { onChangeHandler } from '../../lib/handler';
 import styles from '../../styles/Login.module.css';
 import Head from 'next/head';
 import route from '../../lib/route';
+import { toast } from '../../components/Sweetalert2';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -28,9 +29,10 @@ const Login = () => {
     try {
       const penggunaLogin = await LoginService.login(pengguna);
       localStorageService.set(penggunaLogin, 'pengguna');
+      toast({ title: 'Login berhasil', icon: 'success' });
       router.push(route(penggunaLogin));
     } catch (error) {
-      alert(error.message);
+      toast({ title: 'Username atau Password salah', icon: 'error' });
     }
     return null;
   };

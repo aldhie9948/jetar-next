@@ -25,10 +25,12 @@ const Orders = ({ onEdit }) => {
           </div>
         </div>
         <div>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repudiandae,
-          eius! Provident, neque cum? Dicta dolore perferendis nam beatae
-          asperiores aspernatur possimus. Nisi iste consequuntur fugiat cum
-          ullam ad distinctio debitis!
+          <div className='px-5'>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+            Repudiandae, eius! Provident, neque cum? Dicta dolore perferendis
+            nam beatae asperiores aspernatur possimus. Nisi iste consequuntur
+            fugiat cum ullam ad distinctio debitis!
+          </div>
         </div>
       </div>
     </>

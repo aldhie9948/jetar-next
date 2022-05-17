@@ -43,31 +43,6 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-const selectOptions = {
-  components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
-  styles: {
-    control: (base) => ({
-      ...base,
-      backgroundColor: 'transparent',
-      height: '1.5rem',
-      minHeight: '1.5rem',
-      border: 'none',
-      boxShadow: 'none',
-    }),
-    dropdownIndicator: (base) => ({
-      ...base,
-      paddingTop: 0,
-      paddingBottom: 0,
-    }),
-    clearIndicator: (base) => ({
-      ...base,
-      paddingTop: 0,
-      paddingBottom: 0,
-    }),
-    valueContainer: (base) => ({ ...base, paddingLeft: 0, paddingRight: 0 }),
-    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-  },
-};
 const CardOrder = ({ order }) => {
   const [visibleCard, setVisibleCard] = useState(false);
   const [visibleMaps, setvisibleMaps] = useState(false);
