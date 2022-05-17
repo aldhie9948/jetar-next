@@ -26,7 +26,8 @@ const Home = () => {
 
   return (
     <>
-      <div className='fixed inset-0 bg-black/50 flex'>
+      <div className='fixed bg-black/50 inset-0 blur'></div>
+      <div className='flex z-[9999] absolute inset-0'>
         <div className='lds-facebook m-auto'>
           <div></div>
           <div></div>
