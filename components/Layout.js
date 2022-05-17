@@ -23,16 +23,21 @@ const Layout = ({ title = '', children }) => {
 
   useEffect(() => {
     !pengguna && router.push('/login');
+    pengguna?.level !== 0 && router.push('/');
     // eslint-disable-next-line
   }, [pengguna]);
 
   return (
     <>
-      <Head>
-        <title> {title} | Jemput Antar Kota Tegal dan Sekitarnya</title>
-      </Head>
-      {router.pathname !== '/login' && <NavBar />}
-      <div className='mt-[6rem] px-5'>{children}</div>
+      {(pengguna || pengguna?.level === 0) && (
+        <>
+          <Head>
+            <title> {title} | Jemput Antar Kota Tegal dan Sekitarnya</title>
+          </Head>
+          {router.pathname !== '/login' && <NavBar />}
+          <div className='mt-[6rem] px-5'>{children}</div>
+        </>
+      )}
     </>
   );
 };

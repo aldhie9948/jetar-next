@@ -177,10 +177,10 @@ const CardOrder = ({ order, onEdit }) => {
           </div>
           <div className='flex-grow'>
             <div className='flex flex-col items-end justify-end w-full'>
-              <div className='capitalize font-black truncate sm:w-max w-20 text-right'>
+              <div className='capitalize font-black truncate sm:w-max w-20 text-right sm:pr-0 pr-4'>
                 {order.driver.nama}
               </div>
-              <div className='text-xs font-bold'>
+              <div className='text-xs font-bold sm:pr-0 pr-4'>
                 Rp. {order.ongkir.toLocaleString()}
               </div>
             </div>
@@ -211,7 +211,7 @@ const CardOrder = ({ order, onEdit }) => {
                 <BiMap className='flex-shrink-0 self-start text-lg' />
                 <div className='truncate-3'>{order.pengirim.alamat}</div>
               </div>
-              <div className='flex gap-2 items-center mb-3 '>
+              <div className='flex gap-2 items-center mb-3 lowercase'>
                 <BiNotepad className='flex-shrink-0 self-start text-lg' />
                 <div className='truncate-3'>{order.pengirim.keterangan}</div>
               </div>
@@ -237,7 +237,7 @@ const CardOrder = ({ order, onEdit }) => {
                 <BiMap className='flex-shrink-0 self-start text-lg' />
                 <div className='truncate-3'>{order.penerima.alamat}</div>
               </div>
-              <div className='flex gap-2 items-center mb-3 '>
+              <div className='flex gap-2 items-center mb-3 lowercase'>
                 <BiNotepad className='flex-shrink-0 self-start text-lg' />
                 <div className='truncate-3'>{order.penerima.keterangan}</div>
               </div>

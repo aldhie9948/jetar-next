@@ -11,5 +11,5 @@
 }
 
 .btn {
-  @apply border w-full py-[0.4rem] hover:shadow-none shadow-lg whitespace-nowrap px-4;
+  @apply rounded hover:shadow-lg w-full py-2 font-semibold hover:translate-y-1;
 }

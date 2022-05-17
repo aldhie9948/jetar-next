@@ -121,7 +121,6 @@ const FormOrder = React.forwardRef(({}, ref) => {
     };
     try {
       confirm(() => {
-        data.status = 1;
         if (idOrder) {
           data.id = idOrder;
           dispatch(updateOrder(data, pengguna?.token));
@@ -378,7 +377,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
                       <button
                         id='cek-ongkir-button'
                         type='button'
-                        className={`${styles.btn} bg-green-200 border-green-200`}
+                        className={`${styles.btn} bg-gradient-green hover:!shadow-green-400/20`}
                         onClick={cekOngkirHandler}
                       >
                         Cek Ongkir
@@ -401,7 +400,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
                     />
                     <div className='col-span-2 flex justify-end'>
                       <button
-                        className={`${styles.btn} bg-blue-200 border-blue-200`}
+                        className={`${styles.btn} bg-gradient-blue hover:!shadow-blue-400/20`}
                       >
                         Simpan
                       </button>

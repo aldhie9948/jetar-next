@@ -9,7 +9,7 @@ const route = ({ level }) => {
     case 0:
       return '/dashboard';
     case 1:
-      return '/test';
+      return '/pwa/drivers';
     default:
       return '/logout';
   }
