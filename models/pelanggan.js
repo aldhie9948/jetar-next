@@ -3,9 +3,9 @@ import validator from 'mongoose-unique-validator';
 import mongooseFuzzySearching from 'mongoose-fuzzy-searching';
 
 const pelangganSchema = mongoose.Schema({
-  nama: { required: true, type: String, index: true },
+  nama: { required: true, type: String },
   alamat: { required: true, type: String },
-  noHP: { required: true, type: String, index: true },
+  noHP: { required: true, type: String },
   keterangan: { required: true, type: String },
   softDelete: { type: Boolean },
 });

@@ -4,6 +4,17 @@ import localStorageService from '../lib/localStorage';
 import { initPengguna } from '../reducers/penggunaReducer';
 import { useRouter } from 'next/router';
 
+const route = ({ level }) => {
+  switch (level) {
+    case 0:
+      return '/dashboard';
+    case 1:
+      return '/test';
+    default:
+      return '/logout';
+  }
+};
+
 const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -20,7 +31,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    router.push(pengguna ? '/dashboard' : '/login');
+    router.push(pengguna ? route(pengguna) : '/login');
     // eslint-disable-next-line
   }, [pengguna]);
 

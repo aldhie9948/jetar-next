@@ -20,7 +20,6 @@ import {
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
-import Image from 'next/image';
 
 const StatusBadge = ({ status }) => {
   let classBadge = '';
@@ -33,7 +32,7 @@ const StatusBadge = ({ status }) => {
       break;
     case 2:
       classBadge = 'badge-blue';
-      textBadge = 'jemput oleh driver';
+      textBadge = 'pick up';
       break;
 
     default:
@@ -41,12 +40,8 @@ const StatusBadge = ({ status }) => {
   }
 
   return (
-    <div
-      className={`sm:w-full w-24 text-xs ${
-        textBadge.length > 5 && 'text-[0.5rem] sm:text-xs'
-      } rounded ${classBadge}`}
-    >
-      <div className='sm:px-5 px-0 py-1 text-center font-bold capitalize truncate-2'>
+    <div className={`sm:w-full w-24 text-xs rounded ${classBadge}`}>
+      <div className='sm:px-5 px-0 py-1 text-center font-bold lowercase truncate-2'>
         {textBadge}
       </div>
     </div>
@@ -144,12 +139,13 @@ const CardOrder = ({ order, onEdit }) => {
     <div
       className={`card-order ${
         visibleCard && '!shadow-lg !shadow-green-400/20'
-      } bg-gradient-green  text-slate-600 transition-all duration-150`}
+      } bg-gradient-green  text-slate-600 transition-all duration-150 overflow-x-hidden`}
     >
       <div
         onClick={openCardHandler}
         className='grid grid-cols-2 gap-5 items-center'
       >
+        {/* section header kiri */}
         <div className='flex gap-5 items-center'>
           <div>
             <div className='font-black text-xl'>{order.waktuOrder}</div>
@@ -162,33 +158,30 @@ const CardOrder = ({ order, onEdit }) => {
           <div className='font-bold flex flex-col gap-1'>
             <div className='flex gap-2 items-center w-full'>
               <BiStoreAlt className='flex-shrink-0' />
-              <span className='block text-xs truncate text-ellipsis'>
+              <span className='block text-xs truncate sm:w-full w-20'>
                 {order.pengirim.nama}
               </span>
             </div>
             <div className='flex gap-2 items-center w-full'>
               <FaPeopleCarry className='flex-shrink-0' />
-              <span className='block text-xs truncate text-ellipsis'>
+              <span className='block text-xs truncate sm:w-full w-20'>
                 {order.penerima.nama}
               </span>
             </div>
           </div>
         </div>
+        {/* section header kanan */}
         <div className='flex gap-3 items-center'>
           <div className='px-1'>
             <StatusBadge status={order.status} />
           </div>
-          <div className='justify-self-end flex-shrink-0 flex-grow'>
-            <div className='flex flex-col justify-end'>
-              <div className='flex justify-end w-full'>
-                <div className='capitalize font-black truncate text-ellipsis'>
-                  {order.driver.nama}
-                </div>
+          <div className='flex-grow'>
+            <div className='flex flex-col items-end justify-end w-full'>
+              <div className='capitalize font-black truncate sm:w-max w-20 text-right'>
+                {order.driver.nama}
               </div>
-              <div className='flex justify-end gap-2'>
-                <div className='text-xs font-bold'>
-                  Rp. {order.ongkir.toLocaleString()}
-                </div>
+              <div className='text-xs font-bold'>
+                Rp. {order.ongkir.toLocaleString()}
               </div>
             </div>
           </div>

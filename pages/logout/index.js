@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import localStorageService from '../../lib/localStorage';
 import { useRouter } from 'next/router';
 import { initPengguna } from '../../reducers/penggunaReducer';

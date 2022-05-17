@@ -1,12 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import Layout from '../../components/Layout';
-import styles from '../../styles/Dashboard.module.css';
 import CekOngkir from '../../components/dashboard/CekOngkir';
 import Orders from '../../components/dashboard/Orders';
 import { initDriver } from '../../reducers/driverReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { initOrder } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
+
+import { FaTruck, FaRoute } from 'react-icons/fa';
 
 const Dashboard = () => {
   const formOrderRef = useRef();
@@ -30,19 +31,25 @@ const Dashboard = () => {
   return (
     <Layout title='Dashboard'>
       <>
-        <div className='w-max gap-2 mb-4 flex'>
-          <button
-            onClick={tambahHandler}
-            className={`${styles.btn} bg-green-200 border-green-200 !w-max`}
-          >
-            Tambah Order
-          </button>
-          <button
-            onClick={cekOngkirHandler}
-            className={`${styles.btn} bg-green-200 border-green-200 !w-max`}
-          >
-            Cek Ongkir
-          </button>
+        <div className='w-max mb-4 flex gap-2 items-center'>
+          <div className='bg-gradient-blue rounded hover:shadow-lg hover:shadow-blue-400/20'>
+            <button
+              onClick={tambahHandler}
+              className='flex items-center gap-2 px-4 py-2'
+            >
+              <FaTruck />
+              <div className='text-sm font-light lowercase'>Tambah Order</div>
+            </button>
+          </div>
+          <div className='bg-gradient-blue rounded hover:shadow-lg hover:shadow-blue-400/20'>
+            <button
+              onClick={cekOngkirHandler}
+              className='flex items-center gap-2 px-4 py-2'
+            >
+              <FaRoute />
+              <div className='text-sm font-light lowercase'>cek ongkir</div>
+            </button>
+          </div>
         </div>
         <CekOngkir ref={cekOngkirRef} />
         <FormOrder ref={formOrderRef} />

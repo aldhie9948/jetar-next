@@ -3,6 +3,7 @@ import nc from 'next-connect';
 import Driver from '../../../models/driver';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
+import Pengguna from '../../../models/pengguna';
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -20,7 +21,7 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const driver = await Driver.findById(id);
+      const driver = await Driver.findById(id).populate('akun');
       res.status(200).json(driver);
     } catch (error) {
       console.error(error.toString());
@@ -34,12 +35,40 @@ const handler = nc({
       query: { id },
     } = req;
     try {
+      // verifikasi token
       verifyToken(req);
-      const body = { ...data, nama: trimmer(data.nama) };
-      const save = await Driver.findByIdAndUpdate(id, body, {
+
+      // buat object pengguna untuk di update di database
+      const penggunaObj = {
+        ...data.akun,
+        username: data.akun.username.trim(),
+        nama: trimmer(data.akun.nama),
+      };
+
+      // update pengguna dan akan mengembalikkan object pengguna yang sudah tersimpan
+      const updatedPengguna = await Pengguna.findByIdAndUpdate(
+        penggunaObj.id,
+        penggunaObj,
+        { new: true }
+      );
+
+      // buat object driver yang akan disimpan di database
+      const driverObj = {
+        ...data,
+        akun: updatedPengguna._id,
+        nama: trimmer(data.nama),
+      };
+
+      // update driver dengan data yang baru dan
+      // element akun diisi dengan updatedPengguna ObjectTypeId
+      await Driver.findByIdAndUpdate(id, driverObj, {
         new: true,
       });
-      res.status(201).json(save);
+
+      // ambil data driver yang baru saja disimpan
+      // dan populate element akun
+      const newDriver = await Driver.findById(id).populate('akun');
+      res.status(201).json(newDriver);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
@@ -50,14 +79,24 @@ const handler = nc({
       query: { id },
     } = req;
     try {
+      // verifikasi token
       verifyToken(req);
-      const driver = await Driver.findByIdAndUpdate(
-        id,
-        { softDelete: true },
-        {
-          new: true,
-        }
-      );
+
+      const oldDriver = await Driver.findById(id).populate('akun');
+      // buat object yang akan diupdate
+      // ganti softDelete menjadi "true" untuk indikator agar
+      // order yang menggunakan driver tersebut masih ada datanya
+      // ganti elemetn akun menjadi null, agar driver
+      // tidak bisa melakukan login lagi
+      const updatedDriver = {
+        softDelete: true,
+        akun: null,
+      };
+
+      const driver = await Driver.findByIdAndUpdate(id, updatedDriver, {
+        new: true,
+      });
+      await Pengguna.findByIdAndRemove(oldDriver.akun.id);
       res.status(200).json(driver);
     } catch (error) {
       console.error(error.toString());

@@ -3,7 +3,7 @@ import validator from 'mongoose-unique-validator';
 
 const penggunaSchema = new mongoose.Schema({
   username: { required: true, type: String, unique: true },
-  name: { required: true, type: String },
+  nama: { required: true, type: String },
   password: { required: true, type: String },
   level: { required: true, type: Number },
 });

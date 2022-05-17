@@ -201,8 +201,8 @@ const FormOrder = React.forwardRef(({}, ref) => {
     setterValue({ isPengirim: true });
     setterValue({ isPengirim: false });
     setIdOrder(null);
-    setTalang('');
-    setOngkir('');
+    setTalang('0');
+    setOngkir('0');
     setDriver('');
     setDefaultDriver('');
     setTanggalOrder(dateFormat(new Date(), 'yyyy-MM-dd'));
