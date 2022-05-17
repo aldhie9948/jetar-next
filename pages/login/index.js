@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { BiLogInCircle } from 'react-icons/bi';
 import Button from '../../components/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { initPengguna } from '../../reducers/penggunaReducer';
 import LoginService from '../../services/login';
 import localStorageService from '../../lib/localStorage';
 import { useRouter } from 'next/router';
 import { onChangeHandler } from '../../lib/handler';
 import styles from '../../styles/Login.module.css';
 import Head from 'next/head';
+import route from '../../lib/route';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -27,9 +27,8 @@ const Login = () => {
     };
     try {
       const penggunaLogin = await LoginService.login(pengguna);
-      dispatch(initPengguna(penggunaLogin));
       localStorageService.set(penggunaLogin, 'pengguna');
-      router.push('/');
+      router.push(route(penggunaLogin));
     } catch (error) {
       alert(error.message);
     }
@@ -39,17 +38,10 @@ const Login = () => {
   useEffect(() => {
     const penggunaLocal = localStorageService.get('pengguna', true);
     if (penggunaLocal) {
-      if (!pengguna) {
-        dispatch(initPengguna(penggunaLocal));
-      }
+      router.push(route(penggunaLocal));
     }
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    if (pengguna) router.push('/dashboard');
-    // eslint-disable-next-line
-  }, [pengguna]);
 
   return (
     <>

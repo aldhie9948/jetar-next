@@ -242,7 +242,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
     edit,
   }));
   return (
-    <>
+    <div className='px-5'>
       {visible && (
         <form ref={formRef} className='mb-4' onSubmit={submitHandler}>
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4'>
@@ -423,7 +423,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
           </div>
         </form>
       )}
-    </>
+    </div>
   );
 });
 

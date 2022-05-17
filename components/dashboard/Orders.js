@@ -16,18 +16,12 @@ const Orders = ({ onEdit }) => {
     <>
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
         <div className='col-span-2'>
-          <div className='bg-white rounded-md'>
-            <div className='p-5'>
-              <div>
-                <strong className={`header-form mb-4`}>Orderan</strong>
-                <div className='max-h-[44rem] pb-[5rem] overflow-y-auto'>
-                  {filteredOrders &&
-                    filteredOrders.map((order) => (
-                      <CardOrder key={order.id} order={order} onEdit={onEdit} />
-                    ))}
-                </div>
-              </div>
-            </div>
+          <strong className={`header-form mb-4 px-5`}>Orderan</strong>
+          <div className='max-h-[44rem] pb-[5rem] overflow-y-auto px-5'>
+            {filteredOrders &&
+              filteredOrders.map((order) => (
+                <CardOrder key={order.id} order={order} onEdit={onEdit} />
+              ))}
           </div>
         </div>
         <div>

@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Shadow&display=swap');
+
+.text-jetar {
+  font-family: 'Londrina Shadow', cursive !important;
+}
+
+.iconNav {
+  @apply text-xl hover:opacity-70 hover:drop-shadow-lg hover:translate-y-1 transition-all duration-200;
+}

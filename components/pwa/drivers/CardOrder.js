@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import dateFormat from '../../lib/date';
-import { toast, confirm } from '../Sweetalert2';
-import { currencyNumber, localCurrency } from '../../lib/currency';
-import { removeOrder } from '../../reducers/orderReducer';
-import { updateOrder } from '../../reducers/orderReducer';
+import dateFormat from '../../../lib/date';
+import { toast, confirm } from '../../../components/Sweetalert2';
+import { currencyNumber, localCurrency } from '../../../lib/currency';
 import {
   BiStoreAlt,
   BiPhoneCall,
@@ -13,9 +11,6 @@ import {
   BiInfoCircle,
   BiCar,
   BiDollarCircle,
-  BiTrash,
-  BiEdit,
-  BiSend,
   BiImage,
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
@@ -73,7 +68,7 @@ const selectOptions = {
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
   },
 };
-const CardOrder = ({ order, onEdit }) => {
+const CardOrder = ({ order }) => {
   const [visibleCard, setVisibleCard] = useState(false);
   const [visibleMaps, setvisibleMaps] = useState(false);
   const pengguna = useSelector((s) => s.pengguna);
@@ -104,40 +99,9 @@ const CardOrder = ({ order, onEdit }) => {
     return driverOptions?.find((driver) => driver.value === idDriver);
   };
 
-  // fn / handler untuk mengupdate order yang digunakan di card order
-  // fn harus diberikan args "updatedOrder" yang akan dikirim ke api order
-  const updateOrderHandler = ({ updatedOrder }) => {
-    try {
-      dispatch(updateOrder(updatedOrder, pengguna?.token));
-      toast({ title: 'Update order berhasil', icon: 'success' });
-    } catch (error) {
-      console.error(error);
-      toast({ title: 'Update order gagal', icon: 'error' });
-    }
-  };
-
-  // fn untuk mengahapus order
-  // fn harus memberikan args order sesuai dengan model Order
-  const removeOrderHandler = (order) => {
-    try {
-      confirm(() => {
-        dispatch(removeOrder(order, pengguna?.token));
-        toast({ title: 'Hapus orderan berhasil', icon: 'success' });
-      });
-    } catch (error) {
-      toast({ title: 'Hapus orderan gagal', icon: 'error' });
-    }
-  };
-
-  // fn untuk mengganti order ke driver
-  // atau mengubah status order ke "2" / "jemput oleh driver"
-  const kirimOrderHandler = (order) => {
-    const updatedOrder = { ...order, driver: order.driver.id, status: 2 };
-    updateOrderHandler({ updatedOrder });
-  };
   return (
     <div
-      className={`card-order !shadow-lg bg-gradient-green  text-slate-600 transition-all duration-150 overflow-x-hidden`}
+      className={`card-order !mx-5 !shadow-lg bg-gradient-green  text-slate-600 transition-all duration-150 overflow-x-hidden`}
     >
       <div
         onClick={openCardHandler}
@@ -246,21 +210,8 @@ const CardOrder = ({ order, onEdit }) => {
                 <BiCar className='flex-shrink-0 self-start text-lg' />
                 <span className='block text-xs flex-grow'>
                   <div className='mb-1'>Driver</div>
-                  <div className='font-normal'>
-                    <Select
-                      className='w-full'
-                      {...selectOptions}
-                      options={driverOptions}
-                      value={defaultDriver(order.driver.id)}
-                      // ganti driver dan update order
-                      onChange={(v) => {
-                        const updatedOrder = {
-                          ...order,
-                          driver: v.value,
-                        };
-                        updateOrderHandler({ updatedOrder });
-                      }}
-                    />
+                  <div className='font-normal truncate sm:w-full w-20'>
+                    {order.driver.nama}
                   </div>
                 </span>
               </div>
@@ -274,27 +225,7 @@ const CardOrder = ({ order, onEdit }) => {
                       type='text'
                       className='w-full outline-none bg-transparent'
                       defaultValue={localCurrency(order.talang)}
-                      // ganti uang talangan dan update order
-                      // jika uang talangan sama atau tidak berubah
-                      // maka order tidak akan diupdate
-                      onBlur={(e) => {
-                        const talang = currencyNumber(e.target.value);
-                        const updatedOrder = {
-                          ...order,
-                          talang,
-                          driver: order.driver.id,
-                        };
-                        if (talang !== order.talang)
-                          updateOrderHandler({
-                            updatedOrder,
-                          });
-                      }}
-                      // saat user penginputan, form hanya akan
-                      // menconvert / mengubah ke format currency
-                      onInput={(e) => {
-                        const value = e.target.value;
-                        e.target.value = localCurrency(value);
-                      }}
+                      readOnly
                     />
                   </div>
                 </span>
@@ -309,27 +240,7 @@ const CardOrder = ({ order, onEdit }) => {
                       type='text'
                       className='w-full outline-none bg-transparent'
                       defaultValue={localCurrency(order.ongkir)}
-                      // ganti uang ongkir dan update order
-                      // jika uang ongkir sama atau tidak berubah
-                      // maka order tidak akan diupdate
-                      onBlur={(e) => {
-                        const ongkir = currencyNumber(e.target.value);
-                        const updatedOrder = {
-                          ...order,
-                          ongkir,
-                          driver: order.driver.id,
-                        };
-                        if (ongkir !== order.ongkir)
-                          updateOrderHandler({
-                            updatedOrder,
-                          });
-                      }}
-                      // saat user penginputan, form hanya akan
-                      // menconvert / mengubah ke format currency
-                      onInput={(e) => {
-                        const value = e.target.value;
-                        e.target.value = localCurrency(value);
-                      }}
+                      readOnly
                     />
                   </div>
                 </span>
@@ -361,42 +272,6 @@ const CardOrder = ({ order, onEdit }) => {
                     className='py-[0.4rem] px-2 flex justify-center items-center'
                   >
                     <BiImage className='group-hover:drop-shadow-lg text-xl text-blue-800' />
-                  </button>
-                </div>
-                <div className='group relative flex gap-1 items-center flex-col'>
-                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                    Edit Orderan
-                  </div>
-                  <button
-                    onClick={() => onEdit(order)}
-                    className='py-[0.4rem] px-2 flex justify-center items-center'
-                  >
-                    <BiEdit className='group-hover:drop-shadow-lg text-xl text-blue-800' />
-                  </button>
-                </div>
-                {order.status === 1 && (
-                  <div className='group relative flex gap-1 items-center flex-col'>
-                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                      Kirim Orderan
-                    </div>
-                    <button className='py-[0.4rem] px-2 flex justify-center items-center'>
-                      <BiSend
-                        onClick={() => kirimOrderHandler(order)}
-                        className='group-hover:drop-shadow-lg text-xl text-blue-800'
-                      />
-                    </button>
-                  </div>
-                )}
-
-                <div className='group relative flex gap-1 items-center flex-col'>
-                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                    Hapus Orderan
-                  </div>
-                  <button
-                    onClick={() => removeOrderHandler(order)}
-                    className='py-[0.4rem] px-2 flex justify-center items-center'
-                  >
-                    <BiTrash className='group-hover:drop-shadow-lg text-xl text-red-800' />
                   </button>
                 </div>
               </div>
