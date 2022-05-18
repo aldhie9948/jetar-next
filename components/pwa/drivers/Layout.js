@@ -88,7 +88,7 @@ const Layout = ({ children }) => {
     <>
       {pengguna && pengguna?.level === 1 && (
         <>
-          <div className='sm:max-w-screen-sm sm:mx-auto'>
+          <div className='sm:max-w-screen-sm sm:mx-auto overflow-hidden'>
             <Head>
               <title>JETAR Driver</title>
             </Head>

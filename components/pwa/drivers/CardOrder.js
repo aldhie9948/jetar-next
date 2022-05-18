@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import dateFormat from '../../../lib/date';
 import { toast, confirm } from '../../../components/Sweetalert2';
-import { currencyNumber, localCurrency } from '../../../lib/currency';
+import { localCurrency } from '../../../lib/currency';
 import {
   BiStoreAlt,
   BiPhoneCall,
@@ -12,47 +12,26 @@ import {
   BiCar,
   BiDollarCircle,
   BiImage,
+  BiBox,
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
-import Select from 'react-select';
-
-const StatusBadge = ({ status }) => {
-  let classBadge = '';
-  let textBadge = '';
-
-  switch (status) {
-    case 1:
-      classBadge = 'badge-red';
-      textBadge = 'masuk';
-      break;
-    case 2:
-      classBadge = 'badge-blue';
-      textBadge = 'pick up';
-      break;
-
-    default:
-      break;
-  }
-
-  return (
-    <div className={`sm:w-full w-24 text-xs rounded ${classBadge}`}>
-      <div className='sm:px-5 px-0 py-1 text-center font-bold lowercase truncate-2'>
-        {textBadge}
-      </div>
-    </div>
-  );
-};
+import { updateOrder } from '../../../reducers/orderReducer';
+import subscriptionService from '../../../services/subscription';
+import StatusBadge from '../../../components/StatusBadge';
 
 const CardOrder = ({ order }) => {
   const [visibleCard, setVisibleCard] = useState(false);
   const [visibleMaps, setvisibleMaps] = useState(false);
   const pengguna = useSelector((s) => s.pengguna);
-  const drivers = useSelector((s) => s.driver);
   const dispatch = useDispatch();
 
   // fn untuk membuka dan menutup card orders
   const openCardHandler = (e) => {
     setVisibleCard(!visibleCard);
+    !visibleCard &&
+      e.currentTarget.scrollIntoView({
+        behavior: 'smooth',
+      });
   };
   // fn untuk membuka / memulai chat whatsapp dengan
   // nomor yang diberikan dei argument
@@ -60,18 +39,27 @@ const CardOrder = ({ order }) => {
     window.open(`whatsapp://send?phone=${phone}`, '_top');
   };
 
-  // fn untuk membuat array baru dari driver redux
-  // untuk diberikan ke react-select driver
-  const driverOptions = drivers?.map((driver) => ({
-    value: driver.id,
-    label: driver.nama,
-    obj: driver,
-  }));
+  // fn / handler untuk mengupdate order yang digunakan di card order
+  // fn harus diberikan args "updatedOrder" yang akan dikirim ke api order
+  const updateOrderHandler = ({ updatedOrder }) => {
+    try {
+      dispatch(updateOrder(updatedOrder, pengguna?.token));
+      toast({ title: 'Update order berhasil', icon: 'success' });
+    } catch (error) {
+      console.error(error);
+      toast({ title: 'Update order gagal', icon: 'error' });
+    }
+  };
 
-  // fn untuk mengatur default option react-select driver
-  // di card order sesuai dengan id driver yang diberikan di args
-  const defaultDriver = (idDriver) => {
-    return driverOptions?.find((driver) => driver.value === idDriver);
+  const pickupOrderHandler = (order) => {
+    const updatedOrder = { ...order, driver: order.driver.id, status: 3 };
+    updateOrderHandler({ updatedOrder });
+    const data = {
+      title: `Orderan Driver ${order.driver.nama.toUpperCase()}`,
+      body: `Barang Tn./Ny. ${order.pengirim.nama} telah diambil dan akan diantarkan ke Tn./Ny. ${order.penerima.nama}`,
+      target: 'admin',
+    };
+    subscriptionService.broadcast(data, pengguna.token);
   };
 
   return (
@@ -238,6 +226,7 @@ const CardOrder = ({ order }) => {
             {/* button section */}
             <div className='sm:col-span-3 col-span-2 capitalize'>
               <div className='order-last flex justify-end gap-2'>
+                {/* button maps */}
                 <div className='group relative flex gap-1 items-center flex-col'>
                   <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
                     Maps Orderan
@@ -249,6 +238,23 @@ const CardOrder = ({ order }) => {
                     <BiImage className='group-hover:drop-shadow-lg text-xl text-blue-800' />
                   </button>
                 </div>
+                {/* button delivery */}
+                {order.status === 2 && (
+                  <>
+                    <div className='group relative flex gap-1 items-center flex-col'>
+                      <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                        Driver pickup orderan
+                      </div>
+                      <button
+                        onClick={() => pickupOrderHandler(order)}
+                        className='py-[0.4rem] px-4 flex justify-center items-center gap-1 font-bold bg-blue-800/90 rounded group-hover:drop-shadow-lg text-white tracking-wider'
+                      >
+                        <BiBox className='text-xl' />
+                        <div>Pickup</div>
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

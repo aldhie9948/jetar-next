@@ -6,30 +6,19 @@ import { initOrder } from '../../../reducers/orderReducer';
 import { localCurrency } from '../../../lib/currency';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import Layout from '../../../components/pwa/drivers/Layout';
+import dateFormat from '../../../lib/date';
 
-const CardDriver = () => {
+const CardDriver = ({ driverOrders }) => {
   const pengguna = useSelector((s) => s.pengguna);
   const drivers = useSelector((s) => s.driver);
-  const orders = useSelector((s) => s.order);
   const [currentDriver, setCurrentDriver] = React.useState(null);
-  const [driverOrders, setDriverOrders] = React.useState([]);
 
   useEffect(() => {
     setCurrentDriver(
       drivers?.find((d) => d.akun.username === pengguna.username)
     );
-
     // eslint-disable-next-line
   }, [drivers]);
-
-  useEffect(() => {
-    const selectedOrders = orders?.filter(
-      (order) => order.driver.id === currentDriver?.id
-    );
-    setDriverOrders(selectedOrders);
-
-    // eslint-disable-next-line
-  }, [currentDriver, orders]);
 
   return (
     <>
@@ -102,9 +91,17 @@ const Dashboard = () => {
   }, [drivers]);
 
   useEffect(() => {
-    const selectedOrders = orders?.filter(
-      (order) => order.driver.id === currentDriver?.id
-    );
+    // sorting orderan sesuai dengan driver dan tanggal
+    const selectedOrders = orders?.filter((order) => {
+      console.log(order.tanggalOrder);
+      console.log(dateFormat(new Date(), 'yyyy-MM-dd'));
+      if (
+        order.driver.id === currentDriver?.id &&
+        order.tanggalOrder === dateFormat(new Date(), 'yyyy-MM-dd')
+      )
+        return true;
+      return false;
+    });
     setDriverOrders(selectedOrders);
 
     // eslint-disable-next-line
@@ -113,7 +110,7 @@ const Dashboard = () => {
   return (
     <Layout>
       <>
-        <CardDriver />
+        <CardDriver driverOrders={driverOrders} />
         <div>
           <strong className='header-form my-auto px-5'>
             Orderan Hari Ini..

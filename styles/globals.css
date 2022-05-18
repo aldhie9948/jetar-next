@@ -138,11 +138,15 @@ body {
 }
 
 .badge-red {
-  @apply bg-gradient-to-tr from-red-50 to-red-200 text-slate-700;
+  @apply bg-gradient-to-tr from-red-400 to-red-800 text-slate-50 opacity-80;
 }
 
 .badge-blue {
-  @apply bg-gradient-to-tr from-blue-50 to-blue-200 text-slate-700;
+  @apply bg-gradient-to-tr from-blue-400 to-blue-800 text-slate-50 opacity-80;
+}
+
+.badge-green {
+  @apply bg-gradient-to-tr from-green-400 to-green-800 text-slate-50 opacity-80;
 }
 
 .truncate-3 {

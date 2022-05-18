@@ -23,7 +23,7 @@ self.addEventListener('push', (e) => {
   const data = e.data.json();
   console.log('push recieved...');
   self.registration.showNotification(data.title, {
-    body: 'notified by aldi gunawan',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/2048px-Instagram_icon.png',
+    body: data.body,
+    icon: `${location.origin}/assets/image/JETAR.png`,
   });
 });

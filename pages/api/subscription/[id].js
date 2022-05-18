@@ -41,11 +41,12 @@ const handler = nc({
       const subscriptionObj = await Subscription.findOne({ pengguna: id });
       const payload = JSON.stringify({
         title: 'Orderan baru JETAR',
+        body: 'Cek aplikasi untuk mengetahui details order',
       });
       webpush
         .sendNotification(subscriptionObj.subscription, payload)
         .catch((err) => console.error(err));
-      res.status(204).end();
+      res.status(200).json({ status: 'OK' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: error.message, status: 'FAILED' });

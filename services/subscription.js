@@ -29,7 +29,13 @@ const remove = async (id, token) => {
 
 const send = async (obj, token) => {
   const res = await axios.post(`${baseURL}/${obj.id}`, obj, config(token));
+  return res.data;
+};
+
+const broadcast = async (obj, token) => {
+  const res = await axios.post(`${baseURL}/broadcast`, obj, config(token));
+  return res.data;
 };
 
 // eslint-disable-next-line
-export default { get, find, save, update, remove, send };
+export default { get, find, save, update, remove, send, broadcast };
