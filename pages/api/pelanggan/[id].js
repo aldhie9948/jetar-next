@@ -38,7 +38,7 @@ const handler = nc({
       const body = {
         ...body,
         nama: trimmer(data.nama),
-        keterangan: trimmer(data.keterangan),
+        noHP: numberOnly({ value: data.noHP, isPhone: true }),
       };
       const save = await Pelanggan.findByIdAndUpdate(id, body, {
         new: true,

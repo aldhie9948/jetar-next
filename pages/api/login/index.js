@@ -25,8 +25,8 @@ const handler = nc({
     const penggunaToken = {
       nama: pengguna.nama,
       username: pengguna.username,
-      id: pengguna._id,
       level: pengguna.level,
+      id: pengguna._id,
     };
 
     const token = jwt.sign(penggunaToken, process.env.SECRET_KEY, {
@@ -38,6 +38,7 @@ const handler = nc({
       username: pengguna.username,
       nama: pengguna.nama,
       level: pengguna.level,
+      id: pengguna._id,
     });
   } catch (error) {
     console.error(error);

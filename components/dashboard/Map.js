@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, useState, useImperativeHandle } from 'react';
-import { localCurrency } from '../../lib/currency';
+import React, { useRef, useEffect, useImperativeHandle } from 'react';
 
 const cekOngkir = (distance) => {
   distance = distance === 0 ? 1 : distance;

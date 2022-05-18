@@ -10,6 +10,9 @@ module.exports = {
         secondary: '#60C2FF',
         accents: '#FFA04D',
       },
+      boxShadow: {
+        top: '0 -5px 25px rgb(0 0 0 / 0.1)',
+      },
     },
   },
   plugins: [],

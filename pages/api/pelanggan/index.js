@@ -3,6 +3,7 @@ import nc from 'next-connect';
 import Pelanggan from '../../../models/pelanggan';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
+import { numberOnly } from '../../../lib/currency';
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -31,7 +32,7 @@ const handler = nc({
       const body = {
         ...data,
         nama: trimmer(data.nama),
-        keterangan: trimmer(data.keterangan),
+        noHP: numberOnly({ value: data.noHP, isPhone: true }),
       };
 
       const pelanggan = new Pelanggan(body);

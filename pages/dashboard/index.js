@@ -26,12 +26,12 @@ const Dashboard = () => {
     dispatch(initDriver(pengguna?.token));
     dispatch(initOrder(pengguna?.token));
     // eslint-disable-next-line
-  }, []);
+  }, [pengguna]);
 
   return (
     <Layout title='Dashboard'>
       <>
-        <div className='w-max mb-4 flex gap-2 items-center'>
+        <div className='w-max mb-4 flex gap-2 items-center mx-5'>
           <div className='bg-gradient-blue rounded hover:shadow-lg hover:shadow-blue-400/20'>
             <button
               onClick={tambahHandler}

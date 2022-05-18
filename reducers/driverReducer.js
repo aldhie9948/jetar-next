@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import DriverService from '../services/driver';
+import { axiosError } from '../utils/errorHandler';
 
 const driverSlice = createSlice({
   name: 'Driver Reducer',
@@ -16,7 +17,12 @@ export const { set } = driverSlice.actions;
 
 export const initDriver = (token) => {
   return async (dispatch) => {
-    const driver = await DriverService.get(token);
-    dispatch(set(driver));
+    try {
+      const driver = await DriverService.get(token);
+      dispatch(set(driver));
+    } catch (error) {
+      const label = 'error di driver reducer:';
+      axiosError({ label, error });
+    }
   };
 };

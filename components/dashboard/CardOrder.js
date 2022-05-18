@@ -20,33 +20,9 @@ import {
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
-
-const StatusBadge = ({ status }) => {
-  let classBadge = '';
-  let textBadge = '';
-
-  switch (status) {
-    case 1:
-      classBadge = 'badge-red';
-      textBadge = 'masuk';
-      break;
-    case 2:
-      classBadge = 'badge-blue';
-      textBadge = 'pick up';
-      break;
-
-    default:
-      break;
-  }
-
-  return (
-    <div className={`sm:w-full w-24 text-xs rounded ${classBadge}`}>
-      <div className='sm:px-5 px-0 py-1 text-center font-bold lowercase truncate-2'>
-        {textBadge}
-      </div>
-    </div>
-  );
-};
+import subscriptionService from '../../services/subscription';
+import StatusBadge from '../StatusBadge';
+import { getLinkStaticMap } from '../../lib/getStaticMap';
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -71,6 +47,7 @@ const selectOptions = {
     }),
     valueContainer: (base) => ({ ...base, paddingLeft: 0, paddingRight: 0 }),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    menu: (base) => ({ ...base, textTransform: 'capitalize' }),
   },
 };
 const CardOrder = ({ order, onEdit }) => {
@@ -134,23 +111,27 @@ const CardOrder = ({ order, onEdit }) => {
   const kirimOrderHandler = (order) => {
     const updatedOrder = { ...order, driver: order.driver.id, status: 2 };
     updateOrderHandler({ updatedOrder });
+    const data = {
+      target: order.driver.akun,
+      title: `Orderan Baru ${order.driver.nama}`,
+      body: `Pengambilan di Tn./Ny. ${order.pengirim.nama} diantarkan ke Tn./Ny. ${order.penerima.nama}`,
+    };
+    subscriptionService.send(data, pengguna.token);
   };
   return (
     <div
-      className={`card-order ${
-        visibleCard && '!shadow-lg !shadow-green-400/20'
-      } bg-gradient-green  text-slate-600 transition-all duration-150 overflow-x-hidden`}
+      className={`card-order !shadow-lg bg-gradient-green  text-slate-600 transition-all duration-150 overflow-x-hidden`}
     >
       <div
         onClick={openCardHandler}
-        className='grid grid-cols-2 gap-5 items-center'
+        className='grid grid-cols-1 sm:grid-cols-2 sm:gap-5 gap-2 items-center'
       >
         {/* section header kiri */}
         <div className='flex gap-5 items-center'>
           <div>
             <div className='font-black text-xl'>{order.waktuOrder}</div>
             <div className='text-[0.7rem] w-full'>
-              <div className='text-ellipsis truncate'>
+              <div className='truncate'>
                 {dateFormat(new Date(order.tanggalOrder))}
               </div>
             </div>
@@ -158,29 +139,29 @@ const CardOrder = ({ order, onEdit }) => {
           <div className='font-bold flex flex-col gap-1'>
             <div className='flex gap-2 items-center w-full'>
               <BiStoreAlt className='flex-shrink-0' />
-              <span className='block text-xs truncate sm:w-full w-20'>
+              <span className='block text-xs truncate w-full'>
                 {order.pengirim.nama}
               </span>
             </div>
             <div className='flex gap-2 items-center w-full'>
               <FaPeopleCarry className='flex-shrink-0' />
-              <span className='block text-xs truncate sm:w-full w-20'>
+              <span className='block text-xs truncate w-full'>
                 {order.penerima.nama}
               </span>
             </div>
           </div>
         </div>
         {/* section header kanan */}
-        <div className='flex gap-3 items-center'>
+        <div className='flex gap-3 items-center sm:mb-0 mb-2'>
           <div className='px-1'>
             <StatusBadge status={order.status} />
           </div>
           <div className='flex-grow'>
             <div className='flex flex-col items-end justify-end w-full'>
-              <div className='capitalize font-black truncate sm:w-max w-20 text-right sm:pr-0 pr-4'>
+              <div className='capitalize font-black truncate w-full text-right'>
                 {order.driver.nama}
               </div>
-              <div className='text-xs font-bold sm:pr-0 pr-4'>
+              <div className='text-xs font-bold'>
                 Rp. {order.ongkir.toLocaleString()}
               </div>
             </div>
@@ -342,8 +323,17 @@ const CardOrder = ({ order, onEdit }) => {
                 <>
                   <div className='relative w-full'>
                     {/* eslint-disable-next-line */}
-                    <img
+                    {/* <img
                       src={`/assets/image/map-orderan/${order.id}.png`}
+                      alt={order.id}
+                      className='rounded-lg border-2 border-white shadow-lg'
+                    /> */}
+                    {/* eslint-disable */}
+                    <img
+                      src={getLinkStaticMap({
+                        origin: order.pengirim.alamat,
+                        destination: order.penerima.alamat,
+                      })}
                       alt={order.id}
                       className='rounded-lg border-2 border-white shadow-lg'
                     />

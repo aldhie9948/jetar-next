@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 const selectStyles = {
   control: (styles) => ({ ...styles, borderRadius: 'none', border: 'none' }),
+  menu: (base) => ({ ...base, textTransform: 'capitalize' }),
 };
 
 const SelectPelanggan = React.forwardRef(
@@ -32,7 +33,7 @@ const SelectPelanggan = React.forwardRef(
         className='flex-grow border-2 shadow-lg'
         value={selectedPelanggan}
         onChange={onChangeHandler}
-        placeholder='Pilih Pelanggan..'
+        placeholder='Pelanggan..'
         loadOptions={loadOptions}
         isClearable
         {...args}
