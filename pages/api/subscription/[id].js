@@ -29,19 +29,16 @@ const handler = nc({
   })
   .post(async (req, res) => {
     await connect();
-    const {
-      query: { id },
-    } = req;
     try {
       verifyToken(req);
-      // data structure {pengguna:ObjectID, subscription: subscription obj from push manager}
-      const data = req.body;
+      // ekstrak data dari request
+      const { title, target, body } = req.body;
 
       // ambil data subscription dari mongo dengan id pengguna
-      const subscriptionObj = await Subscription.findOne({ pengguna: id });
+      const subscriptionObj = await Subscription.findOne({ pengguna: target });
       const payload = JSON.stringify({
-        title: 'Orderan baru JETAR',
-        body: 'Cek aplikasi untuk mengetahui details order',
+        title,
+        body,
       });
       webpush
         .sendNotification(subscriptionObj.subscription, payload)

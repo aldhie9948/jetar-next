@@ -28,7 +28,7 @@ const remove = async (id, token) => {
 };
 
 const send = async (obj, token) => {
-  const res = await axios.post(`${baseURL}/${obj.id}`, obj, config(token));
+  const res = await axios.post(`${baseURL}/${obj.target}`, obj, config(token));
   return res.data;
 };
 

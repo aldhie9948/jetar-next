@@ -13,6 +13,7 @@ import {
   BiDollarCircle,
   BiImage,
   BiBox,
+  BiCheckDouble,
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
 import { updateOrder } from '../../../reducers/orderReducer';
@@ -57,6 +58,16 @@ const CardOrder = ({ order }) => {
     const data = {
       title: `Orderan Driver ${order.driver.nama.toUpperCase()}`,
       body: `Barang Tn./Ny. ${order.pengirim.nama} telah diambil dan akan diantarkan ke Tn./Ny. ${order.penerima.nama}`,
+      target: 'admin',
+    };
+    subscriptionService.broadcast(data, pengguna.token);
+  };
+  const finishOrderHandler = (order) => {
+    const updatedOrder = { ...order, driver: order.driver.id, status: 0 };
+    updateOrderHandler({ updatedOrder });
+    const data = {
+      title: `Orderan Driver ${order.driver.nama.toUpperCase()}`,
+      body: `Barang Tn./Ny. ${order.pengirim.nama} telah diantarkan ke Tn./Ny. ${order.penerima.nama}`,
       target: 'admin',
     };
     subscriptionService.broadcast(data, pengguna.token);
@@ -251,6 +262,23 @@ const CardOrder = ({ order }) => {
                       >
                         <BiBox className='text-xl' />
                         <div>Pickup</div>
+                      </button>
+                    </div>
+                  </>
+                )}
+                {/* button selesai order */}
+                {order.status === 3 && (
+                  <>
+                    <div className='group relative flex gap-1 items-center flex-col'>
+                      <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                        Orderan selesai
+                      </div>
+                      <button
+                        onClick={() => finishOrderHandler(order)}
+                        className='py-[0.4rem] px-4 flex justify-center items-center gap-1 font-bold bg-red-800/90 rounded group-hover:drop-shadow-lg text-white tracking-wider'
+                      >
+                        <BiCheckDouble className='text-xl' />
+                        <div>Selesai</div>
                       </button>
                     </div>
                   </>

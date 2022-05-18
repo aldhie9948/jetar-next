@@ -21,33 +21,7 @@ import {
 import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
 import subscriptionService from '../../services/subscription';
-
-const StatusBadge = ({ status }) => {
-  let classBadge = '';
-  let textBadge = '';
-
-  switch (status) {
-    case 1:
-      classBadge = 'badge-red';
-      textBadge = 'masuk';
-      break;
-    case 2:
-      classBadge = 'badge-blue';
-      textBadge = 'pick up';
-      break;
-
-    default:
-      break;
-  }
-
-  return (
-    <div className={`sm:w-full w-24 text-xs rounded ${classBadge}`}>
-      <div className='sm:px-5 px-0 py-1 text-center font-bold lowercase truncate-2'>
-        {textBadge}
-      </div>
-    </div>
-  );
-};
+import StatusBadge from '../StatusBadge';
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -136,7 +110,11 @@ const CardOrder = ({ order, onEdit }) => {
   const kirimOrderHandler = (order) => {
     const updatedOrder = { ...order, driver: order.driver.id, status: 2 };
     updateOrderHandler({ updatedOrder });
-    const data = { id: order.driver.akun, idOrder: order.id };
+    const data = {
+      target: order.driver.akun,
+      title: `Orderan Baru ${order.driver.nama}`,
+      body: `Pengambilan di Tn./Ny. ${order.pengirim.nama} diantarkan ke Tn./Ny. ${order.penerima.nama}`,
+    };
     subscriptionService.send(data, pengguna.token);
   };
   return (

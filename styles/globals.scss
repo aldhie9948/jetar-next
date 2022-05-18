@@ -114,6 +114,10 @@ body {
 .badge-red {
   @apply bg-gradient-to-tr from-red-400 to-red-800 text-slate-50 opacity-80;
 }
+.badge-black {
+  @apply bg-gradient-to-tr from-slate-400 to-slate-800 text-slate-50 opacity-80;
+}
+
 .badge-blue {
   @apply bg-gradient-to-tr from-blue-400 to-blue-800 text-slate-50 opacity-80;
 }

@@ -93,8 +93,6 @@ const Dashboard = () => {
   useEffect(() => {
     // sorting orderan sesuai dengan driver dan tanggal
     const selectedOrders = orders?.filter((order) => {
-      console.log(order.tanggalOrder);
-      console.log(dateFormat(new Date(), 'yyyy-MM-dd'));
       if (
         order.driver.id === currentDriver?.id &&
         order.tanggalOrder === dateFormat(new Date(), 'yyyy-MM-dd')
@@ -119,7 +117,7 @@ const Dashboard = () => {
             {driverOrders &&
               driverOrders.map(
                 (order) =>
-                  order.status !== 1 && (
+                  (order.status === 2 || order.status === 3) && (
                     <CardOrder key={order.id} order={order} />
                   )
               )}

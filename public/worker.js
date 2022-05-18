@@ -22,8 +22,23 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('push', (e) => {
   const data = e.data.json();
   console.log('push recieved...');
-  self.registration.showNotification(data.title, {
-    body: data.body,
+  const message = {
     icon: `${location.origin}/assets/image/JETAR.png`,
-  });
+    body: data.body,
+    actions: [{ action: 'ok', title: 'OK' }],
+  };
+  self.registration.showNotification(data.title, message);
 });
+
+self.addEventListener(
+  'notificationclick',
+  function (event) {
+    event.notification.close();
+    if (event.action === 'ok') {
+      synchronizeReader();
+    } else {
+      clients.openWindow(location.origin);
+    }
+  },
+  false
+);
