@@ -88,12 +88,6 @@ const handler = nc({
       // ambil atau fetch data static maps dari maps api
       // dan di simpan di /public/assets/image/map-orderan
       // dengan nama id orderan png
-      getStaticMap({
-        name: savedOrder.id,
-        origin: savedOrder.pengirim.alamat,
-        destination: savedOrder.penerima.alamat,
-        polyline: body.polyline,
-      });
 
       // ambil data orderan yang baru saja disimpan
       // dan populate data drivernya lalu kirim menjadi response

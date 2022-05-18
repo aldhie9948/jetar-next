@@ -22,6 +22,7 @@ import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
 import subscriptionService from '../../services/subscription';
 import StatusBadge from '../StatusBadge';
+import { getLinkStaticMap } from '../../lib/getStaticMap';
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -322,8 +323,17 @@ const CardOrder = ({ order, onEdit }) => {
                 <>
                   <div className='relative w-full'>
                     {/* eslint-disable-next-line */}
-                    <img
+                    {/* <img
                       src={`/assets/image/map-orderan/${order.id}.png`}
+                      alt={order.id}
+                      className='rounded-lg border-2 border-white shadow-lg'
+                    /> */}
+                    {/* eslint-disable */}
+                    <img
+                      src={getLinkStaticMap({
+                        origin: order.pengirim.alamat,
+                        destination: order.penerima.alamat,
+                      })}
                       alt={order.id}
                       className='rounded-lg border-2 border-white shadow-lg'
                     />

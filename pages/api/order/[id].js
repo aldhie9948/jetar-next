@@ -85,14 +85,6 @@ const handler = nc({
         new: true,
       });
 
-      // ambil atau fetch gambar static maps dari maps api google
-      getStaticMap({
-        name: updatedOrder.id,
-        origin: updatedOrder.pengirim.alamat,
-        destination: updatedOrder.penerima.alamat,
-        polyline: body.polyline,
-      });
-
       // ambil data yang baru saja disimpan
       // populate data driver dan kirim sebagai response
       const order = await updatedOrder.populate('driver');
@@ -112,10 +104,6 @@ const handler = nc({
       // hapus data orderan berdasarkan id yang diberikan
       // saat request
       const order = await Order.findByIdAndRemove(id).populate('driver');
-
-      // hapus gambar static image yang disimpan dengan
-      // nama id order diatas
-      removeMaps({ name: order.id });
 
       // kirim response data orderan yang dihapus
       res.status(200).json(order);
