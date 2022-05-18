@@ -20,6 +20,7 @@ import {
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
+import subscriptionService from '../../services/subscription';
 
 const StatusBadge = ({ status }) => {
   let classBadge = '';
@@ -135,6 +136,8 @@ const CardOrder = ({ order, onEdit }) => {
   const kirimOrderHandler = (order) => {
     const updatedOrder = { ...order, driver: order.driver.id, status: 2 };
     updateOrderHandler({ updatedOrder });
+    const data = { id: order.driver.akun, idOrder: order.id };
+    subscriptionService.send(data, pengguna.token);
   };
   return (
     <div

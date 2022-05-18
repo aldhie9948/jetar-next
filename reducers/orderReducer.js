@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import OrderService from '../services/order';
 import dateFormat from '../lib/date';
+import { axiosError } from '../utils/errorHandler';
 
 const sort = (a, b) => {
   const x = dateFormat(`${a.tanggalOrder} ${a.waktuOrder}`, 't');
@@ -41,28 +42,48 @@ export const { set, create, update, remove } = orderSlice.actions;
 
 export const initOrder = (token) => {
   return async (dispatch) => {
-    const response = await OrderService.get(token);
-    dispatch(set(response));
+    try {
+      const response = await OrderService.get(token);
+      dispatch(set(response));
+    } catch (error) {
+      const label = 'error di order reducer:';
+      axiosError({ label, error });
+    }
   };
 };
 
 export const createOrder = (order, token) => {
   return async (dispatch) => {
-    const response = await OrderService.save(order, token);
-    dispatch(create(response));
+    try {
+      const response = await OrderService.save(order, token);
+      dispatch(create(response));
+    } catch (error) {
+      const label = 'error di order reducer:';
+      axiosError({ label, error });
+    }
   };
 };
 
 export const updateOrder = (order, token) => {
   return async (dispatch) => {
-    const response = await OrderService.update(order, token);
-    dispatch(update(response));
+    try {
+      const response = await OrderService.update(order, token);
+      dispatch(update(response));
+    } catch (error) {
+      const label = 'error di order reducer:';
+      axiosError({ label, error });
+    }
   };
 };
 
 export const removeOrder = (order, token) => {
   return async (dispatch) => {
-    const response = await OrderService.remove(order.id, token);
-    dispatch(remove(response));
+    try {
+      const response = await OrderService.remove(order.id, token);
+      dispatch(remove(response));
+    } catch (error) {
+      const label = 'error di order reducer:';
+      axiosError({ label, error });
+    }
   };
 };

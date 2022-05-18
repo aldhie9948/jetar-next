@@ -30,17 +30,7 @@ const handler = nc({
       verifyToken(req);
       // data structure {pengguna:ObjectID, subscription: subscription obj from push manager}
       const data = req.body;
-
-      // ambil data object id dari mongo
-      const pengguna = await Pengguna.findOne({
-        username: data.pengguna.username,
-      });
-
-      const formattedData = {
-        pengguna: pengguna._id,
-        subscription: data.subscription,
-      };
-      const subscription = new Subscription(formattedData);
+      const subscription = new Subscription(data);
       const savedSubscription = await subscription.save();
       const populated = await savedSubscription.populate('pengguna');
       res.status(201).json(populated);
@@ -57,23 +47,14 @@ const handler = nc({
       const data = req.body;
 
       // ambil data subscription lama
-      // dengan menggunakan username pengguna
-      const pengguna = await Pengguna.findOne({
-        username: data.pengguna.username,
-      });
+      // dengan menggunakan id pengguna
       const oldSubscription = await Subscription.findOne({
-        pengguna: pengguna._id,
+        pengguna: data.id,
       });
-
-      // format data yang akan diupdate
-      const formattedData = {
-        pengguna: pengguna._id,
-        subscription: data.subscription,
-      };
 
       const updatedSubscription = await Subscription.findByIdAndUpdate(
         oldSubscription._id,
-        formattedData,
+        data,
         { new: true }
       );
       const populated = await updatedSubscription.populate('pengguna');

@@ -27,5 +27,9 @@ const remove = async (id, token) => {
   return res.data;
 };
 
+const send = async (obj, token) => {
+  const res = await axios.post(`${baseURL}/${obj.id}`, obj, config(token));
+};
+
 // eslint-disable-next-line
-export default { get, find, save, update, remove };
+export default { get, find, save, update, remove, send };

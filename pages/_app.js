@@ -14,10 +14,6 @@ webpush.setVapidDetails(
 );
 
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    registerServiceWorker().catch((err) => console.error(err));
-  }, []);
-
   return (
     <Provider store={store}>
       <Head>

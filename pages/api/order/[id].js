@@ -95,7 +95,7 @@ const handler = nc({
 
       // ambil data yang baru saja disimpan
       // populate data driver dan kirim sebagai response
-      const order = await Order.findById(updatedOrder.id).populate('driver');
+      const order = await updatedOrder.populate('driver');
       res.status(201).json(order);
     } catch (error) {
       console.error(error.toString());

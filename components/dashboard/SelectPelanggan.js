@@ -33,7 +33,7 @@ const SelectPelanggan = React.forwardRef(
         className='flex-grow border-2 shadow-lg'
         value={selectedPelanggan}
         onChange={onChangeHandler}
-        placeholder='Pilih Pelanggan..'
+        placeholder='Pelanggan..'
         loadOptions={loadOptions}
         isClearable
         {...args}

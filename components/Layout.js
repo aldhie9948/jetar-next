@@ -25,7 +25,7 @@ const Layout = ({ title = '', children }) => {
 
   return (
     <>
-      {(pengguna || pengguna?.level === 0) && (
+      {pengguna && pengguna?.level === 0 && (
         <>
           <Head>
             <title> {title} | Jemput Antar Kota Tegal dan Sekitarnya</title>
