@@ -49,7 +49,7 @@ const handler = nc({
       // ambil data subscription lama
       // dengan menggunakan id pengguna
       const oldSubscription = await Subscription.findOne({
-        pengguna: data.id,
+        pengguna: data.pengguna,
       });
 
       const updatedSubscription = await Subscription.findByIdAndUpdate(

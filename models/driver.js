@@ -6,6 +6,7 @@ const driverSchema = mongoose.Schema({
   nama: { required: true, type: String, index: true },
   noHP: { required: true, type: String, index: true, unique: true },
   foto: { type: String },
+  gender: { type: String },
   akun: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Pengguna',

@@ -4,12 +4,16 @@ import PelangganService from '../../services/pelanggan';
 import { useSelector } from 'react-redux';
 
 const selectStyles = {
-  control: (styles) => ({ ...styles, borderRadius: 'none', border: 'none' }),
+  control: (styles) => ({
+    ...styles,
+    borderRadius: 'none',
+    border: 'none',
+  }),
   menu: (base) => ({ ...base, textTransform: 'capitalize' }),
 };
 
 const SelectPelanggan = React.forwardRef(
-  ({ onChange = null, ...args }, ref) => {
+  ({ onChange = null, className = '', ...args }, ref) => {
     const pengguna = useSelector((s) => s.pengguna);
 
     const [selectedPelanggan, setSelectedPelanggan] = useState([]);
@@ -30,7 +34,7 @@ const SelectPelanggan = React.forwardRef(
       <AsyncSelect
         cacheOptions
         styles={selectStyles}
-        className='flex-grow border-2 shadow-lg'
+        className={`w-full border ${className}`}
         value={selectedPelanggan}
         onChange={onChangeHandler}
         placeholder='Pelanggan..'

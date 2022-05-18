@@ -19,6 +19,7 @@ import { FaPeopleCarry } from 'react-icons/fa';
 import { updateOrder } from '../../../reducers/orderReducer';
 import subscriptionService from '../../../services/subscription';
 import StatusBadge from '../../../components/StatusBadge';
+import { getLinkStaticMap } from '../../../lib/getStaticMap';
 
 const CardOrder = ({ order }) => {
   const [visibleCard, setVisibleCard] = useState(false);
@@ -63,14 +64,16 @@ const CardOrder = ({ order }) => {
     subscriptionService.broadcast(data, pengguna.token);
   };
   const finishOrderHandler = (order) => {
-    const updatedOrder = { ...order, driver: order.driver.id, status: 0 };
-    updateOrderHandler({ updatedOrder });
-    const data = {
-      title: `Orderan Driver ${order.driver.nama.toUpperCase()}`,
-      body: `Barang Tn./Ny. ${order.pengirim.nama} telah diantarkan ke Tn./Ny. ${order.penerima.nama}`,
-      target: 'admin',
-    };
-    subscriptionService.broadcast(data, pengguna.token);
+    confirm(() => {
+      const updatedOrder = { ...order, driver: order.driver.id, status: 0 };
+      updateOrderHandler({ updatedOrder });
+      const data = {
+        title: `Orderan Driver ${order.driver.nama.toUpperCase()}`,
+        body: `Barang Tn./Ny. ${order.pengirim.nama} telah diantarkan ke Tn./Ny. ${order.penerima.nama}`,
+        target: 'admin',
+      };
+      subscriptionService.broadcast(data, pengguna.token);
+    });
   };
 
   return (
@@ -226,7 +229,10 @@ const CardOrder = ({ order }) => {
                   <div className='relative w-full'>
                     {/* eslint-disable-next-line */}
                     <img
-                      src={`/assets/image/map-orderan/${order.id}.png`}
+                      src={getLinkStaticMap({
+                        origin: order.pengirim.alamat,
+                        destination: order.penerima.alamat,
+                      })}
                       alt={order.id}
                       className='rounded-lg border-2 border-white shadow-lg'
                     />
