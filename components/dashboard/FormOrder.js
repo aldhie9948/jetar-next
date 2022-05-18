@@ -1,3 +1,4 @@
+import config from '../../utils/config';
 import React, { useImperativeHandle, useRef, useState } from 'react';
 import dateFormat from '../../lib/date';
 import { toast, confirm } from '../Sweetalert2';
@@ -5,7 +6,6 @@ import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import SelectPelanggan from './SelectPelanggan';
 import SelectDriver from './SelectDriver';
 import MapComponent from './Map';
-import { apiKeyGoogle } from '../../utils/api';
 import { onChangeHandler, borderInputHandler } from '../../lib/handler';
 import { currencyNumber, localCurrency } from '../../lib/currency';
 import { createOrder } from '../../reducers/orderReducer';
@@ -412,7 +412,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
                     libraries={['places']}
                     region='ID'
                     language='id'
-                    apiKey={apiKeyGoogle()}
+                    apiKey={config.MAP_API}
                     render={render}
                   >
                     <MapComponent ref={mapsRef} />
