@@ -1,21 +1,21 @@
 import mongoose from 'mongoose';
 import validator from 'mongoose-unique-validator';
 
-const subcriptionSchema = mongoose.Schema({
+const subscriptionSchema = mongoose.Schema({
   pengguna: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Pengguna',
     required: true,
     unique: true,
   },
-  subcription: {
+  subscription: {
     type: Object,
     required: true,
   },
 });
 
-subcriptionSchema.plugin(validator);
-subcriptionSchema.set('toJSON', {
+subscriptionSchema.plugin(validator);
+subscriptionSchema.set('toJSON', {
   transform: (doc, obj) => {
     obj.id = obj._id;
     delete obj._id;
@@ -24,5 +24,5 @@ subcriptionSchema.set('toJSON', {
 });
 
 module.exports =
-  mongoose.models.Subcription ||
-  mongoose.model('Subscription', subcriptionSchema);
+  mongoose.models.Subscription ||
+  mongoose.model('Subscription', subscriptionSchema);
