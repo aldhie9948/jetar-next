@@ -25,6 +25,8 @@ const Layout = ({ title = '', children }) => {
       } else {
         router.push('/logout');
       }
+    } else {
+      router.push('/logout');
     }
   };
 
