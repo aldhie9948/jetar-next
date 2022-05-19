@@ -17,6 +17,7 @@ const Driver = () => {
 
   useEffect(() => {
     pengguna && dispatch(initDriver(pengguna.token));
+    // eslint-disable-next-line
   }, [pengguna]);
 
   return (
