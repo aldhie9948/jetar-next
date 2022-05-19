@@ -40,9 +40,10 @@ const handler = nc({
         title,
         body,
       });
-      webpush
-        .sendNotification(subscriptionObj.subscription, payload)
-        .catch((err) => console.error(err));
+      subscriptionObj &&
+        webpush
+          .sendNotification(subscriptionObj.subscription, payload)
+          .catch((err) => console.error(err));
       res.status(200).json({ status: 'OK' });
     } catch (error) {
       console.error(error);

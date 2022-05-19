@@ -27,12 +27,16 @@ const NavBar = () => {
                 </div>
               </a>
             </Link>
-            <div
-              className={`flex flex-col justify-center items-center ${styles.iconNav}`}
-            >
-              <FaRoute className={``} />
-              <div className='text-xs'>Riwayat</div>
-            </div>
+            <Link href='/pwa/drivers/riwayat'>
+              <a>
+                <div
+                  className={`flex flex-col justify-center items-center ${styles.iconNav}`}
+                >
+                  <FaRoute className={``} />
+                  <div className='text-xs'>Riwayat</div>
+                </div>
+              </a>
+            </Link>
             <div
               className={`flex flex-col justify-center items-center ${styles.iconNav}`}
             >

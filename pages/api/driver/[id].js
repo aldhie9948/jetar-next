@@ -4,6 +4,9 @@ import Driver from '../../../models/driver';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
 import Pengguna from '../../../models/pengguna';
+import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
+const saltRounds = 10;
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -21,7 +24,11 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const driver = await Driver.findById(id).populate('akun');
+      const ObjectID = mongoose.Types.ObjectId;
+      const param = new ObjectID(id.length < 12 ? '123456789012' : id);
+      const driver = await Driver.findOne({
+        $or: [{ _id: param }, { akun: param }],
+      });
       res.status(200).json(driver);
     } catch (error) {
       console.error(error.toString());
@@ -38,16 +45,23 @@ const handler = nc({
       // verifikasi token
       verifyToken(req);
 
+      // ambil driver lama
+      const oldDriver = await Driver.findById(id);
+
       // buat object pengguna untuk di update di database
       const penggunaObj = {
         ...data.akun,
-        username: data.akun.username.trim(),
-        nama: trimmer(data.akun.nama),
+        username: data.username.trim(),
+        nama: trimmer(data.nama),
       };
+
+      // jika ada password masukkan password
+      (data?.password || data?.password !== '') &&
+        (penggunaObj.password = await bcrypt.hash(data.password, saltRounds));
 
       // update pengguna dan akan mengembalikkan object pengguna yang sudah tersimpan
       const updatedPengguna = await Pengguna.findByIdAndUpdate(
-        penggunaObj.id,
+        oldDriver.akun,
         penggunaObj,
         { new: true }
       );
@@ -61,17 +75,15 @@ const handler = nc({
 
       // update driver dengan data yang baru dan
       // element akun diisi dengan updatedPengguna ObjectTypeId
-      await Driver.findByIdAndUpdate(id, driverObj, {
+      const newDriver = await Driver.findByIdAndUpdate(id, driverObj, {
         new: true,
       });
+      const populated = await newDriver.populate('akun');
 
-      // ambil data driver yang baru saja disimpan
-      // dan populate element akun
-      const newDriver = await Driver.findById(id).populate('akun');
-      res.status(201).json(newDriver);
+      res.status(201).json(populated);
     } catch (error) {
       console.error(error.toString());
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.toString() });
     }
   })
   .delete(async (req, res) => {

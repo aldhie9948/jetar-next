@@ -6,6 +6,7 @@ import { borderInputHandler } from '../../lib/handler';
 
 const selectStyles = {
   control: (styles) => ({ ...styles, borderRadius: 'none', border: 'none' }),
+  menu: (base) => ({ ...base, textTransform: 'capitalize' }),
 };
 
 const SelectDriver = React.forwardRef(({ onChange = null, ...rest }, ref) => {
@@ -14,8 +15,11 @@ const SelectDriver = React.forwardRef(({ onChange = null, ...rest }, ref) => {
   const pengguna = useSelector((s) => s.pengguna);
   const [selectedDriver, setSelectedDriver] = useState('');
   const options = () => {
+    // mengembalikan array kosong jika driver belum init
     if (!driver) return [];
-    return driver.map((m) => ({ label: m.nama, value: m.id, obj: m }));
+    // filter driver yang belum softDelete
+    const filteredDrivers = driver.filter((f) => !f.softDelete);
+    return filteredDrivers.map((m) => ({ label: m.nama, value: m.id, obj: m }));
   };
 
   const onChangeHandler = (value) => {

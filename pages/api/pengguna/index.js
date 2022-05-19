@@ -18,12 +18,9 @@ const handler = nc({
   .get(async (req, res) => {
     await connect();
     try {
-      const checkedToken = verifyToken(req);
-
-      if (checkedToken) {
-        const pengguna = await Pengguna.find({});
-        res.status(200).json(pengguna);
-      }
+      verifyToken(req);
+      const pengguna = await Pengguna.find({});
+      res.status(200).json(pengguna);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
@@ -33,17 +30,14 @@ const handler = nc({
     await connect();
     const body = req.body;
     try {
-      const checkedToken = verifyToken(req);
-
-      if (checkedToken) {
-        const password = await bcrypt.hash(
-          body?.password || 'default',
-          saltRounds
-        );
-        const pengguna = new Pengguna({ ...body, password });
-        const save = await pengguna.save();
-        res.status(201).json(save);
-      }
+      verifyToken(req);
+      const password = await bcrypt.hash(
+        body?.password || 'default',
+        saltRounds
+      );
+      const pengguna = new Pengguna({ ...body, password });
+      const save = await pengguna.save();
+      res.status(201).json(save);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });

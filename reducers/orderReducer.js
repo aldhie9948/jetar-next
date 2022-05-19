@@ -42,60 +42,35 @@ export const { set, create, update, remove } = orderSlice.actions;
 
 export const initOrder = (token) => {
   return async (dispatch) => {
-    try {
-      const response = await OrderService.get(token);
-      dispatch(set(response));
-    } catch (error) {
-      const label = 'error di order reducer:';
-      axiosError({ label, error });
-    }
+    const response = await OrderService.get(token);
+    response.error ?? dispatch(set(response));
   };
 };
 
 export const initOrdersToday = (token) => {
   return async (dispatch) => {
-    try {
-      const response = await OrderService.find('today', token);
-      dispatch(set(response));
-    } catch (error) {
-      const label = 'error di order reducer:';
-      axiosError({ label, error });
-    }
+    const response = await OrderService.find('today', token);
+    response.error ?? dispatch(set(response));
   };
 };
 
 export const createOrder = (order, token) => {
   return async (dispatch) => {
-    try {
-      const response = await OrderService.save(order, token);
-      dispatch(create(response));
-    } catch (error) {
-      const label = 'error di order reducer:';
-      axiosError({ label, error });
-    }
+    const response = await OrderService.save(order, token);
+    response.error ?? dispatch(create(response));
   };
 };
 
 export const updateOrder = (order, token) => {
   return async (dispatch) => {
-    try {
-      const response = await OrderService.update(order, token);
-      dispatch(update(response));
-    } catch (error) {
-      const label = 'error di order reducer:';
-      axiosError({ label, error });
-    }
+    const response = await OrderService.update(order, token);
+    response.error ?? dispatch(update(response));
   };
 };
 
 export const removeOrder = (order, token) => {
   return async (dispatch) => {
-    try {
-      const response = await OrderService.remove(order.id, token);
-      dispatch(remove(response));
-    } catch (error) {
-      const label = 'error di order reducer:';
-      axiosError({ label, error });
-    }
+    const response = await OrderService.remove(order.id, token);
+    response.error ?? dispatch(remove(response));
   };
 };

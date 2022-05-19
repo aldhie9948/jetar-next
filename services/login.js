@@ -1,9 +1,14 @@
 import axios from 'axios';
 const base = '/api/login';
+import { axiosError } from '../utils/errorHandler';
 
 const login = async (obj) => {
-  const res = await axios.post(base, obj);
-  return res.data;
+  try {
+    const res = await axios.post(base, obj);
+    return res.data;
+  } catch (error) {
+    return axiosError(error);
+  }
 };
 
 const verify = async (pengguna) => {
@@ -11,7 +16,7 @@ const verify = async (pengguna) => {
     const res = await axios.post(`${base}/verify`, pengguna);
     return res.data;
   } catch (error) {
-    return { status: false, message: 'Verifikasi login gagal' };
+    return axiosError(error);
   }
 };
 

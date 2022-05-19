@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BiLogInCircle } from 'react-icons/bi';
 import Button from '../../components/Button';
-import { useDispatch, useSelector } from 'react-redux';
 import LoginService from '../../services/login';
 import localStorageService from '../../lib/localStorage';
 import { useRouter } from 'next/router';
@@ -23,25 +22,18 @@ const Login = () => {
       username,
       password,
     };
-    try {
-      const penggunaLogin = await LoginService.login(pengguna);
-      console.log('pengguna login', penggunaLogin);
+
+    const penggunaLogin = await LoginService.login(pengguna);
+
+    if (!penggunaLogin.error) {
       localStorageService.set(penggunaLogin, 'pengguna');
       toast({ title: 'Login berhasil', icon: 'success' });
       router.push(route(penggunaLogin));
-    } catch (error) {
-      toast({ title: 'Username atau Password salah', icon: 'error' });
     }
-    return null;
-  };
 
-  useEffect(() => {
-    // const penggunaLocal = localStorageService.get('pengguna', true);
-    // if (penggunaLocal) {
-    //   router.push(route(penggunaLocal));
-    // }
-    // eslint-disable-next-line
-  }, []);
+    penggunaLogin.error &&
+      toast({ title: 'Username atau Password salah', icon: 'error' });
+  };
 
   return (
     <>

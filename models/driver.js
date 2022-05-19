@@ -4,8 +4,7 @@ import mongooseFuzzySearching from 'mongoose-fuzzy-searching';
 
 const driverSchema = mongoose.Schema({
   nama: { required: true, type: String, index: true },
-  noHP: { required: true, type: String, index: true, unique: true },
-  foto: { type: String },
+  noHP: { required: true, type: String, index: true },
   gender: { type: String },
   akun: {
     type: mongoose.Schema.Types.ObjectId,

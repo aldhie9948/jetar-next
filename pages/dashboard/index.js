@@ -22,6 +22,22 @@ const Dashboard = () => {
     cekOngkirRef.current.toggle();
   };
 
+  const ButtonMenu = ({ onClick, icon, label }) => {
+    return (
+      <>
+        <div className='bg-gradient-blue rounded hover:shadow-lg hover:shadow-blue-400/20'>
+          <button
+            onClick={onClick}
+            className='flex items-center gap-2 px-4 py-2'
+          >
+            {icon}
+            <div className='text-sm font-light lowercase'>{label}</div>
+          </button>
+        </div>
+      </>
+    );
+  };
+
   useEffect(() => {
     if (pengguna) {
       dispatch(initDriver(pengguna.token));
@@ -34,24 +50,16 @@ const Dashboard = () => {
     <Layout title='Dashboard'>
       <>
         <div className='w-max mb-4 flex gap-2 items-center mx-5'>
-          <div className='bg-gradient-blue rounded hover:shadow-lg hover:shadow-blue-400/20'>
-            <button
-              onClick={tambahHandler}
-              className='flex items-center gap-2 px-4 py-2'
-            >
-              <FaTruck />
-              <div className='text-sm font-light lowercase'>Tambah Order</div>
-            </button>
-          </div>
-          <div className='bg-gradient-blue rounded hover:shadow-lg hover:shadow-blue-400/20'>
-            <button
-              onClick={cekOngkirHandler}
-              className='flex items-center gap-2 px-4 py-2'
-            >
-              <FaRoute />
-              <div className='text-sm font-light lowercase'>cek ongkir</div>
-            </button>
-          </div>
+          <ButtonMenu
+            onClick={tambahHandler}
+            icon={<FaTruck />}
+            label='Tambah Order'
+          />
+          <ButtonMenu
+            onClick={cekOngkirHandler}
+            icon={<FaRoute />}
+            label='cek ongkir'
+          />
         </div>
         <CekOngkir ref={cekOngkirRef} />
         <FormOrder ref={formOrderRef} />

@@ -3,8 +3,8 @@ import nc from 'next-connect';
 import Driver from '../../../models/driver';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
-import bcrypt from 'bcrypt';
 import Pengguna from '../../../models/pengguna';
+import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
 const handler = nc({
@@ -40,7 +40,10 @@ const handler = nc({
         level: 1,
       };
 
-      const password = await bcrypt.hash(data.password, saltRounds);
+      const password = await bcrypt.hash(
+        data?.password || 'jetarjaya',
+        saltRounds
+      );
       pengguna.password = password;
 
       const penggunaModel = new Pengguna(pengguna);
@@ -50,11 +53,13 @@ const handler = nc({
         ...data,
         nama: trimmer(data.nama),
         akun: savedPengguna._id,
+        softDelete: false,
       };
 
       const driver = new Driver(driverObj);
       const savedDriver = await driver.save();
-      res.status(201).json(savedDriver);
+      const populated = await savedDriver.populate('akun');
+      res.status(201).json(populated);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });
