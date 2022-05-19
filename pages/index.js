@@ -5,7 +5,7 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/dashboard');
+    router.push('/login');
     // eslint-disable-next-line
   }, []);
 
