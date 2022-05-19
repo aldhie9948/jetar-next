@@ -20,6 +20,7 @@ import { updateOrder } from '../../../reducers/orderReducer';
 import subscriptionService from '../../../services/subscription';
 import StatusBadge from '../../../components/StatusBadge';
 import { getLinkStaticMap } from '../../../lib/getStaticMap';
+import Link from 'next/link';
 
 const CardOrder = ({ order }) => {
   const [visibleCard, setVisibleCard] = useState(false);
@@ -74,6 +75,11 @@ const CardOrder = ({ order }) => {
       };
       subscriptionService.broadcast(data, pengguna.token);
     });
+  };
+  const directionLinkBuilder = (alamat) => {
+    const base = 'https://www.google.com/maps/dir//';
+    const urlEncoded = encodeURI(alamat);
+    return base + urlEncoded;
   };
 
   return (
@@ -150,7 +156,15 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3'>
                   <BiMap className='flex-shrink-0 self-start text-lg' />
-                  <div className='truncate-3'>{order.pengirim.alamat}</div>
+                  <div className='truncate-3'>
+                    <a
+                      href={directionLinkBuilder(order.pengirim.alamat)}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      {order.pengirim.alamat}
+                    </a>
+                  </div>
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
@@ -176,7 +190,15 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3'>
                   <BiMap className='flex-shrink-0 self-start text-lg' />
-                  <div className='truncate-3'>{order.penerima.alamat}</div>
+                  <div className='truncate-3'>
+                    <a
+                      href={directionLinkBuilder(order.penerima.alamat)}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      {order.penerima.alamat}
+                    </a>
+                  </div>
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />

@@ -92,7 +92,7 @@ const Dashboard = () => {
           <strong className='header-form my-auto px-5'>
             Orderan Hari Ini..
           </strong>
-          <div className='h-[60vh] overflow-y-auto'>
+          <div className='max-h-[65vh] overflow-y-auto'>
             {driverOrders &&
               driverOrders.map(
                 (order) =>
