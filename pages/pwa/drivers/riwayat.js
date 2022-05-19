@@ -130,9 +130,11 @@ const Riwayat = () => {
 
     return (
       <>
-        {currentItems?.map((o) => (
-          <CardOrder key={o.id} order={o} />
-        ))}
+        <div className='max-h-[65vh] overflow-x-hidden overflow-y-auto mb-4'>
+          {currentItems?.map((o) => (
+            <CardOrder key={o.id} order={o} />
+          ))}
+        </div>
         <ReactPaginate
           breakLabel='...'
           nextLabel={<NextButton />}
@@ -201,9 +203,7 @@ const Riwayat = () => {
               </div>
             </div>
           </div>
-          <div className='max-h-[80vh] overflow-y-auto'>
-            <PaginatedItems itemsPerPage={itemsCount} items={filteredOrders} />
-          </div>
+          <PaginatedItems itemsPerPage={itemsCount} items={filteredOrders} />
         </div>
       </Layout>
     </>

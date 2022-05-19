@@ -37,12 +37,12 @@ const NavBar = () => {
                 </div>
               </a>
             </Link>
-            <div
+            {/* <div
               className={`flex flex-col justify-center items-center ${styles.iconNav}`}
             >
               <FaUserAlt className={``} />
               <div className='text-xs'>Profile</div>
-            </div>
+            </div> */}
 
             <Link href='/logout'>
               <a>

@@ -5,10 +5,10 @@ import { FaBars } from 'react-icons/fa';
 
 const nav = [
   '/dashboard',
-  '/statistik',
+  // '/statistik',
   '/driver',
-  '/pelanggan',
-  '/pengaturan',
+  // '/pelanggan',
+  // '/pengaturan',
   '/logout',
 ];
 
