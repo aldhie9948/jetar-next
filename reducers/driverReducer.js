@@ -4,7 +4,7 @@ import DriverService from '../services/driver';
 
 const driverSlice = createSlice({
   name: 'Driver Reducer',
-  initialState: null,
+  initialState: [],
   reducers: {
     set: (state, action) => {
       return action.payload;

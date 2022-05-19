@@ -70,9 +70,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (pengguna) {
-      const { token } = pengguna;
+      const { token, id } = pengguna;
       dispatch(initOrdersToday(token));
-      dispatch(initOneDriver(pengguna.id, token));
+      dispatch(initOneDriver(id, token));
     }
     // eslint-disable-next-line
   }, [pengguna]);

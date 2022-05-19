@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import OrderService from '../services/order';
 import dateFormat from '../lib/date';
-import { axiosError } from '../utils/errorHandler';
 
 const sort = (a, b) => {
   const x = dateFormat(`${a.tanggalOrder} ${a.waktuOrder}`, 't');
@@ -15,7 +14,7 @@ const sortStatus = (a, b) =>
 
 const orderSlice = createSlice({
   name: 'Order',
-  initialState: null,
+  initialState: [],
   reducers: {
     set: (state, action) => {
       return action.payload.sort(sort).sort(sortStatus);
@@ -50,6 +49,13 @@ export const initOrder = (token) => {
 export const initOrdersToday = (token) => {
   return async (dispatch) => {
     const response = await OrderService.find('today', token);
+    response.error ?? dispatch(set(response));
+  };
+};
+
+export const initOrdersDriver = (id, token) => {
+  return async (dispatch) => {
+    const response = await OrderService.find(id, token);
     response.error ?? dispatch(set(response));
   };
 };

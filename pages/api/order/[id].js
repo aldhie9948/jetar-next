@@ -5,6 +5,7 @@ import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
 import dateFormat from '../../../lib/date';
 import Pelanggan from '../../../models/pelanggan';
+import mongoose from 'mongoose';
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -27,7 +28,18 @@ const handler = nc({
         const today = dateFormat(new Date(), 'yyyy-MM-dd');
         order = await Order.find({ tanggalOrder: today }).populate('driver');
       } else {
-        order = await Order.findById(id).populate('driver');
+        const ObjectId = mongoose.Types.ObjectId;
+        const param = new ObjectId(id.length < 12 ? '123456789012' : id);
+        order = await Order.find({
+          $or: [
+            {
+              _id: param,
+            },
+            {
+              driver: param,
+            },
+          ],
+        }).populate('driver');
       }
       res.status(200).json(order);
     } catch (error) {
