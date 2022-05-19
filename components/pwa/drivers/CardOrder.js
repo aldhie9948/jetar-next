@@ -19,8 +19,10 @@ import { FaPeopleCarry } from 'react-icons/fa';
 import { updateOrder } from '../../../reducers/orderReducer';
 import subscriptionService from '../../../services/subscription';
 import StatusBadge from '../../../components/StatusBadge';
-import { getLinkStaticMap } from '../../../lib/getStaticMap';
-import Link from 'next/link';
+import {
+  getLinkStaticMap,
+  directionLinkBuilder,
+} from '../../../lib/getStaticMap';
 
 const CardOrder = ({ order }) => {
   const [visibleCard, setVisibleCard] = useState(false);
@@ -75,11 +77,6 @@ const CardOrder = ({ order }) => {
       };
       subscriptionService.broadcast(data, pengguna.token);
     });
-  };
-  const directionLinkBuilder = (alamat) => {
-    const base = 'https://www.google.com/maps/dir//';
-    const urlEncoded = encodeURI(alamat);
-    return base + urlEncoded;
   };
 
   return (

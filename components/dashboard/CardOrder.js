@@ -22,7 +22,7 @@ import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
 import subscriptionService from '../../services/subscription';
 import StatusBadge from '../StatusBadge';
-import { getLinkStaticMap } from '../../lib/getStaticMap';
+import { getLinkStaticMap, directionLinkBuilder } from '../../lib/getStaticMap';
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -190,7 +190,15 @@ const CardOrder = ({ order, onEdit }) => {
               </div>
               <div className='flex gap-2 items-center mb-3'>
                 <BiMap className='flex-shrink-0 self-start text-lg' />
-                <div className='truncate-3'>{order.pengirim.alamat}</div>
+                <div className='truncate-3'>
+                  <a
+                    href={directionLinkBuilder(order.pengirim.alamat)}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    {order.pengirim.alamat}
+                  </a>
+                </div>
               </div>
               <div className='flex gap-2 items-center mb-3 lowercase'>
                 <BiNotepad className='flex-shrink-0 self-start text-lg' />
@@ -216,7 +224,15 @@ const CardOrder = ({ order, onEdit }) => {
               </div>
               <div className='flex gap-2 items-center mb-3'>
                 <BiMap className='flex-shrink-0 self-start text-lg' />
-                <div className='truncate-3'>{order.penerima.alamat}</div>
+                <div className='truncate-3'>
+                  <a
+                    href={directionLinkBuilder(order.pengirim.alamat)}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    {order.pengirim.alamat}
+                  </a>
+                </div>
               </div>
               <div className='flex gap-2 items-center mb-3 lowercase'>
                 <BiNotepad className='flex-shrink-0 self-start text-lg' />
