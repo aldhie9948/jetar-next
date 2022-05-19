@@ -1,8 +1,8 @@
 {
-  "name": "JETAR Ongkir",
+  "name": "Jasa Antar Jemput Kota Tegal",
   "short_name": "JETAR",
-  "scope": "/",
-  "start_url": "/",
+  "scope": "http://localhost:3000/",
+  "start_url": "http://localhost:3000/",
   "description": "Jasa Antar Jemput Kota Tegal & Sekitanya",
   "icons": [
     {

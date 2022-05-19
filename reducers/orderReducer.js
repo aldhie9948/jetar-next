@@ -52,6 +52,18 @@ export const initOrder = (token) => {
   };
 };
 
+export const initOrdersToday = (token) => {
+  return async (dispatch) => {
+    try {
+      const response = await OrderService.find('today', token);
+      dispatch(set(response));
+    } catch (error) {
+      const label = 'error di order reducer:';
+      axiosError({ label, error });
+    }
+  };
+};
+
 export const createOrder = (order, token) => {
   return async (dispatch) => {
     try {

@@ -14,9 +14,6 @@ import { toast } from '../../components/Sweetalert2';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const pengguna = useSelector((state) => state.pengguna);
-
-  const dispatch = useDispatch();
   const formRef = useRef();
   const router = useRouter();
 
@@ -28,6 +25,7 @@ const Login = () => {
     };
     try {
       const penggunaLogin = await LoginService.login(pengguna);
+      console.log('pengguna login', penggunaLogin);
       localStorageService.set(penggunaLogin, 'pengguna');
       toast({ title: 'Login berhasil', icon: 'success' });
       router.push(route(penggunaLogin));
@@ -38,10 +36,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    const penggunaLocal = localStorageService.get('pengguna', true);
-    if (penggunaLocal) {
-      router.push(route(penggunaLocal));
-    }
+    // const penggunaLocal = localStorageService.get('pengguna', true);
+    // if (penggunaLocal) {
+    //   router.push(route(penggunaLocal));
+    // }
     // eslint-disable-next-line
   }, []);
 

@@ -6,20 +6,30 @@ import localStorageService from '../lib/localStorage';
 import { initPengguna } from '../reducers/penggunaReducer';
 import NavBar from '../components/NavBar';
 import { registerPush } from '../lib/serviceWorker';
+import loginService from '../services/login';
+import route from '../lib/route';
 
 const Layout = ({ title = '', children }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const pengguna = useSelector((state) => state.pengguna);
 
-  useEffect(() => {
+  const verifyPengguna = async () => {
     const penggunaLocal = localStorageService.get('pengguna', true);
     if (penggunaLocal) {
-      dispatch(initPengguna(penggunaLocal));
-      registerPush({ pengguna: penggunaLocal });
+      const verify = await loginService.verify(penggunaLocal);
+      if (verify.status) {
+        penggunaLocal.level !== 0 && router.push(route(penggunaLocal));
+        dispatch(initPengguna(penggunaLocal));
+        registerPush({ pengguna: penggunaLocal });
+      } else {
+        router.push('/logout');
+      }
     }
-    if (penggunaLocal && penggunaLocal.level !== 0) router.push('/');
-    if (!penggunaLocal) router.push('/login');
+  };
+
+  useEffect(() => {
+    verifyPengguna().catch((err) => console.log('verify error:', err));
     // eslint-disable-next-line
   }, []);
 

@@ -31,7 +31,6 @@
     "sweetalert2": "^11.4.14",
     "sweetalert2-react-content": "^5.0.0",
     "tls": "^0.0.1",
-    "uuid-token-generator": "^1.0.0",
     "web-push": "^3.5.0"
   },
   "devDependencies": {

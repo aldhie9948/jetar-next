@@ -1,17 +1,11 @@
 import React, { useEffect } from 'react';
-import localStorageService from '../lib/localStorage';
 import { useRouter } from 'next/router';
-import route from '../lib/route';
 
 const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const penggunaLocal = localStorageService.get('pengguna', true);
-    if (!penggunaLocal) router.push('/login');
-
-    if (penggunaLocal) router.push(route(penggunaLocal));
-
+    router.push('/dashboard');
     // eslint-disable-next-line
   }, []);
 

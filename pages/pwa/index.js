@@ -1,15 +1,23 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 
 const PwaRedirect = () => {
-  const router = useRouter();
-
   React.useEffect(() => {
-    router.push('/');
+    router.push('/pwa/drivers');
     // eslint-disable-next-line
   }, []);
 
-  return <></>;
+  return (
+    <>
+      <div className='fixed bg-black/20 inset-0'></div>
+      <div className='flex z-[9999] absolute inset-0'>
+        <div className='lds-facebook m-auto'>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default PwaRedirect;

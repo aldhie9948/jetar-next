@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FcBusinessman } from 'react-icons/fc';
 import { initDriver } from '../../../reducers/driverReducer';
-import { initOrder } from '../../../reducers/orderReducer';
+import { initOrdersToday } from '../../../reducers/orderReducer';
 import { localCurrency } from '../../../lib/currency';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import Layout from '../../../components/pwa/drivers/Layout';
@@ -75,35 +75,36 @@ const Dashboard = () => {
   const pengguna = useSelector((s) => s.pengguna);
   const drivers = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
-  const [currentDriver, setCurrentDriver] = React.useState(null);
+  const [currentDriver, setCurrentDriver] = React.useState({});
   const [driverOrders, setDriverOrders] = React.useState([]);
 
   useEffect(() => {
-    dispatch(initOrder(pengguna?.token));
-    dispatch(initDriver(pengguna?.token));
+    if (pengguna) {
+      dispatch(initOrdersToday(pengguna.token));
+      dispatch(initDriver(pengguna.token));
+    }
+    // eslint-disable-next-line
   }, [pengguna]);
 
   useEffect(() => {
-    setCurrentDriver(
-      drivers?.find((d) => d.akun.username === pengguna?.username)
-    );
-    // eslint-disable-next-line
-  }, [drivers]);
+    if (pengguna && drivers) {
+      const selectedDriver = drivers.find(
+        (d) => d.akun.username === pengguna.username
+      );
+      setCurrentDriver(selectedDriver);
+    }
 
-  useEffect(() => {
-    // sorting orderan sesuai dengan driver dan tanggal
-    const selectedOrders = orders?.filter((order) => {
-      if (
-        order.driver.id === currentDriver?.id &&
-        order.tanggalOrder === dateFormat(new Date(), 'yyyy-MM-dd')
-      )
-        return true;
-      return false;
-    });
-    setDriverOrders(selectedOrders);
+    if (orders && currentDriver) {
+      // sorting orderan sesuai dengan driver dan tanggal
+      const selectedOrders = orders.filter((order) => {
+        if (order.driver.id === currentDriver?.id) return true;
+        return false;
+      });
+      setDriverOrders(selectedOrders);
+    }
 
     // eslint-disable-next-line
-  }, [currentDriver, orders]);
+  }, [currentDriver, orders, drivers]);
 
   return (
     <Layout>

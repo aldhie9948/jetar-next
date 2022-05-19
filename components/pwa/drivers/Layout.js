@@ -8,6 +8,8 @@ import localStorageService from '../../../lib/localStorage';
 import Link from 'next/link';
 import { registerPush } from '../../../lib/serviceWorker';
 import { useRouter } from 'next/router';
+import route from '../../../lib/route';
+import loginService from '../../../services/login';
 
 const NavBar = () => {
   return (
@@ -73,14 +75,24 @@ const Layout = ({ children }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const pengguna = useSelector((state) => state.pengguna);
-  React.useEffect(() => {
+
+  const verifyPengguna = async () => {
     const penggunaLocal = localStorageService.get('pengguna', true);
     if (penggunaLocal) {
-      dispatch(initPengguna(penggunaLocal));
-      registerPush({ pengguna: penggunaLocal });
+      const verify = await loginService.verify(penggunaLocal);
+      console.log('verify', verify);
+      if (verify.status) {
+        penggunaLocal.level !== 1 && router.push(route(penggunaLocal));
+        dispatch(initPengguna(penggunaLocal));
+        registerPush({ pengguna: penggunaLocal });
+      } else {
+        router.push('/logout');
+      }
     }
-    if (penggunaLocal && penggunaLocal.level !== 1) router.push('/');
-    if (!penggunaLocal) router.push('/login');
+  };
+
+  React.useEffect(() => {
+    verifyPengguna().catch((err) => console.log('verify error:', err));
     // eslint-disable-next-line
   }, []);
 

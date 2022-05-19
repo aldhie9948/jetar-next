@@ -44,15 +44,11 @@ const Orders = ({ onEdit }) => {
               <div className='max-h-[44rem] pb-[5rem] overflow-y-auto px-5'>
                 {filteredOrders &&
                   filteredOrders.map((order) => (
-                    <>
+                    <div key={order.id}>
                       {order.status !== 0 && (
-                        <CardOrder
-                          key={order.id}
-                          order={order}
-                          onEdit={onEdit}
-                        />
+                        <CardOrder order={order} onEdit={onEdit} />
                       )}
-                    </>
+                    </div>
                   ))}
               </div>
             </div>

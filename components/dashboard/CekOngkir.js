@@ -38,16 +38,25 @@ const CekOngkir = React.forwardRef(({}, ref) => {
 
   // update state dengan pelanggan yang terpilih
   const onChangePelanggan = (pelanggan, setter) => {
-    console.log(pelanggan);
-    setter(pelanggan.obj.alamat);
+    if (pelanggan) return setter(pelanggan.obj.alamat);
+    return setter('');
   };
+
+  const onBlurInput = (e, setter) => setter(e.target.value);
 
   const onChangeInput = (e, setter) => {
     setter(e.target.value);
   };
 
+  const toggle = () => {
+    setOngkir(0);
+    setOrigin('');
+    setDestination('');
+    setVisible(!visible);
+  };
+
   useImperativeHandle(ref, () => ({
-    toggle: () => setVisible(!visible),
+    toggle,
   }));
   return (
     <>
@@ -76,6 +85,7 @@ const CekOngkir = React.forwardRef(({}, ref) => {
                     id='alamat-pengirim-cek-ongkir'
                     value={origin}
                     onChange={(e) => onChangeInput(e, setOrigin)}
+                    onBlur={(e) => onBlurInput(e, setOrigin)}
                   />
                 </div>
               </div>
@@ -99,6 +109,7 @@ const CekOngkir = React.forwardRef(({}, ref) => {
                     id='alamat-penerima-cek-ongkir'
                     value={destination}
                     onChange={(e) => onChangeInput(e, setDestination)}
+                    onBlur={(e) => onBlurInput(e, setDestination)}
                   />
                 </div>
               </div>

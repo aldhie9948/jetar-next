@@ -11,7 +11,7 @@ const Logout = () => {
   useEffect(() => {
     dispatch(initPengguna(null));
     localStorageService.clear();
-    router.push('/');
+    router.push('/login');
     // eslint-disable-next-line
   }, []);
 };

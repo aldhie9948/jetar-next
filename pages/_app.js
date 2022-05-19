@@ -1,10 +1,8 @@
 import '../styles/globals.css';
 import { Provider } from 'react-redux';
 import store from '../store';
-import { useEffect } from 'react';
 import webpush from 'web-push';
 import config from '../utils/config';
-import { registerServiceWorker } from '../lib/serviceWorker';
 import Head from 'next/head';
 
 webpush.setVapidDetails(

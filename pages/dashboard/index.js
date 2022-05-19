@@ -4,7 +4,7 @@ import CekOngkir from '../../components/dashboard/CekOngkir';
 import Orders from '../../components/dashboard/Orders';
 import { initDriver } from '../../reducers/driverReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { initOrder } from '../../reducers/orderReducer';
+import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
 
 import { FaTruck, FaRoute } from 'react-icons/fa';
@@ -23,8 +23,10 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    dispatch(initDriver(pengguna?.token));
-    dispatch(initOrder(pengguna?.token));
+    if (pengguna) {
+      dispatch(initDriver(pengguna.token));
+      dispatch(initOrdersToday(pengguna.token));
+    }
     // eslint-disable-next-line
   }, [pengguna]);
 

@@ -3,7 +3,7 @@ import nc from 'next-connect';
 import Order from '../../../models/order';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
-import getStaticMap, { removeMaps } from '../../../lib/getStaticMap';
+import dateFormat from '../../../lib/date';
 import Pelanggan from '../../../models/pelanggan';
 
 const handler = nc({
@@ -22,7 +22,13 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const order = await Order.findById(id).populate('driver');
+      let order = {};
+      if (id === 'today') {
+        const today = dateFormat(new Date(), 'yyyy-MM-dd');
+        order = await Order.find({ tanggalOrder: today }).populate('driver');
+      } else {
+        order = await Order.findById(id).populate('driver');
+      }
       res.status(200).json(order);
     } catch (error) {
       console.error(error.toString());

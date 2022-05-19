@@ -140,7 +140,7 @@ const CekOngkirMap = React.memo(
           'alamat-pengirim-cek-ongkir'
         );
         const targetPenerima = document.getElementById(
-          'alamat-pengirim-cek-ongkir'
+          'alamat-penerima-cek-ongkir'
         );
         autoCompletePlaces(targetPengirim);
         autoCompletePlaces(targetPenerima);
