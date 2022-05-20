@@ -2,12 +2,16 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Layout from '../../../components/pwa/drivers/Layout';
 import { initOneDriver } from '../../../reducers/driverReducer';
-import { initOrder, initOrdersDriver } from '../../../reducers/orderReducer';
+import { initOrdersDriver } from '../../../reducers/orderReducer';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import ReactPaginate from 'react-paginate';
 import { BsArrowRightCircleFill, BsArrowLeftCircleFill } from 'react-icons/bs';
 import dateFormat from '../../../lib/date';
-import { getUnixTime } from 'date-fns';
+import Pusher from 'pusher-js';
+
+const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_PUBLIC_KEY, {
+  cluster: 'ap1',
+});
 
 const Riwayat = () => {
   const pengguna = useSelector((s) => s.pengguna);
@@ -28,7 +32,17 @@ const Riwayat = () => {
     if (pengguna) {
       const { token, id } = pengguna;
       dispatch(initOneDriver(id, token));
+      const channel = pusher.subscribe('jetar-channel');
+      channel.bind('save-order', (data) => {
+        console.log('pusher:', data);
+        dispatch(initOneDriver(id, token));
+      });
     }
+
+    return () => {
+      pusher.unsubscribe('jetar-channel');
+    };
+
     // eslint-disable-next-line
   }, [pengguna]);
 

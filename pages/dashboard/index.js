@@ -8,6 +8,12 @@ import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
 import { FaTruck, FaRoute } from 'react-icons/fa';
 
+import Pusher from 'pusher-js';
+
+const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_PUBLIC_KEY, {
+  cluster: 'ap1',
+});
+
 const Dashboard = () => {
   const formOrderRef = useRef();
   const cekOngkirRef = useRef();
@@ -42,7 +48,16 @@ const Dashboard = () => {
       const { token } = pengguna;
       dispatch(initDriver(token));
       dispatch(initOrdersToday(token));
+
+      const channel = pusher.subscribe('jetar-channel');
+      channel.bind('save-order', (data) => {
+        console.log('pusher:', data);
+        dispatch(initOrdersToday(token));
+      });
     }
+    return () => {
+      pusher.unsubscribe('jetar-channel');
+    };
     // eslint-disable-next-line
   }, [pengguna]);
 

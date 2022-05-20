@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import localStorageService from '../lib/localStorage';
 import { initPengguna } from '../reducers/penggunaReducer';
 import NavBar from '../components/NavBar';
-import { registerPush } from '../lib/serviceWorker';
+import { registerServiceWorker } from '../lib/serviceWorker';
 import loginService from '../services/login';
 import route from '../lib/route';
 
@@ -22,7 +22,7 @@ const Layout = ({ title = '', children }) => {
       if (verify.status) {
         penggunaLocal.level !== 0 && router.push(route(penggunaLocal));
         dispatch(initPengguna(penggunaLocal));
-        registerPush({ pengguna: penggunaLocal });
+        registerServiceWorker();
       } else {
         router.push('/logout');
       }
@@ -33,6 +33,7 @@ const Layout = ({ title = '', children }) => {
 
   useEffect(() => {
     verifyPengguna().catch((err) => console.log('verify error:', err));
+
     // eslint-disable-next-line
   }, []);
 

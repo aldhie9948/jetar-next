@@ -6,6 +6,11 @@ import { initOrdersToday } from '../../../reducers/orderReducer';
 import { localCurrency } from '../../../lib/currency';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import Layout from '../../../components/pwa/drivers/Layout';
+import Pusher from 'pusher-js';
+
+const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_PUBLIC_KEY, {
+  cluster: 'ap1',
+});
 
 const CardDriver = ({ driverOrders }) => {
   const driver = useSelector((s) => s.driver);
@@ -73,7 +78,16 @@ const Dashboard = () => {
       const { token, id } = pengguna;
       dispatch(initOrdersToday(token));
       dispatch(initOneDriver(id, token));
+      const channel = pusher.subscribe('jetar-channel');
+      channel.bind('save-order', (data) => {
+        console.log('pusher:', data);
+        dispatch(initOrdersToday(token));
+      });
     }
+
+    return () => {
+      pusher.unsubscribe('jetar-channel');
+    };
     // eslint-disable-next-line
   }, [pengguna]);
 

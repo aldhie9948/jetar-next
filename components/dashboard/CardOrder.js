@@ -22,6 +22,7 @@ import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
 import StatusBadge from '../StatusBadge';
 import { getLinkStaticMap, directionLinkBuilder } from '../../lib/getStaticMap';
+import axios from 'axios';
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -82,10 +83,11 @@ const CardOrder = ({ order, onEdit }) => {
 
   // fn / handler untuk mengupdate order yang digunakan di card order
   // fn harus diberikan args "updatedOrder" yang akan dikirim ke api order
-  const updateOrderHandler = ({ updatedOrder }) => {
+  const updateOrderHandler = async ({ updatedOrder }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
       toast({ title: 'Update order berhasil', icon: 'success' });
+      await axios.post('/api/pusher', { event: 'save-order' });
     } catch (error) {
       console.error(error);
       toast({ title: 'Update order gagal', icon: 'error' });

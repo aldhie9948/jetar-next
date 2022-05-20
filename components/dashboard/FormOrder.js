@@ -11,6 +11,7 @@ import { createOrder, initOrdersToday } from '../../reducers/orderReducer';
 import styles from '../../styles/Dashboard.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateOrder } from '../../reducers/orderReducer';
+import axios from 'axios';
 
 const Input = ({
   label = '',
@@ -126,6 +127,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
       }
       toast({ title: 'Order berhasil disimpan', icon: 'success' });
       toggle();
+      await axios.post('/api/pusher', { event: 'save-order' });
     });
   };
 

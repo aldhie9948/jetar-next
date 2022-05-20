@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import React from 'react';
-import { FaHome, FaSignOutAlt, FaUserAlt, FaRoute } from 'react-icons/fa';
+import { FaHome, FaSignOutAlt, FaRoute } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { initPengguna } from '../../../reducers/penggunaReducer';
 import styles from '../../../styles/pwa/Driver.module.css';
 import localStorageService from '../../../lib/localStorage';
 import Link from 'next/link';
-import { registerPush } from '../../../lib/serviceWorker';
+import { registerServiceWorker } from '../../../lib/serviceWorker';
 import { useRouter } from 'next/router';
 import route from '../../../lib/route';
 import loginService from '../../../services/login';
@@ -88,7 +88,7 @@ const Layout = ({ children }) => {
       if (verify.status) {
         penggunaLocal.level !== 1 && router.push(route(penggunaLocal));
         dispatch(initPengguna(penggunaLocal));
-        registerPush({ pengguna: penggunaLocal });
+        registerServiceWorker();
       } else {
         router.push('/logout');
       }
@@ -99,6 +99,7 @@ const Layout = ({ children }) => {
 
   React.useEffect(() => {
     verifyPengguna().catch((err) => console.log('verify error:', err));
+
     // eslint-disable-next-line
   }, []);
 
