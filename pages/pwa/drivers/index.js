@@ -110,12 +110,7 @@ const Dashboard = () => {
 
           {console.log(header.current.offsetTop)}
 
-          <div
-            className='box-border overflow-y-auto'
-            style={{
-              height: window.innerHeight - header.current.offsetTop - 120,
-            }}
-          >
+          <div className='box-border overflow-y-auto'>
             {driverOrders &&
               driverOrders.map(
                 (order) =>
