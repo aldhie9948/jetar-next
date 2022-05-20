@@ -1,7 +1,6 @@
+import Pengguna from '../../../models/pengguna';
 import connect from '../../../lib/connect';
 import nc from 'next-connect';
-import Pengguna from '../../../models/pengguna';
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from '../../../utils/config';
 

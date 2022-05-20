@@ -1,9 +1,9 @@
+import Pengguna from '../../../models/pengguna';
+import Driver from '../../../models/driver';
 import connect from '../../../lib/connect';
 import nc from 'next-connect';
-import Driver from '../../../models/driver';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
-import Pengguna from '../../../models/pengguna';
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 

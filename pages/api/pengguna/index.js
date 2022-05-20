@@ -1,8 +1,8 @@
+import Pengguna from '../../../models/pengguna';
 import connect from '../../../lib/connect';
 import nc from 'next-connect';
-import Pengguna from '../../../models/pengguna';
 import bcrypt from 'bcrypt';
-import { getToken, verifyToken } from '../../../lib/token';
+import { verifyToken } from '../../../lib/token';
 
 const saltRounds = 10;
 

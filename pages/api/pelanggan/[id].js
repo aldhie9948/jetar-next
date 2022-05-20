@@ -1,6 +1,6 @@
+import Pelanggan from '../../../models/pelanggan';
 import connect from '../../../lib/connect';
 import nc from 'next-connect';
-import Pelanggan from '../../../models/pelanggan';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
 

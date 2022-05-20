@@ -1,11 +1,9 @@
 import connect from '../../../lib/connect';
-import nc from 'next-connect';
 import Order from '../../../models/order';
 import Pelanggan from '../../../models/pelanggan';
+import nc from 'next-connect';
 import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
-
-import getStaticMap from '../../../lib/getStaticMap';
 
 const handler = nc({
   onError: (err, req, res, next) => {
