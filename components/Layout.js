@@ -1,3 +1,4 @@
+import config from '../utils/config';
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';

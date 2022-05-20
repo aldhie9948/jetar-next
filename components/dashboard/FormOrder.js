@@ -1,4 +1,3 @@
-import config from '../../utils/config';
 import React, { useImperativeHandle, useRef, useState } from 'react';
 import dateFormat from '../../lib/date';
 import { toast, confirm } from '../Sweetalert2';
@@ -12,6 +11,7 @@ import { createOrder } from '../../reducers/orderReducer';
 import styles from '../../styles/Dashboard.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateOrder } from '../../reducers/orderReducer';
+import axios from 'axios';
 
 const Input = ({
   label = '',
@@ -119,21 +119,17 @@ const FormOrder = React.forwardRef(({}, ref) => {
       talang: currencyNumber(talang),
       polyline,
     };
-    try {
-      confirm(() => {
-        if (idOrder) {
-          data.id = idOrder;
-          dispatch(updateOrder(data, pengguna?.token));
-        } else {
-          dispatch(createOrder(data, pengguna?.token));
-        }
-        toast({ title: 'Order berhasil disimpan', icon: 'success' });
-        toggle();
-      });
-    } catch (error) {
-      console.log('error:', error);
-      toast({ title: 'Order gagal disimpan', icon: 'error' });
-    }
+    confirm(async () => {
+      if (idOrder) {
+        data.id = idOrder;
+        dispatch(updateOrder(data, pengguna?.token));
+      } else {
+        dispatch(createOrder(data, pengguna?.token));
+      }
+      toast({ title: 'Order berhasil disimpan', icon: 'success' });
+      toggle();
+      await axios.post('/api/pusher', { message: 'simpan/update order' });
+    });
   };
 
   // isi form pengirim saat pilih pelanggan
@@ -412,7 +408,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
                     libraries={['places']}
                     region='ID'
                     language='id'
-                    apiKey={config.MAP_API}
+                    apiKey={process.env.NEXT_PUBLIC_MAPS_API}
                     render={render}
                   >
                     <MapComponent ref={mapsRef} />

@@ -6,8 +6,8 @@ import { initDriver } from '../../reducers/driverReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
-
 import { FaTruck, FaRoute } from 'react-icons/fa';
+import Pusher from 'pusher-js';
 
 const Dashboard = () => {
   const formOrderRef = useRef();
@@ -20,6 +20,20 @@ const Dashboard = () => {
   };
   const cekOngkirHandler = () => {
     cekOngkirRef.current.toggle();
+  };
+
+  const reloadOrderPusher = (token) => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY, {
+      cluster: 'ap1',
+    });
+    const channel = pusher.subscribe('jetar-channel');
+    channel.bind('orderan', (data) => {
+      console.log(data.message);
+      dispatch(initOrdersToday(token));
+    });
+    return () => {
+      pusher.unsubscribe('orderan');
+    };
   };
 
   const ButtonMenu = ({ onClick, icon, label }) => {
@@ -40,8 +54,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (pengguna) {
-      dispatch(initDriver(pengguna.token));
-      dispatch(initOrdersToday(pengguna.token));
+      const { token } = pengguna;
+      dispatch(initDriver(token));
+      dispatch(initOrdersToday(token));
+      reloadOrderPusher(token);
     }
     // eslint-disable-next-line
   }, [pengguna]);

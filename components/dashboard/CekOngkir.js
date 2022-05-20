@@ -4,7 +4,6 @@ import { BiStoreAlt, BiBox } from 'react-icons/bi';
 import SelectPelanggan from '../../components/dashboard/SelectPelanggan';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import CekOngkirMap from './CekOngkirMap';
-import config from '../../utils/config';
 import styles from '../../styles/Dashboard.module.css';
 import { localCurrency } from '../../lib/currency';
 
@@ -129,7 +128,7 @@ const CekOngkir = React.forwardRef(({}, ref) => {
                 libraries={['places']}
                 region='ID'
                 language='id'
-                apiKey={config.MAP_API}
+                apiKey={process.env.NEXT_PUBLIC_MAPS_API}
                 render={render}
               >
                 <CekOngkirMap ref={mapRef} />

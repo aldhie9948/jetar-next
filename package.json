@@ -21,6 +21,8 @@
     "net": "^1.0.2",
     "next": "12.1.6",
     "next-connect": "^0.12.2",
+    "pusher": "^5.1.0-beta",
+    "pusher-js": "^7.1.0-beta",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-google-places-autocomplete": "^3.3.4",
