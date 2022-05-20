@@ -43,7 +43,7 @@ const CardOrder = ({ order }) => {
   // fn untuk membuka / memulai chat whatsapp dengan
   // nomor yang diberikan dei argument
   const whatsappHandler = (phone) => {
-    window.open(`whatsapp://send?phone=${phone}`, '_top');
+    window.open(`whatsapp://send?phone=62${phone}`, '_top');
   };
 
   // fn / handler untuk mengupdate order yang digunakan di card order

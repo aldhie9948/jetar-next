@@ -65,16 +65,18 @@ const CardOrder = ({ order, onEdit }) => {
   // fn untuk membuka / memulai chat whatsapp dengan
   // nomor yang diberikan dei argument
   const whatsappHandler = (phone) => {
-    window.open(`whatsapp://send?phone=${phone}`, '_top');
+    window.open(`whatsapp://send?phone=62${phone}`, '_top');
   };
 
   // fn untuk membuat array baru dari driver redux
   // untuk diberikan ke react-select driver
-  const driverOptions = drivers?.map((driver) => ({
-    value: driver.id,
-    label: driver.nama,
-    obj: driver,
-  }));
+  const driverOptions =
+    drivers &&
+    drivers?.map((driver) => ({
+      value: driver.id,
+      label: driver.nama,
+      obj: driver,
+    }));
 
   // fn untuk mengatur default option react-select driver
   // di card order sesuai dengan id driver yang diberikan di args

@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Layout from '../../../components/pwa/drivers/Layout';
 import { initOneDriver } from '../../../reducers/driverReducer';
-import { initOrder, initOrdersDriver } from '../../../reducers/orderReducer';
+import { initOrdersDriver } from '../../../reducers/orderReducer';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import ReactPaginate from 'react-paginate';
 import { BsArrowRightCircleFill, BsArrowLeftCircleFill } from 'react-icons/bs';
 import dateFormat from '../../../lib/date';
-import { getUnixTime } from 'date-fns';
 
 const Riwayat = () => {
   const pengguna = useSelector((s) => s.pengguna);
@@ -39,15 +38,15 @@ const Riwayat = () => {
       dispatch(initOrdersDriver(id, token));
     }
     // eslint-disable-next-line
-  }, [driver, pengguna]);
+  }, [driver]);
 
   useEffect(() => {
-    if (orders && driver) {
+    if (orders) {
       const finishedOrder = orders.filter((f) => f.status === 0);
       setDriverOrders(finishedOrder);
       setFilteredOrders(finishedOrder);
     }
-  }, [orders, driver]);
+  }, [orders]);
 
   useEffect(() => {
     const data = driverOrders.filter((d) => {
@@ -130,7 +129,7 @@ const Riwayat = () => {
 
     return (
       <>
-        <div className='max-h-[65vh] overflow-x-hidden overflow-y-auto mb-4'>
+        <div className='max-h-[50vh] overflow-x-hidden overflow-y-auto mb-4'>
           {currentItems?.map((o) => (
             <CardOrder key={o.id} order={o} />
           ))}
