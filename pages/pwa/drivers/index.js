@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FcBusinessman, FcBusinesswoman } from 'react-icons/fc';
 import { initOneDriver } from '../../../reducers/driverReducer';
@@ -69,6 +69,7 @@ const Dashboard = () => {
   const driver = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
   const [driverOrders, setDriverOrders] = React.useState([]);
+  const header = useRef();
 
   const socketInitializer = async (token) => {
     await fetch('/api/socket');
@@ -87,6 +88,7 @@ const Dashboard = () => {
       dispatch(initOneDriver(id, token));
       socketInitializer(token);
     }
+
     // eslint-disable-next-line
   }, [pengguna]);
 
@@ -102,10 +104,18 @@ const Dashboard = () => {
       <>
         <CardDriver driverOrders={driverOrders} />
         <div>
-          <strong className='header-form my-auto px-5'>
+          <strong ref={header} className='header-form my-auto px-5'>
             Orderan Hari Ini..
           </strong>
-          <div className='max-h-[50vh] overflow-y-auto'>
+
+          {console.log(header.current.offsetTop)}
+
+          <div
+            className='box-border overflow-y-auto'
+            style={{
+              height: window.innerHeight - header.current.offsetTop - 120,
+            }}
+          >
             {driverOrders &&
               driverOrders.map(
                 (order) =>

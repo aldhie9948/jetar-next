@@ -14,7 +14,10 @@ import loginService from '../../../services/login';
 const NavBar = () => {
   return (
     <>
-      <div className='absolute left-0 right-0 bottom-0 shadow-top z-[9999] bg-green-300 rounded-tl-xl rounded-tr-xl'>
+      <div
+        className='fixed max-h-16 left-0 right-0 bottom-0 shadow-top z-[9999] bg-green-300 rounded-tl-xl rounded-tr-xl'
+        id='navbar-bottom'
+      >
         <div className='px-2 py-3'>
           <div className='flex gap-2 justify-around items-center text-green-900'>
             <Link href='/pwa/drivers'>
@@ -106,7 +109,7 @@ const Layout = ({ children }) => {
     <>
       {pengguna && pengguna?.level === 1 && (
         <>
-          <div className='sm:max-w-screen-sm sm:mx-auto overflow-hidden'>
+          <div className='sm:max-w-screen-sm sm:mx-auto overflow-x-hidden'>
             <Head>
               <title>JETAR Driver</title>
             </Head>

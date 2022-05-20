@@ -116,6 +116,7 @@ const CardOrder = ({ order, onEdit }) => {
   const kirimOrderHandler = (order) => {
     const updatedOrder = { ...order, driver: order.driver.id, status: 2 };
     updateOrderHandler({ updatedOrder });
+    socket.emit('reload-order');
   };
   return (
     <div
@@ -201,7 +202,7 @@ const CardOrder = ({ order, onEdit }) => {
               </div>
               <div className='flex gap-2 items-center mb-3 lowercase'>
                 <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                <div className='truncate-3'>{order.pengirim.keterangan}</div>
+                <div className='break-all'>{order.pengirim.keterangan}</div>
               </div>
             </div>
             {/* penerima section */}
@@ -235,7 +236,7 @@ const CardOrder = ({ order, onEdit }) => {
               </div>
               <div className='flex gap-2 items-center mb-3 lowercase'>
                 <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                <div className='truncate-3'>{order.penerima.keterangan}</div>
+                <div className='break-all'>{order.penerima.keterangan}</div>
               </div>
             </div>
             {/* quickedit section */}

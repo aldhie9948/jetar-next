@@ -13,6 +13,7 @@ const SocketHandler = (req, res) => {
         console.log('user disconnected');
       });
       socket.on('reload-order', () => {
+        console.log('reload-order');
         socket.broadcast.emit('latest-order');
       });
     });
