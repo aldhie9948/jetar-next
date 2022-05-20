@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
 import { FaTruck, FaRoute } from 'react-icons/fa';
-import io from 'Socket.IO-client';
+import io from 'socket.io-client';
 const socket = io();
 
 const Dashboard = () => {

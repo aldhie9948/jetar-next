@@ -6,7 +6,7 @@ import { initOrdersToday } from '../../../reducers/orderReducer';
 import { localCurrency } from '../../../lib/currency';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import Layout from '../../../components/pwa/drivers/Layout';
-import io from 'Socket.IO-client';
+import io from 'socket.io-client';
 const socket = io();
 
 const CardDriver = ({ driverOrders }) => {

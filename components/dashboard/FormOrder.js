@@ -11,7 +11,7 @@ import { createOrder, initOrdersToday } from '../../reducers/orderReducer';
 import styles from '../../styles/Dashboard.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateOrder } from '../../reducers/orderReducer';
-import io from 'Socket.IO-client';
+import io from 'socket.io-client';
 
 const Input = ({
   label = '',
