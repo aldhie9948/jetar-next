@@ -7,24 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
 import { FaTruck, FaRoute } from 'react-icons/fa';
-import io from 'socket.io-client';
-const socket = io();
 
 const Dashboard = () => {
   const formOrderRef = useRef();
   const cekOngkirRef = useRef();
   const dispatch = useDispatch();
   const pengguna = useSelector((s) => s.pengguna);
-
-  const socketInitializer = async (token) => {
-    await fetch('/api/socket');
-    socket.on('connect', () => {
-      console.log('an user is connected');
-    });
-    socket.on('update-order', () => {
-      dispatch(initOrdersToday(token));
-    });
-  };
 
   const tambahHandler = () => {
     formOrderRef.current.toggle();
@@ -54,7 +42,6 @@ const Dashboard = () => {
       const { token } = pengguna;
       dispatch(initDriver(token));
       dispatch(initOrdersToday(token));
-      socketInitializer(token);
     }
     // eslint-disable-next-line
   }, [pengguna]);
@@ -75,12 +62,11 @@ const Dashboard = () => {
           />
         </div>
         <CekOngkir ref={cekOngkirRef} />
-        <FormOrder ref={formOrderRef} socket={socket} />
+        <FormOrder ref={formOrderRef} />
         <Orders
           onEdit={(order) => {
             formOrderRef.current.edit(order);
           }}
-          socket={socket}
         />
       </>
     </Layout>

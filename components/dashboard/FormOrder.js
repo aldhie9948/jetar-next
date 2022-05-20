@@ -11,7 +11,6 @@ import { createOrder, initOrdersToday } from '../../reducers/orderReducer';
 import styles from '../../styles/Dashboard.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateOrder } from '../../reducers/orderReducer';
-import io from 'socket.io-client';
 
 const Input = ({
   label = '',
@@ -60,8 +59,6 @@ const FormOrder = React.forwardRef(({}, ref) => {
         return console.log(status);
     }
   };
-
-  const [socket, setSocket] = useState(io());
 
   const dispatch = useDispatch();
 
@@ -129,7 +126,6 @@ const FormOrder = React.forwardRef(({}, ref) => {
       }
       toast({ title: 'Order berhasil disimpan', icon: 'success' });
       toggle();
-      socket.emit('save-order');
     });
   };
 

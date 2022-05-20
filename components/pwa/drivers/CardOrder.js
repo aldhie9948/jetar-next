@@ -23,9 +23,6 @@ import {
   directionLinkBuilder,
 } from '../../../lib/getStaticMap';
 
-import io from 'socket.io-client';
-const socket = io();
-
 const CardOrder = ({ order }) => {
   const [visibleCard, setVisibleCard] = useState(false);
   const [visibleMaps, setvisibleMaps] = useState(false);
@@ -52,7 +49,6 @@ const CardOrder = ({ order }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
       toast({ title: 'Update order berhasil', icon: 'success' });
-      socket.emit('save-order');
     } catch (error) {
       console.error(error);
       toast({ title: 'Update order gagal', icon: 'error' });

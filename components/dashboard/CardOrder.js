@@ -22,8 +22,6 @@ import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
 import StatusBadge from '../StatusBadge';
 import { getLinkStaticMap, directionLinkBuilder } from '../../lib/getStaticMap';
-import io from 'socket.io-client';
-const socket = io();
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -88,7 +86,6 @@ const CardOrder = ({ order, onEdit }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
       toast({ title: 'Update order berhasil', icon: 'success' });
-      socket.emit('save-order');
     } catch (error) {
       console.error(error);
       toast({ title: 'Update order gagal', icon: 'error' });
