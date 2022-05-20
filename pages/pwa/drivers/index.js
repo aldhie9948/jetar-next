@@ -75,7 +75,7 @@ const Dashboard = () => {
     socket.on('connect', () => {
       console.log('an user is connected');
     });
-    socket.on('update-order', () => {
+    socket.on('latest-order', () => {
       dispatch(initOrdersToday(token));
     });
   };

@@ -12,8 +12,8 @@ const SocketHandler = (req, res) => {
       socket.on('disconnect', () => {
         console.log('user disconnected');
       });
-      socket.on('save-order', () => {
-        socket.broadcast.emit('update-order');
+      socket.on('reload-order', () => {
+        socket.broadcast.emit('latest-order');
       });
     });
   }

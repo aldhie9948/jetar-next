@@ -88,7 +88,7 @@ const CardOrder = ({ order, onEdit }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
       toast({ title: 'Update order berhasil', icon: 'success' });
-      socket.emit('save-order');
+      socket.emit('reload-order');
     } catch (error) {
       console.error(error);
       toast({ title: 'Update order gagal', icon: 'error' });
@@ -102,6 +102,7 @@ const CardOrder = ({ order, onEdit }) => {
       confirm(() => {
         dispatch(removeOrder(order, pengguna?.token));
         toast({ title: 'Hapus orderan berhasil', icon: 'success' });
+        socket.emit('reload-order');
       });
     } catch (error) {
       toast({ title: 'Hapus orderan gagal', icon: 'error' });
