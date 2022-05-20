@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useRef, useState } from 'react';
+import React, { useImperativeHandle, useRef, useState, useEffect } from 'react';
 import dateFormat from '../../lib/date';
 import { toast, confirm } from '../Sweetalert2';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
@@ -7,11 +7,11 @@ import SelectDriver from './SelectDriver';
 import MapComponent from './Map';
 import { onChangeHandler, borderInputHandler } from '../../lib/handler';
 import { currencyNumber, localCurrency } from '../../lib/currency';
-import { createOrder } from '../../reducers/orderReducer';
+import { createOrder, initOrdersToday } from '../../reducers/orderReducer';
 import styles from '../../styles/Dashboard.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateOrder } from '../../reducers/orderReducer';
-import axios from 'axios';
+import io from 'Socket.IO-client';
 
 const Input = ({
   label = '',
@@ -60,6 +60,9 @@ const FormOrder = React.forwardRef(({}, ref) => {
         return console.log(status);
     }
   };
+
+  const [socket, setSocket] = useState(io());
+
   const dispatch = useDispatch();
 
   const formRef = useRef();
@@ -88,7 +91,6 @@ const FormOrder = React.forwardRef(({}, ref) => {
   const [talang, setTalang] = useState(0);
   const [visible, setVisible] = useState(false);
   const [defaultDriver, setDefaultDriver] = useState({});
-  const [polyline, setPolyline] = useState(null);
 
   // handle saat form di submit
   const submitHandler = (e) => {
@@ -117,7 +119,6 @@ const FormOrder = React.forwardRef(({}, ref) => {
       waktuOrder,
       ongkir: currencyNumber(ongkir),
       talang: currencyNumber(talang),
-      polyline,
     };
     confirm(async () => {
       if (idOrder) {
@@ -128,7 +129,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
       }
       toast({ title: 'Order berhasil disimpan', icon: 'success' });
       toggle();
-      await axios.post('/api/pusher', { message: 'simpan/update order' });
+      socket.emit('save-order');
     });
   };
 
@@ -182,8 +183,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
     const origin = alamatPengirim;
     const destination = alamatPenerima;
     const callback = (args) => {
-      const { ongkir, response } = args;
-      setPolyline(response.routes[0].overview_polyline);
+      const { ongkir } = args;
       setOngkir(localCurrency(ongkir));
     };
     mapsRef.current.route({ origin, destination, callback });
@@ -202,7 +202,6 @@ const FormOrder = React.forwardRef(({}, ref) => {
     setDefaultDriver('');
     setTanggalOrder(dateFormat(new Date(), 'yyyy-MM-dd'));
     setWaktuOrder(dateFormat(new Date(), 'HH:mm'));
-    setPolyline(null);
   };
 
   // fn untuk update/edit order dan mengisinya di form order

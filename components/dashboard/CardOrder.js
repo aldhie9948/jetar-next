@@ -20,9 +20,10 @@ import {
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
-import subscriptionService from '../../services/subscription';
 import StatusBadge from '../StatusBadge';
 import { getLinkStaticMap, directionLinkBuilder } from '../../lib/getStaticMap';
+import io from 'socket.io-client';
+const socket = io();
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -87,6 +88,7 @@ const CardOrder = ({ order, onEdit }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
       toast({ title: 'Update order berhasil', icon: 'success' });
+      socket.emit('save-order');
     } catch (error) {
       console.error(error);
       toast({ title: 'Update order gagal', icon: 'error' });
@@ -111,12 +113,6 @@ const CardOrder = ({ order, onEdit }) => {
   const kirimOrderHandler = (order) => {
     const updatedOrder = { ...order, driver: order.driver.id, status: 2 };
     updateOrderHandler({ updatedOrder });
-    const data = {
-      target: order.driver.akun,
-      title: `Orderan Baru ${order.driver.nama}`,
-      body: `Pengambilan di Tn./Ny. ${order.pengirim.nama} diantarkan ke Tn./Ny. ${order.penerima.nama}`,
-    };
-    subscriptionService.send(data, pengguna.token);
   };
   return (
     <div

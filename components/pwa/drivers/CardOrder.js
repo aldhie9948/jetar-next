@@ -17,12 +17,14 @@ import {
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
 import { updateOrder } from '../../../reducers/orderReducer';
-import subscriptionService from '../../../services/subscription';
 import StatusBadge from '../../../components/StatusBadge';
 import {
   getLinkStaticMap,
   directionLinkBuilder,
 } from '../../../lib/getStaticMap';
+
+import io from 'socket.io-client';
+const socket = io();
 
 const CardOrder = ({ order }) => {
   const [visibleCard, setVisibleCard] = useState(false);
@@ -50,6 +52,7 @@ const CardOrder = ({ order }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
       toast({ title: 'Update order berhasil', icon: 'success' });
+      socket.emit('save-order');
     } catch (error) {
       console.error(error);
       toast({ title: 'Update order gagal', icon: 'error' });
@@ -59,23 +62,11 @@ const CardOrder = ({ order }) => {
   const pickupOrderHandler = (order) => {
     const updatedOrder = { ...order, driver: order.driver.id, status: 3 };
     updateOrderHandler({ updatedOrder });
-    const data = {
-      title: `Orderan Driver ${order.driver.nama.toUpperCase()}`,
-      body: `Barang Tn./Ny. ${order.pengirim.nama} telah diambil dan akan diantarkan ke Tn./Ny. ${order.penerima.nama}`,
-      target: 'admin',
-    };
-    subscriptionService.broadcast(data, pengguna.token);
   };
   const finishOrderHandler = (order) => {
     confirm(() => {
       const updatedOrder = { ...order, driver: order.driver.id, status: 0 };
       updateOrderHandler({ updatedOrder });
-      const data = {
-        title: `Orderan Driver ${order.driver.nama.toUpperCase()}`,
-        body: `Barang Tn./Ny. ${order.pengirim.nama} telah diantarkan ke Tn./Ny. ${order.penerima.nama}`,
-        target: 'admin',
-      };
-      subscriptionService.broadcast(data, pengguna.token);
     });
   };
 

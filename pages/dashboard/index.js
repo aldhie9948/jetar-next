@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import CekOngkir from '../../components/dashboard/CekOngkir';
 import Orders from '../../components/dashboard/Orders';
@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
 import { FaTruck, FaRoute } from 'react-icons/fa';
-import Pusher from 'pusher-js';
+import io from 'Socket.IO-client';
+const socket = io();
 
 const Dashboard = () => {
   const formOrderRef = useRef();
@@ -15,25 +16,21 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const pengguna = useSelector((s) => s.pengguna);
 
+  const socketInitializer = async (token) => {
+    await fetch('/api/socket');
+    socket.on('connect', () => {
+      console.log('an user is connected');
+    });
+    socket.on('update-order', () => {
+      dispatch(initOrdersToday(token));
+    });
+  };
+
   const tambahHandler = () => {
     formOrderRef.current.toggle();
   };
   const cekOngkirHandler = () => {
     cekOngkirRef.current.toggle();
-  };
-
-  const reloadOrderPusher = (token) => {
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY, {
-      cluster: 'ap1',
-    });
-    const channel = pusher.subscribe('jetar-channel');
-    channel.bind('orderan', (data) => {
-      console.log(data.message);
-      dispatch(initOrdersToday(token));
-    });
-    return () => {
-      pusher.unsubscribe('orderan');
-    };
   };
 
   const ButtonMenu = ({ onClick, icon, label }) => {
@@ -57,7 +54,7 @@ const Dashboard = () => {
       const { token } = pengguna;
       dispatch(initDriver(token));
       dispatch(initOrdersToday(token));
-      reloadOrderPusher(token);
+      socketInitializer(token);
     }
     // eslint-disable-next-line
   }, [pengguna]);
@@ -78,11 +75,12 @@ const Dashboard = () => {
           />
         </div>
         <CekOngkir ref={cekOngkirRef} />
-        <FormOrder ref={formOrderRef} />
+        <FormOrder ref={formOrderRef} socket={socket} />
         <Orders
           onEdit={(order) => {
             formOrderRef.current.edit(order);
           }}
+          socket={socket}
         />
       </>
     </Layout>

@@ -6,6 +6,8 @@ import { initOrdersToday } from '../../../reducers/orderReducer';
 import { localCurrency } from '../../../lib/currency';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import Layout from '../../../components/pwa/drivers/Layout';
+import io from 'Socket.IO-client';
+const socket = io();
 
 const CardDriver = ({ driverOrders }) => {
   const driver = useSelector((s) => s.driver);
@@ -68,11 +70,22 @@ const Dashboard = () => {
   const orders = useSelector((s) => s.order);
   const [driverOrders, setDriverOrders] = React.useState([]);
 
+  const socketInitializer = async (token) => {
+    await fetch('/api/socket');
+    socket.on('connect', () => {
+      console.log('an user is connected');
+    });
+    socket.on('update-order', () => {
+      dispatch(initOrdersToday(token));
+    });
+  };
+
   useEffect(() => {
     if (pengguna) {
       const { token, id } = pengguna;
       dispatch(initOrdersToday(token));
       dispatch(initOneDriver(id, token));
+      socketInitializer(token);
     }
     // eslint-disable-next-line
   }, [pengguna]);
