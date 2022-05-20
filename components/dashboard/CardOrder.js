@@ -226,11 +226,11 @@ const CardOrder = ({ order, onEdit }) => {
                 <BiMap className='flex-shrink-0 self-start text-lg' />
                 <div className='truncate-3'>
                   <a
-                    href={directionLinkBuilder(order.pengirim.alamat)}
+                    href={directionLinkBuilder(order.penerima.alamat)}
                     target='_blank'
                     rel='noreferrer'
                   >
-                    {order.pengirim.alamat}
+                    {order.penerima.alamat}
                   </a>
                 </div>
               </div>
