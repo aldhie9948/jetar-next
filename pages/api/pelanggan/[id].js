@@ -19,7 +19,7 @@ const handler = nc({
       query: { id },
     } = req;
     try {
-      // verifyToken(req);
+      verifyToken(req);
       const pelanggan = await Pelanggan.find({
         $or: [
           { nama: { $regex: `.*${id}.*`, $options: 'i' } },
