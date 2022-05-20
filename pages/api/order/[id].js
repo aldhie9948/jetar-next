@@ -26,7 +26,10 @@ const handler = nc({
       let order = {};
       if (id === 'today') {
         const today = dateFormat(new Date(), 'yyyy-MM-dd');
-        order = await Order.find({ tanggalOrder: today }).populate('driver');
+        order = await Order.find({ tanggalOrder: today }).populate({
+          path: 'driver',
+          model: 'Driver',
+        });
       } else {
         const ObjectId = mongoose.Types.ObjectId;
         const param = new ObjectId(id.length < 12 ? '123456789012' : id);
@@ -39,7 +42,10 @@ const handler = nc({
               driver: param,
             },
           ],
-        }).populate('driver');
+        }).populate({
+          path: 'driver',
+          model: 'Driver',
+        });
       }
       res.status(200).json(order);
     } catch (error) {

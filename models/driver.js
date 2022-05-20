@@ -7,7 +7,7 @@ const driverSchema = mongoose.Schema({
   gender: { type: String },
   akun: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'pengguna',
+    ref: 'Pengguna',
     required: true,
   },
   softDelete: Boolean,

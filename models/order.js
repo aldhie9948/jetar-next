@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema({
   },
   driver: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'driver',
+    ref: 'Driver',
     required: true,
   },
   softDelete: Boolean,
