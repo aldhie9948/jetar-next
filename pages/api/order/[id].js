@@ -5,6 +5,7 @@ import { verifyToken } from '../../../lib/token';
 import { trimmer } from '../../../lib/trimmer';
 import dateFormat from '../../../lib/date';
 import Pelanggan from '../../../models/pelanggan';
+import Driver from '../../../models/driver';
 import mongoose from 'mongoose';
 
 const handler = nc({

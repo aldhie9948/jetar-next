@@ -51,7 +51,7 @@ const Textarea = ({ label = '', value, setter, ...rest }) => {
   );
 };
 
-const FormOrder = React.forwardRef(({}, ref) => {
+const FormOrder = React.forwardRef(({ drivers }, ref) => {
   const render = (status) => {
     switch (status) {
       case Status.LOADING:
@@ -364,6 +364,7 @@ const FormOrder = React.forwardRef(({}, ref) => {
                         ref={selectDriverRef}
                         defaultValue={defaultDriver}
                         placeholder='Pilih Driver'
+                        drivers={drivers}
                       />
                     </div>
                     <div className='box-border'>

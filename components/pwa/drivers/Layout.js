@@ -1,15 +1,8 @@
 import Head from 'next/head';
 import React from 'react';
 import { FaHome, FaSignOutAlt, FaUserAlt, FaRoute } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { initPengguna } from '../../../reducers/penggunaReducer';
 import styles from '../../../styles/pwa/Driver.module.css';
-import localStorageService from '../../../lib/localStorage';
 import Link from 'next/link';
-import { registerPush } from '../../../lib/serviceWorker';
-import { useRouter } from 'next/router';
-import route from '../../../lib/route';
-import loginService from '../../../services/login';
 
 const NavBar = () => {
   return (
@@ -79,48 +72,20 @@ const TopBar = () => {
 };
 
 const Layout = ({ children }) => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const pengguna = useSelector((state) => state.pengguna);
-
-  const verifyPengguna = async () => {
-    const penggunaLocal = localStorageService.get('pengguna', true);
-    if (penggunaLocal) {
-      const verify = await loginService.verify(penggunaLocal);
-      console.log('verify', verify);
-      if (verify.status) {
-        penggunaLocal.level !== 1 && router.push(route(penggunaLocal));
-        dispatch(initPengguna(penggunaLocal));
-        registerPush({ pengguna: penggunaLocal });
-      } else {
-        router.push('/logout');
-      }
-    } else {
-      router.push('/logout');
-    }
-  };
-
-  React.useEffect(() => {
-    verifyPengguna().catch((err) => console.log('verify error:', err));
-    // eslint-disable-next-line
-  }, []);
-
   return (
     <>
-      {pengguna && pengguna?.level === 1 && (
-        <>
-          <div className='sm:max-w-screen-sm sm:mx-auto overflow-x-hidden'>
-            <Head>
-              <title>JETAR Driver</title>
-            </Head>
-            <div className='bg-slate-100 h-screen relative'>
-              <TopBar />
-              <NavBar />
-              <div className='pt-8 pb-20 text-sm'>{children}</div>
-            </div>
+      <>
+        <div className='sm:max-w-screen-sm sm:mx-auto overflow-x-hidden'>
+          <Head>
+            <title>JETAR Driver</title>
+          </Head>
+          <div className='bg-slate-100 h-screen relative'>
+            <TopBar />
+            <NavBar />
+            <div className='pt-8 pb-20 text-sm'>{children}</div>
           </div>
-        </>
-      )}
+        </div>
+      </>
     </>
   );
 };

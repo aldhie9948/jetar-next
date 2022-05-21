@@ -55,7 +55,7 @@ export const initOrdersToday = (token) => {
 
 export const initOrdersDriver = (id, token) => {
   return async (dispatch) => {
-    const response = await OrderService.find(id, token);
+    const response = await OrderService.findByIdPengguna(id, token);
     response.error ?? dispatch(set(response));
   };
 };

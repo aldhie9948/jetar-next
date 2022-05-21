@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Layout from '../../../components/pwa/drivers/Layout';
-import { initOneDriver } from '../../../reducers/driverReducer';
-import { initOrdersDriver } from '../../../reducers/orderReducer';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import ReactPaginate from 'react-paginate';
 import { BsArrowRightCircleFill, BsArrowLeftCircleFill } from 'react-icons/bs';
 import dateFormat from '../../../lib/date';
+import verifyLogin from '../../../lib/verifyLogin';
+import { initPengguna } from '../../../reducers/penggunaReducer';
+import { initOrdersDriver } from '../../../reducers/orderReducer';
+import { initOneDriver } from '../../../reducers/driverReducer';
+import orderService from '../../../services/order';
 
 const Riwayat = () => {
-  const pengguna = useSelector((s) => s.pengguna);
-  const driver = useSelector((s) => s.driver);
-  const orders = useSelector((s) => s.order);
-  const [driverOrders, setDriverOrders] = useState([]);
+  const orders = useSelector((s) => {
+    const finishedOrders = s.order.filter((f) => f.status === 0);
+    return finishedOrders;
+  });
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [keyword, setKeyword] = useState('');
   const [itemsCount, setItemsCount] = useState(5);
   const [startDate, setStartDate] = useState(
     dateFormat(new Date(), 'yyyy-MM-dd')
@@ -24,48 +26,23 @@ const Riwayat = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (pengguna) {
-      const { token, id } = pengguna;
-      dispatch(initOneDriver(id, token));
-    }
-    // eslint-disable-next-line
-  }, [pengguna]);
-
-  useEffect(() => {
-    if (driver && pengguna) {
-      const { token } = pengguna;
-      const { id } = driver;
+    const callback = (user) => {
+      const { id, token } = user;
+      dispatch(initPengguna(user));
       dispatch(initOrdersDriver(id, token));
-    }
+      dispatch(initOneDriver(id, token));
+      orderService
+        .findByIdPengguna(id, token)
+        .then((res) => setFilteredOrders(res.filter((f) => f.status === 0)));
+    };
+    verifyLogin(callback, 1);
     // eslint-disable-next-line
-  }, [driver]);
+  }, []);
+
+  // eslint-disable-next-line
 
   useEffect(() => {
-    if (orders) {
-      const finishedOrder = orders.filter((f) => f.status === 0);
-      setDriverOrders(finishedOrder);
-      setFilteredOrders(finishedOrder);
-    }
-  }, [orders]);
-
-  useEffect(() => {
-    const data = driverOrders.filter((d) => {
-      const pengirim = d.pengirim.nama
-        .toString()
-        .toLowerCase()
-        .includes(keyword);
-      const penerima = d.penerima.nama
-        .toString()
-        .toLowerCase()
-        .includes(keyword);
-      if (pengirim || penerima) return true;
-    });
-    setFilteredOrders(keyword !== '' ? data : driverOrders);
-    // eslint-disable-next-line
-  }, [keyword]);
-
-  useEffect(() => {
-    const data = driverOrders.filter((d) => {
+    const data = orders.filter((d) => {
       const orderTimeStamp = new Date(d.tanggalOrder);
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -79,7 +56,19 @@ const Riwayat = () => {
   }, [startDate, endDate]);
 
   const filterOrdersHandler = (e) => {
-    setKeyword(e.target.value);
+    const keyword = e.target.value;
+    const data = orders.filter((d) => {
+      const pengirim = d.pengirim.nama
+        .toString()
+        .toLowerCase()
+        .includes(keyword);
+      const penerima = d.penerima.nama
+        .toString()
+        .toLowerCase()
+        .includes(keyword);
+      if (pengirim || penerima) return true;
+    });
+    setFilteredOrders(keyword !== '' ? data : orders);
   };
 
   const PaginatedItems = ({ itemsPerPage, items }) => {
@@ -93,7 +82,6 @@ const Riwayat = () => {
     useEffect(() => {
       // Fetch items from another resources.
       const endOffset = itemOffset + itemsPerPage;
-      console.log(`Loading items from ${itemOffset} to ${endOffset}`);
       setCurrentItems(items.slice(itemOffset, endOffset));
       setPageCount(Math.ceil(items.length / itemsPerPage));
       // eslint-disable-next-line
@@ -129,7 +117,7 @@ const Riwayat = () => {
 
     return (
       <>
-        <div className='max-h-[50vh] overflow-x-hidden overflow-y-auto mb-4'>
+        <div className='overflow-x-hidden overflow-y-auto mb-4'>
           {currentItems?.map((o) => (
             <CardOrder key={o.id} order={o} />
           ))}
@@ -196,13 +184,14 @@ const Riwayat = () => {
                   type='search'
                   className='p-2 w-full outline-none focus:shadow-lg rounded border placeholder:text-xs'
                   placeholder='masukkan nama pengirim atau penerima...'
-                  value={keyword}
                   onChange={filterOrdersHandler}
                 />
               </div>
             </div>
           </div>
-          <PaginatedItems itemsPerPage={itemsCount} items={filteredOrders} />
+          {filteredOrders.length > 1 && (
+            <PaginatedItems itemsPerPage={itemsCount} items={filteredOrders} />
+          )}
         </div>
       </Layout>
     </>

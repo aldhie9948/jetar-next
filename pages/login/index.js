@@ -8,6 +8,7 @@ import { onChangeHandler } from '../../lib/handler';
 import styles from '../../styles/Login.module.css';
 import Head from 'next/head';
 import route from '../../lib/route';
+import { toast } from '../../components/Sweetalert2';
 
 const Login = () => {
   const [username, setUsername] = useState('');

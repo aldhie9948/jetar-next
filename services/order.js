@@ -21,6 +21,15 @@ const find = async (id, token) => {
   }
 };
 
+const findByIdPengguna = async (id, token) => {
+  try {
+    const res = await axios.post(`${baseURL}/pengguna/`, { id }, config(token));
+    return res.data;
+  } catch (error) {
+    return axiosError(error);
+  }
+};
+
 const save = async (obj, token) => {
   try {
     const res = await axios.post(baseURL, obj, config(token));
@@ -49,4 +58,4 @@ const remove = async (id, token) => {
 };
 
 // eslint-disable-next-line
-export default { get, find, save, update, remove };
+export default { get, find, save, update, remove, findByIdPengguna };

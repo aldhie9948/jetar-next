@@ -8,13 +8,16 @@ import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
 import { FaTruck, FaRoute } from 'react-icons/fa';
 import io from 'socket.io-client';
+import verifyPengguna from '../../lib/verifyLogin';
+import { initPengguna } from '../../reducers/penggunaReducer';
 const socket = io();
 
 const Dashboard = () => {
   const formOrderRef = useRef();
   const cekOngkirRef = useRef();
   const dispatch = useDispatch();
-  const pengguna = useSelector((s) => s.pengguna);
+  const drivers = useSelector((s) => s.driver);
+  const orders = useSelector((s) => s.order);
 
   const socketInitializer = async (token) => {
     await fetch('/api/socket');
@@ -52,40 +55,45 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (pengguna) {
-      const { token } = pengguna;
+    const callback = (user) => {
+      const { token } = user;
+      dispatch(initPengguna(user));
       dispatch(initDriver(token));
       dispatch(initOrdersToday(token));
       socketInitializer(token);
-    }
+    };
+    verifyPengguna(callback, 0);
     // eslint-disable-next-line
-  }, [pengguna]);
+  }, []);
 
   return (
-    <Layout title='Dashboard'>
-      <>
-        <div className='w-max mb-4 flex gap-2 items-center mx-5'>
-          <ButtonMenu
-            onClick={tambahHandler}
-            icon={<FaTruck />}
-            label='Tambah Order'
+    <>
+      <Layout title='Dashboard'>
+        <>
+          <div className='w-max mb-4 flex gap-2 items-center mx-5'>
+            <ButtonMenu
+              onClick={tambahHandler}
+              icon={<FaTruck />}
+              label='Tambah Order'
+            />
+            <ButtonMenu
+              onClick={cekOngkirHandler}
+              icon={<FaRoute />}
+              label='cek ongkir'
+            />
+          </div>
+          <CekOngkir ref={cekOngkirRef} />
+          <FormOrder ref={formOrderRef} drivers={drivers} />
+          <Orders
+            onEdit={(order) => {
+              formOrderRef.current.edit(order);
+            }}
+            orders={orders}
+            drivers={drivers}
           />
-          <ButtonMenu
-            onClick={cekOngkirHandler}
-            icon={<FaRoute />}
-            label='cek ongkir'
-          />
-        </div>
-        <CekOngkir ref={cekOngkirRef} />
-        <FormOrder ref={formOrderRef} socket={socket} />
-        <Orders
-          onEdit={(order) => {
-            formOrderRef.current.edit(order);
-          }}
-          socket={socket}
-        />
-      </>
-    </Layout>
+        </>
+      </Layout>
+    </>
   );
 };
 
