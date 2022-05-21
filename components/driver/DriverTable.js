@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTable } from 'react-table/dist/react-table.development';
 import { removeDriver } from '../../reducers/driverReducer';
-import { confirm, toast } from '../Sweetalert2';
+import { confirm } from '../Sweetalert2';
 
 const DriverTable = ({ driver, onUpdate }) => {
   const pengguna = useSelector((s) => s.pengguna);

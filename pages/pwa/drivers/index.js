@@ -76,6 +76,10 @@ const Dashboard = () => {
       console.log('an user is connected');
     });
     socket.on('latest-order', () => {
+      console.log(
+        location.pathname,
+        'receiced emit and reloading latest order'
+      );
       dispatch(initOrdersToday(token));
     });
   };

@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { toast } from '../components/Sweetalert2';
 import DriverService from '../services/driver';
 
 const driverSlice = createSlice({
@@ -46,8 +45,6 @@ export const createDriver = (data, token) => {
   return async (dispatch) => {
     const driver = await DriverService.save(data, token);
     driver.error ?? dispatch(create(driver));
-    driver.error ??
-      toast({ title: 'Driver berhasil disimpan', icon: 'success' });
   };
 };
 
@@ -55,8 +52,6 @@ export const removeDriver = (data, token) => {
   return async (dispatch) => {
     const driver = await DriverService.remove(data.id, token);
     driver.error ?? dispatch(remove(driver));
-    driver.error ??
-      toast({ title: 'Driver berhasil dihapus', icon: 'success' });
   };
 };
 
@@ -64,7 +59,5 @@ export const updateDriver = (data, token) => {
   return async (dispatch) => {
     const driver = await DriverService.update(data, token);
     driver.error ?? dispatch(update(driver));
-    driver.error ??
-      toast({ title: 'Driver berhasil disimpan', icon: 'success' });
   };
 };

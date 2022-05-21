@@ -127,7 +127,6 @@ const FormOrder = React.forwardRef(({}, ref) => {
       } else {
         dispatch(createOrder(data, pengguna?.token));
       }
-      toast({ title: 'Order berhasil disimpan', icon: 'success' });
       toggle();
       socket.emit('reload-order');
     });

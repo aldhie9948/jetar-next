@@ -22,6 +22,7 @@ const Dashboard = () => {
       console.log('an user is connected');
     });
     socket.on('latest-order', () => {
+      console.log(location.pathname, 'receive emit and reloading latest order');
       dispatch(initOrdersToday(token));
     });
   };
@@ -29,6 +30,7 @@ const Dashboard = () => {
   const tambahHandler = () => {
     formOrderRef.current.toggle();
   };
+
   const cekOngkirHandler = () => {
     cekOngkirRef.current.toggle();
   };

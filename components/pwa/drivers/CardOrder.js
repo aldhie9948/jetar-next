@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import dateFormat from '../../../lib/date';
-import { toast, confirm } from '../../../components/Sweetalert2';
+import { confirm } from '../../../components/Sweetalert2';
 import { localCurrency } from '../../../lib/currency';
 import {
   BiStoreAlt,
@@ -51,11 +51,9 @@ const CardOrder = ({ order }) => {
   const updateOrderHandler = ({ updatedOrder }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
-      toast({ title: 'Update order berhasil', icon: 'success' });
       socket.emit('reload-order');
     } catch (error) {
       console.error(error);
-      toast({ title: 'Update order gagal', icon: 'error' });
     }
   };
 
@@ -85,7 +83,6 @@ const CardOrder = ({ order }) => {
               <div className='font-black text-xl'>{order.waktuOrder}</div>
               <div className='text-[0.7rem] w-full'>
                 <div className='truncate'>
-                  {console.log(order.tanggalOrder)}
                   {dateFormat(new Date(order.tanggalOrder))}
                 </div>
               </div>

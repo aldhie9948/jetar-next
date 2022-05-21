@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import dateFormat from '../../lib/date';
-import { toast, confirm } from '../Sweetalert2';
+import { confirm } from '../Sweetalert2';
 import { currencyNumber, localCurrency } from '../../lib/currency';
 import { removeOrder } from '../../reducers/orderReducer';
 import { updateOrder } from '../../reducers/orderReducer';
@@ -71,7 +71,7 @@ const CardOrder = ({ order, onEdit }) => {
   // fn untuk membuat array baru dari driver redux
   // untuk diberikan ke react-select driver
   const driverOptions =
-    drivers &&
+    drivers.length > 0 &&
     drivers?.map((driver) => ({
       value: driver.id,
       label: driver.nama,
@@ -89,11 +89,9 @@ const CardOrder = ({ order, onEdit }) => {
   const updateOrderHandler = ({ updatedOrder }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
-      toast({ title: 'Update order berhasil', icon: 'success' });
       socket.emit('reload-order');
     } catch (error) {
       console.error(error);
-      toast({ title: 'Update order gagal', icon: 'error' });
     }
   };
 
@@ -103,11 +101,10 @@ const CardOrder = ({ order, onEdit }) => {
     try {
       confirm(() => {
         dispatch(removeOrder(order, pengguna?.token));
-        toast({ title: 'Hapus orderan berhasil', icon: 'success' });
         socket.emit('reload-order');
       });
     } catch (error) {
-      toast({ title: 'Hapus orderan gagal', icon: 'error' });
+      console.error(location.pathname, error);
     }
   };
 
