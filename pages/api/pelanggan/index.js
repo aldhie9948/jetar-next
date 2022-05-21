@@ -7,7 +7,7 @@ import { numberOnly } from '../../../lib/currency';
 
 const handler = nc({
   onError: (err, req, res, next) => {
-    console.error(error.stack);
+    console.error(err.stack);
     res.status(500).end('Terjadi kendala error di server');
   },
   onNoMatch: (req, res) => {
