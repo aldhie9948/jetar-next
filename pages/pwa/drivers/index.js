@@ -80,6 +80,7 @@ const Dashboard = () => {
         location.pathname,
         'receiced emit and reloading latest order'
       );
+      console.log(token);
       dispatch(initOrdersToday(token));
     });
   };

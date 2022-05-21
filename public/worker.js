@@ -10,10 +10,10 @@ if (workbox) {
 // Switch debug logging on/off here. Default is on in dev and off in prod.
 workbox.setConfig({ debug: false });
 
-workbox.routing.registerRoute(
-  new RegExp('/.*'),
-  new workbox.strategies.NetworkFirst()
-);
+// workbox.routing.registerRoute(
+//   new RegExp('/.*'),
+//   new workbox.strategies.NetworkFirst()
+// );
 
 self.addEventListener('activate', (event) => {
   console.log('V1 now ready to handle fetches!');
