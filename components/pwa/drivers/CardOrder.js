@@ -41,7 +41,7 @@ const CardOrder = ({ order }) => {
   // fn untuk membuka / memulai chat whatsapp dengan
   // nomor yang diberikan dei argument
   const whatsappHandler = (phone) => {
-    window.open(`whatsapp://send?phone=${phone}`, '_top');
+    window.open(`whatsapp://send?phone=62${phone}`, '_top');
   };
 
   // fn / handler untuk mengupdate order yang digunakan di card order
@@ -154,7 +154,7 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                  <div className='truncate-3'>{order.pengirim.keterangan}</div>
+                  <div className='break-all'>{order.pengirim.keterangan}</div>
                 </div>
               </div>
               {/* penerima section */}
@@ -188,7 +188,7 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                  <div className='truncate-3'>{order.penerima.keterangan}</div>
+                  <div className='break-all'>{order.penerima.keterangan}</div>
                 </div>
               </div>
               {/* quickedit section */}

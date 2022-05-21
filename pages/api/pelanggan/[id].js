@@ -20,7 +20,12 @@ const handler = nc({
     } = req;
     try {
       verifyToken(req);
-      const pelanggan = await Pelanggan.findById(id);
+      const pelanggan = await Pelanggan.find({
+        $or: [
+          { nama: { $regex: `.*${id}.*`, $options: 'i' } },
+          { noHP: { $regex: `.*${id}.*`, $options: 'i' } },
+        ],
+      }).limit(10);
       res.status(200).json(pelanggan);
     } catch (error) {
       console.error(error.toString());

@@ -106,7 +106,8 @@ const Dashboard = () => {
           <strong className='header-form my-auto px-5'>
             Orderan Hari Ini..
           </strong>
-          <div className='max-h-[65vh] overflow-y-auto'>
+
+          <div className='box-border overflow-y-auto'>
             {driverOrders &&
               driverOrders.map(
                 (order) =>

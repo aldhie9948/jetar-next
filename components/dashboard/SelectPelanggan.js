@@ -22,7 +22,7 @@ const SelectPelanggan = React.forwardRef(
       onChange && onChange(selected);
     };
     const loadOptions = async (inputText, callback) => {
-      const response = await PelangganService.like(inputText, pengguna?.token);
+      const response = await PelangganService.find(inputText, pengguna?.token);
       callback(response.map((i) => ({ label: i.nama, value: i.id, obj: i })));
     };
 

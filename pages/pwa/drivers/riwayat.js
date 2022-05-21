@@ -53,15 +53,15 @@ const Riwayat = () => {
       dispatch(initOrdersDriver(id, token));
     }
     // eslint-disable-next-line
-  }, [driver, pengguna]);
+  }, [driver]);
 
   useEffect(() => {
-    if (orders && driver) {
+    if (orders) {
       const finishedOrder = orders.filter((f) => f.status === 0);
       setDriverOrders(finishedOrder);
       setFilteredOrders(finishedOrder);
     }
-  }, [orders, driver]);
+  }, [orders]);
 
   useEffect(() => {
     const data = driverOrders.filter((d) => {
@@ -144,7 +144,7 @@ const Riwayat = () => {
 
     return (
       <>
-        <div className='max-h-[65vh] overflow-x-hidden overflow-y-auto mb-4'>
+        <div className='max-h-[50vh] overflow-x-hidden overflow-y-auto mb-4'>
           {currentItems?.map((o) => (
             <CardOrder key={o.id} order={o} />
           ))}

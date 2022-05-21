@@ -64,7 +64,7 @@ const CardOrder = ({ order, onEdit }) => {
   // fn untuk membuka / memulai chat whatsapp dengan
   // nomor yang diberikan dei argument
   const whatsappHandler = (phone) => {
-    window.open(`whatsapp://send?phone=${phone}`, '_top');
+    window.open(`whatsapp://send?phone=62${phone}`, '_top');
   };
 
   // fn untuk membuat array baru dari driver redux
@@ -89,7 +89,7 @@ const CardOrder = ({ order, onEdit }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna?.token));
       toast({ title: 'Update order berhasil', icon: 'success' });
-      await axios.post('/api/pusher', { event: 'save-order' });
+      socket.emit('reload-order');
     } catch (error) {
       console.error(error);
       toast({ title: 'Update order gagal', icon: 'error' });
@@ -103,6 +103,7 @@ const CardOrder = ({ order, onEdit }) => {
       confirm(() => {
         dispatch(removeOrder(order, pengguna?.token));
         toast({ title: 'Hapus orderan berhasil', icon: 'success' });
+        socket.emit('reload-order');
       });
     } catch (error) {
       toast({ title: 'Hapus orderan gagal', icon: 'error' });
@@ -114,6 +115,7 @@ const CardOrder = ({ order, onEdit }) => {
   const kirimOrderHandler = (order) => {
     const updatedOrder = { ...order, driver: order.driver.id, status: 2 };
     updateOrderHandler({ updatedOrder });
+    socket.emit('reload-order');
   };
   return (
     <>
@@ -141,9 +143,37 @@ const CardOrder = ({ order, onEdit }) => {
                   {order.pengirim.nama}
                 </span>
               </div>
-              <div className='flex gap-2 items-center w-full'>
-                <FaPeopleCarry className='flex-shrink-0' />
-                <span className='block text-xs truncate w-full'>
+              <div className='flex gap-2 items-center mb-3'>
+                <BiPhoneCall className='flex-shrink-0 text-lg' />
+                <div
+                  onClick={() => whatsappHandler(order.pengirim.noHP)}
+                  className='truncate'
+                >
+                  {order.pengirim.noHP}
+                </div>
+              </div>
+              <div className='flex gap-2 items-center mb-3'>
+                <BiMap className='flex-shrink-0 self-start text-lg' />
+                <div className='truncate-3'>
+                  <a
+                    href={directionLinkBuilder(order.pengirim.alamat)}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    {order.pengirim.alamat}
+                  </a>
+                </div>
+              </div>
+              <div className='flex gap-2 items-center mb-3 lowercase'>
+                <BiNotepad className='flex-shrink-0 self-start text-lg' />
+                <div className='break-all'>{order.pengirim.keterangan}</div>
+              </div>
+            </div>
+            {/* penerima section */}
+            <div className='capitalize'>
+              <div className='flex gap-2 items-center w-full font-black mb-3'>
+                <FaPeopleCarry className='flex-shrink-0 text-lg' />
+                <span className='block text-xs truncate'>
                   {order.penerima.nama}
                 </span>
               </div>
