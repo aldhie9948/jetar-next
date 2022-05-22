@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import ReactPaginate from 'react-paginate';
+import { BsArrowRightCircleFill, BsArrowLeftCircleFill } from 'react-icons/bs';
 import CardOrder from './CardOrder';
 import { FcBarChart, FcInTransit } from 'react-icons/fc';
 import { localCurrency } from '../../lib/currency';
 
 const Orders = ({ onEdit, orders }) => {
-  const [filteredOrders, setFilteredOrders] = useState([]);
-
-  // hooks akan ketrigger untuk mengupdate FilteredOrders
-  // saat orders redux berubah
-  useEffect(() => {
-    setFilteredOrders(orders);
-  }, [orders]);
-
   const orderByStatus = ({ status }) =>
     orders.filter((f) => f.status === status);
 
@@ -24,20 +18,165 @@ const Orders = ({ onEdit, orders }) => {
     return { width: '0%' };
   };
 
+  const PaginatedItems = ({ itemsPerPage, items }) => {
+    // We start with an empty list of items.
+    const [currentItems, setCurrentItems] = useState([]);
+    const [pageCount, setPageCount] = useState(0);
+    // Here we use item offsets; we could also use page offsets
+    // following the API or data you're working with.
+    const [itemOffset, setItemOffset] = useState(0);
+
+    useEffect(() => {
+      setCurrentItems(items);
+    }, [items]);
+
+    useEffect(() => {
+      // Fetch items from another resources.
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(items.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(items.length / itemsPerPage));
+      // eslint-disable-next-line
+    }, [itemOffset, itemsPerPage]);
+
+    // Invoke when user click to request another page.
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % items.length;
+      console.log(
+        `User requested page number ${event.selected}, which is offset ${newOffset}`
+      );
+      setItemOffset(newOffset);
+    };
+
+    const NextButton = () => {
+      return (
+        <>
+          <div className='m-1 p-2'>
+            <BsArrowRightCircleFill className='text-xl' />
+          </div>
+        </>
+      );
+    };
+    const PrevButton = () => {
+      return (
+        <>
+          <div className='m-1 p-2'>
+            <BsArrowLeftCircleFill className='text-xl' />
+          </div>
+        </>
+      );
+    };
+
+    return (
+      <>
+        <div className='overflow-x-hidden overflow-y-auto mb-4'>
+          {currentItems
+            .filter((f) => f.status === 0)
+            .map((order) => (
+              <div key={order.id}>
+                <CardOrder order={order} onEdit={onEdit} isFinished={true} />
+              </div>
+            ))}
+        </div>
+        <ReactPaginate
+          breakLabel='...'
+          nextLabel={<NextButton />}
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel={<PrevButton />}
+          renderOnZeroPageCount={null}
+          containerClassName='flex justify-center gap-2'
+          activeClassName='font-black p-2 shadow bg-blue-100 m-1'
+          pageClassName='font-black p-2 m-1'
+        />
+      </>
+    );
+  };
+
+  const OrderFinished = ({ orders }) => {
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [filteredOrders, setfilteredOrders] = useState(orders);
+    const [keyword, setKeyword] = useState('');
+
+    const keywordHandler = (e) => {
+      const value = e.target.value;
+      setKeyword(value);
+    };
+
+    useEffect(() => {
+      const data = orders.filter((order) => {
+        const driver = order.driver.nama
+          .toString()
+          .toLowerCase()
+          .includes(keyword);
+        const pengirim = order.pengirim.nama
+          .toString()
+          .toLowerCase()
+          .includes(keyword);
+        const penerima = order.penerima.nama
+          .toString()
+          .toLowerCase()
+          .includes(keyword);
+        if (driver || pengirim || penerima) return true;
+        return false;
+      });
+      setfilteredOrders(keyword === '' ? orders : data);
+      // eslint-disable-next-line
+    }, [keyword]);
+
+    return (
+      <>
+        <div className='flex justify-between mb-2 items-center'>
+          <strong className={`header-form px-5 self-end`}>Selesai</strong>
+          <div className='flex justify-end flex-col items-end mx-5'>
+            <div className='mb-2 space-x-2'>
+              <span className='text-sm'>Tampilkan</span>
+              <select
+                className='p-1 shadow-lg outline-none rounded text-sm'
+                value={itemsPerPage}
+                onChange={(e) => setItemsPerPage(e.target.value)}
+              >
+                <option value='10'>10</option>
+                <option value='50'>50</option>
+                <option value='100'>100</option>
+                <option value='200'>200</option>
+                <option value={orders.length}>{orders.length}</option>
+              </select>
+            </div>
+            <div className='space-x-2'>
+              <span className='text-sm'>Cari</span>
+              <input
+                value={keyword}
+                onChange={keywordHandler}
+                type='text'
+                className='outline-none rounded py-1 px-2 focus:shadow-lg placeholder:text-xs'
+                placeholder='cari pengirim, penerima atau driver...'
+              />
+            </div>
+          </div>
+        </div>
+        <div className='overflow-x-hidden pb-[5rem] overflow-y-auto px-5'>
+          <PaginatedItems itemsPerPage={itemsPerPage} items={filteredOrders} />
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
       <div className='grid grid-cols-1 sm:grid-cols-3 mb-5'>
         <div className='col-span-2'>
           <strong className={`header-form mb-4 px-5`}>Orderan</strong>
           <div className='overflow-x-hidden pb-[5rem] overflow-y-auto px-5'>
-            {filteredOrders.map((order) => (
-              <div key={order.id}>
-                {order.status !== 0 && (
+            {orders
+              .filter((f) => f.status !== 0)
+              .map((order) => (
+                <div key={order.id}>
                   <CardOrder order={order} onEdit={onEdit} />
-                )}
-              </div>
-            ))}
+                </div>
+              ))}
           </div>
+          <OrderFinished orders={orders} />
         </div>
         <div className='mx-5'>
           {/* statistik section */}

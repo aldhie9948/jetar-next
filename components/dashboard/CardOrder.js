@@ -51,7 +51,7 @@ const selectOptions = {
     menu: (base) => ({ ...base, textTransform: 'capitalize' }),
   },
 };
-const CardOrder = ({ order, onEdit }) => {
+const CardOrder = ({ order, onEdit, isFinished = false }) => {
   const [visibleCard, setVisibleCard] = useState(false);
   const [visibleMaps, setvisibleMaps] = useState(false);
   const pengguna = useSelector((s) => s.pengguna);
@@ -242,6 +242,7 @@ const CardOrder = ({ order, onEdit }) => {
                   <div className='font-normal'>
                     <Select
                       className='w-full'
+                      isDisabled={isFinished}
                       {...selectOptions}
                       options={driverOptions}
                       value={defaultDriver(order.driver.id)}
@@ -264,6 +265,7 @@ const CardOrder = ({ order, onEdit }) => {
                   <div className='font-normal py-1 flex gap-4 items-center rounded-md'>
                     <div>Rp.</div>
                     <input
+                      disabled={isFinished}
                       type='text'
                       className='w-full outline-none bg-transparent'
                       defaultValue={localCurrency(order.talang)}
@@ -299,6 +301,7 @@ const CardOrder = ({ order, onEdit }) => {
                   <div className='font-normal py-1 flex gap-4 items-center rounded-md'>
                     <div>Rp.</div>
                     <input
+                      disabled={isFinished}
                       type='text'
                       className='w-full outline-none bg-transparent'
                       defaultValue={localCurrency(order.ongkir)}
