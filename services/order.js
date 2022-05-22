@@ -21,9 +21,13 @@ const find = async (id, token) => {
   }
 };
 
-const findByIdPengguna = async (id, token) => {
+const findByIdPengguna = async ({ id, date = 'all' || 'today' }, token) => {
   try {
-    const res = await axios.post(`${baseURL}/pengguna/`, { id }, config(token));
+    const res = await axios.post(
+      `${baseURL}/pengguna`,
+      { id, date },
+      config(token)
+    );
     return res.data;
   } catch (error) {
     return axiosError(error);

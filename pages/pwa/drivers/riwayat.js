@@ -29,11 +29,11 @@ const Riwayat = () => {
     const callback = (user) => {
       const { id, token } = user;
       dispatch(initPengguna(user));
-      dispatch(initOrdersDriver(id, token));
+      dispatch(initOrdersDriver({ id }, token));
       dispatch(initOneDriver(id, token));
-      orderService
-        .findByIdPengguna(id, token)
-        .then((res) => setFilteredOrders(res.filter((f) => f.status === 0)));
+      orderService.findByIdPengguna({ id }, token).then((res) => {
+        setFilteredOrders(res.filter((f) => f.status === 0));
+      });
     };
     verifyLogin(callback, 1);
     // eslint-disable-next-line
@@ -189,7 +189,7 @@ const Riwayat = () => {
               </div>
             </div>
           </div>
-          {filteredOrders.length > 1 && (
+          {filteredOrders.length > 0 && (
             <PaginatedItems itemsPerPage={itemsCount} items={filteredOrders} />
           )}
         </div>

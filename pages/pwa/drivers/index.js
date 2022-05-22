@@ -67,7 +67,8 @@ const Dashboard = () => {
   const driver = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
 
-  const socketInitializer = async (token) => {
+  const socketInitializer = async (pengguna) => {
+    const { id, token } = pengguna;
     await fetch('/api/socket');
     socket.on('connect', () => {
       console.log('an user is connected');
@@ -77,8 +78,7 @@ const Dashboard = () => {
         location.pathname,
         'receiced emit and reloading latest order'
       );
-      console.log(token);
-      dispatch(initOrdersToday(token));
+      dispatch(initOrdersDriver({ id, date: 'today' }, token));
     });
   };
 
@@ -86,9 +86,9 @@ const Dashboard = () => {
     const callback = (user) => {
       const { token, id } = user;
       dispatch(initPengguna(user));
-      dispatch(initOrdersDriver(id, token));
+      dispatch(initOrdersDriver({ id, date: 'today' }, token));
       dispatch(initOneDriver(id, token));
-      socketInitializer(token);
+      socketInitializer(user);
     };
     verifyPengguna(callback, 1);
     // eslint-disable-next-line
