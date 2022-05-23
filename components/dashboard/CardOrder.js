@@ -24,6 +24,7 @@ import StatusBadge from '../StatusBadge';
 import { getLinkStaticMap, directionLinkBuilder } from '../../lib/getStaticMap';
 import io from 'socket.io-client';
 const socket = io();
+import { verifyUser } from '../Sweetalert2';
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -97,7 +98,7 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
   // fn harus memberikan args order sesuai dengan model Order
   const removeOrderHandler = (order) => {
     try {
-      confirm(() => {
+      verifyUser(() => {
         dispatch(removeOrder(order, pengguna.token));
         socket.emit('reload-order');
       });
@@ -368,17 +369,19 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                     <BiImage className='group-hover:drop-shadow-lg text-xl text-blue-800' />
                   </button>
                 </div>
-                <div className='group relative flex gap-1 items-center flex-col'>
-                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                    Edit Orderan
+                {order.status !== 0 && (
+                  <div className='group relative flex gap-1 items-center flex-col'>
+                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                      Edit Orderan
+                    </div>
+                    <button
+                      onClick={() => onEdit(order)}
+                      className='py-[0.4rem] px-2 flex justify-center items-center'
+                    >
+                      <BiEdit className='group-hover:drop-shadow-lg text-xl text-blue-800' />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => onEdit(order)}
-                    className='py-[0.4rem] px-2 flex justify-center items-center'
-                  >
-                    <BiEdit className='group-hover:drop-shadow-lg text-xl text-blue-800' />
-                  </button>
-                </div>
+                )}
                 {order.status === 1 && (
                   <div className='group relative flex gap-1 items-center flex-col'>
                     <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>

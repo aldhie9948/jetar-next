@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import localStorageService from '../lib/localStorage';
 
 const MySwal = withReactContent(Swal);
 
@@ -39,6 +40,42 @@ export const confirm = (callback) => {
   }).then((result) => {
     if (result.isConfirmed) {
       callback();
+    }
+  });
+};
+
+export const verifyUser = (callback) => {
+  Swal.fire({
+    title: 'Masukkan Kode ID Admin:',
+    input: 'password',
+    inputAttributes: {
+      autocapitalize: 'off',
+      autocomplete: 'new-password',
+    },
+    showCancelButton: true,
+    confirmButtonText: 'Verifikasi',
+    showLoaderOnConfirm: true,
+    preConfirm: (id) => {
+      const pengguna = localStorageService.get('pengguna', true);
+      try {
+        if (!pengguna) throw new Error('User tidak ada');
+        if (pengguna) {
+          if (id === pengguna.id && pengguna.username === 'aldi') {
+            return pengguna;
+          } else {
+            throw new Error('Verifikasi gagal');
+          }
+        }
+      } catch (error) {
+        Swal.showValidationMessage(error);
+      }
+    },
+    allowOutsideClick: () => !Swal.isLoading(),
+  }).then((result) => {
+    if (result.isConfirmed) {
+      confirm(() => {
+        callback();
+      });
     }
   });
 };
