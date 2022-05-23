@@ -60,7 +60,7 @@ const CekOngkir = React.forwardRef(({}, ref) => {
   return (
     <>
       {visible && (
-        <div className='mb-4 mx-5 bg-blue-100/40 shadow-md rounded-lg p-5 pb-10'>
+        <div className='mb-4 mx-5 bg-white rounded-lg p-5 pb-10'>
           <strong className='header-form mb-4'>Cek Ongkir</strong>
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
             <div>
@@ -80,7 +80,7 @@ const CekOngkir = React.forwardRef(({}, ref) => {
                   <input
                     type='text'
                     placeholder='Masukkan alamat pengambilan...'
-                    className='outline-none w-full py-2 bg-transparent'
+                    className='outline-none w-full p-2 border border-green-400 focus:shadow-lg'
                     id='alamat-pengirim-cek-ongkir'
                     value={origin}
                     onChange={(e) => onChangeInput(e, setOrigin)}
@@ -104,7 +104,7 @@ const CekOngkir = React.forwardRef(({}, ref) => {
                   <input
                     type='text'
                     placeholder='Masukkan alamat pengambilan...'
-                    className='outline-none w-full py-2 bg-transparent'
+                    className='outline-none w-full p-2 border border-green-400 focus:shadow-lg'
                     id='alamat-penerima-cek-ongkir'
                     value={destination}
                     onChange={(e) => onChangeInput(e, setDestination)}
