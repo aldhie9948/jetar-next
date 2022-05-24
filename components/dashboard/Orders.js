@@ -151,7 +151,7 @@ const Orders = ({ onEdit, orders }) => {
               <input
                 value={keyword}
                 onChange={keywordHandler}
-                type='text'
+                type='search'
                 className='outline-none rounded py-1 px-2 focus:shadow-lg placeholder:text-xs w-full'
                 placeholder='cari pengirim, penerima atau driver...'
               />
@@ -191,7 +191,7 @@ const Orders = ({ onEdit, orders }) => {
                   <div className='text-center'>
                     <span className='font-black text-sm'>Pendapatan</span>
                     <FcBarChart className='text-[4rem] mx-auto' />
-                    <span className='font-black text-xl'>
+                    <span className='font-black text-lg'>
                       Rp.{' '}
                       {localCurrency(orders.reduce((a, b) => a + b.ongkir, 0))}
                     </span>
@@ -199,7 +199,7 @@ const Orders = ({ onEdit, orders }) => {
                   <div className='text-center'>
                     <span className='text-sm font-black'>Order</span>
                     <FcInTransit className='text-[4rem] mx-auto' />
-                    <span className='font-black text-xl'>
+                    <span className='font-black text-lg'>
                       {localCurrency(orders.length)}
                     </span>
                   </div>
