@@ -141,7 +141,7 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3'>
                   <BiMap className='flex-shrink-0 self-start text-lg' />
-                  <div className='truncate-3'>
+                  <div className='break-all'>
                     <a
                       href={directionLinkBuilder(order.pengirim.alamat)}
                       target='_blank'
@@ -153,7 +153,9 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                  <div className='break-all'>{order.pengirim.keterangan}</div>
+                  <div className='break-all whitespace-pre'>
+                    {order.pengirim.keterangan}
+                  </div>
                 </div>
               </div>
               {/* penerima section */}
@@ -175,7 +177,7 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3'>
                   <BiMap className='flex-shrink-0 self-start text-lg' />
-                  <div className='truncate-3'>
+                  <div className='break-all'>
                     <a
                       href={directionLinkBuilder(order.penerima.alamat)}
                       target='_blank'
@@ -187,7 +189,9 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                  <div className='break-all'>{order.penerima.keterangan}</div>
+                  <div className='break-all whitespace-pre'>
+                    {order.penerima.keterangan}
+                  </div>
                 </div>
               </div>
               {/* quickedit section */}
