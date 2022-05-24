@@ -170,7 +170,7 @@ const Orders = ({ onEdit, orders }) => {
       <div className='grid grid-cols-1 sm:grid-cols-3 mb-5'>
         <div className='col-span-2'>
           <strong className={`header-form mb-4 px-5`}>Orderan</strong>
-          <div className='overflow-x-hidden pb-[5rem] overflow-y-auto px-5'>
+          <div className='overflow-x-hidden max-h-[30rem] overflow-y-auto px-5'>
             {orders
               .filter((f) => f.status !== 0)
               .map((order) => (
