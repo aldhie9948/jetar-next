@@ -127,8 +127,10 @@ const Orders = ({ onEdit, orders }) => {
     return (
       <>
         <div className='flex justify-between mb-2 items-center'>
-          <strong className={`header-form px-5 self-end`}>Selesai</strong>
-          <div className='flex justify-end flex-col items-end mx-5'>
+          <strong className={`header-form px-5 sm:self-end self-center`}>
+            Selesai
+          </strong>
+          <div className='flex justify-end flex-col items-end mx-5 flex-wrap'>
             <div className='mb-2 space-x-2'>
               <span className='text-sm'>Tampilkan</span>
               <select
@@ -143,13 +145,13 @@ const Orders = ({ onEdit, orders }) => {
                 <option value={orders.length}>{orders.length}</option>
               </select>
             </div>
-            <div className='space-x-2'>
+            <div className='space-x-2 flex items-center'>
               <span className='text-sm'>Cari</span>
               <input
                 value={keyword}
                 onChange={keywordHandler}
                 type='text'
-                className='outline-none rounded py-1 px-2 focus:shadow-lg placeholder:text-xs'
+                className='outline-none rounded py-1 px-2 focus:shadow-lg placeholder:text-xs w-full'
                 placeholder='cari pengirim, penerima atau driver...'
               />
             </div>
