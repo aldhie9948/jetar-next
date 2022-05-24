@@ -21,6 +21,7 @@ const CekOngkir = React.forwardRef(({}, ref) => {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [ongkir, setOngkir] = useState(0);
+  const [distance, setDistance] = useState(0);
 
   const mapRef = useRef();
 
@@ -29,7 +30,8 @@ const CekOngkir = React.forwardRef(({}, ref) => {
   // dengan argument ongkir & response dari direction maps api
   const cekOngkirHandler = () => {
     const callback = (args) => {
-      const { ongkir } = args;
+      const { ongkir, distance } = args;
+      setDistance(Math.ceil(distance.value / 1000));
       setOngkir(localCurrency(ongkir));
     };
     mapRef.current.route({ origin, destination, callback });
@@ -119,7 +121,7 @@ const CekOngkir = React.forwardRef(({}, ref) => {
                   className={`${styles.btn} bg-gradient-green hover:!shadow-green-400/20`}
                   onClick={() => cekOngkirHandler()}
                 >
-                  Cek Ongkir - Rp. {ongkir}
+                  Cek Ongkir - Rp. {ongkir} [{distance} KM]
                 </button>
               </div>
             </div>

@@ -3,16 +3,16 @@ import React, { useRef, useEffect, useImperativeHandle } from 'react';
 const cekOngkir = (distance) => {
   distance = distance === 0 ? 1 : distance;
   const OngkirPrice = [
-    { range: 1, value: 6000 },
-    { range: 2, value: 7000 },
+    { range: 1, value: 7000 },
+    { range: 2, value: 8000 },
     { range: 3, value: 8000 },
     { range: 4, value: 9000 },
     { range: 5, value: 10000 },
-    { range: 6, value: 11000 },
-    { range: 7, value: 12000 },
-    { range: 8, value: 13000 },
-    { range: 9, value: 14000 },
-    { range: 10, value: 15000 },
+    { range: 6, value: 12000 },
+    { range: 7, value: 13000 },
+    { range: 8, value: 14000 },
+    { range: 9, value: 15000 },
+    { range: 10, value: 17000 },
     { range: 11, value: 2000 },
   ];
   let ongkir = 0;
@@ -114,8 +114,7 @@ const CekOngkirMap = React.memo(
                     const distance = route.distance;
                     const ongkir = cekOngkir(distance.value);
                     directionsRenderer.setDirections(response);
-                    callback && callback({ ongkir, response });
-                    console.log(response);
+                    callback && callback({ ongkir, response, distance });
                   } else {
                     window.alert('Directions request failed due to ' + status);
                   }

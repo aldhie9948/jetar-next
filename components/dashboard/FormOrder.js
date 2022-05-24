@@ -91,6 +91,7 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
   const [talang, setTalang] = useState(0);
   const [visible, setVisible] = useState(false);
   const [defaultDriver, setDefaultDriver] = useState({});
+  const [distance, setDistance] = useState(0);
 
   // handle saat form di submit
   const submitHandler = (e) => {
@@ -182,7 +183,8 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
     const origin = alamatPengirim;
     const destination = alamatPenerima;
     const callback = (args) => {
-      const { ongkir } = args;
+      const { ongkir, distance } = args;
+      setDistance(Math.ceil(distance.value / 1000));
       setOngkir(localCurrency(ongkir));
     };
     mapsRef.current.route({ origin, destination, callback });
@@ -375,7 +377,7 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
                         className={`${styles.btn} bg-gradient-green hover:!shadow-green-400/20`}
                         onClick={cekOngkirHandler}
                       >
-                        Cek Ongkir
+                        Cek Ongkir [{distance} KM]
                       </button>
                     </div>
                     <Input
