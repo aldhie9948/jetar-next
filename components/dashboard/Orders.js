@@ -94,7 +94,7 @@ const Orders = ({ onEdit, orders }) => {
   };
 
   const OrderFinished = ({ orders }) => {
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const [filteredOrders, setfilteredOrders] = useState(orders);
     const [keyword, setKeyword] = useState('');
 
@@ -138,6 +138,7 @@ const Orders = ({ onEdit, orders }) => {
                 value={itemsPerPage}
                 onChange={(e) => setItemsPerPage(e.target.value)}
               >
+                <option value='5'>5</option>
                 <option value='10'>10</option>
                 <option value='50'>50</option>
                 <option value='100'>100</option>

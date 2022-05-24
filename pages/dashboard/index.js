@@ -6,7 +6,7 @@ import { initDriver } from '../../reducers/driverReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
-import { FaTruck, FaRoute } from 'react-icons/fa';
+import { FaTruck, FaRoute, FaUndo } from 'react-icons/fa';
 import io from 'socket.io-client';
 import verifyPengguna from '../../lib/verifyLogin';
 import { initPengguna } from '../../reducers/penggunaReducer';
@@ -80,6 +80,13 @@ const Dashboard = () => {
               onClick={cekOngkirHandler}
               icon={<FaRoute />}
               label='cek ongkir'
+            />
+            <ButtonMenu
+              onClick={() => {
+                location.reload();
+              }}
+              icon={<FaUndo />}
+              label='Refresh'
             />
           </div>
           <CekOngkir ref={cekOngkirRef} />
