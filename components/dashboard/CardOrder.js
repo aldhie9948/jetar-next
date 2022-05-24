@@ -197,7 +197,7 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
               </div>
               <div className='flex gap-2 items-center mb-3 lowercase'>
                 <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                <div className='break-all whitespace-pre'>
+                <div className='break-all whitespace-pre-wrap'>
                   {order.pengirim.keterangan}
                 </div>
               </div>
@@ -233,7 +233,7 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
               </div>
               <div className='flex gap-2 items-center mb-3 lowercase'>
                 <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                <div className='break-all whitespace-pre'>
+                <div className='break-all whitespace-pre-wrap'>
                   {order.penerima.keterangan}
                 </div>
               </div>
