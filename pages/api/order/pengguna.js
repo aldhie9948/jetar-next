@@ -24,11 +24,11 @@ const handler = nc({
     if (driver) {
       let orders = [];
       if (date === 'all')
-        orders = await Order.find({ akun: driver._id }).populate('driver');
+        orders = await Order.find({ driver: driver._id }).populate('driver');
       if (date === 'today')
         orders = await Order.find({
-          $and: [{ akun: driver._id }, { tanggalOrder }],
-        });
+          $and: [{ driver: driver._id }, { tanggalOrder }],
+        }).populate('driver');
       res.status(200).json(orders);
     } else {
       res.status(404).json({ error: 'akun pengguna driver tidak ditemukan' });

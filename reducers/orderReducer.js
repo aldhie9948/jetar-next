@@ -53,9 +53,9 @@ export const initOrdersToday = (token) => {
   };
 };
 
-export const initOrdersDriver = (id, token) => {
+export const initOrdersDriver = ({ id, date = 'all' }, token) => {
   return async (dispatch) => {
-    const response = await OrderService.findByIdPengguna(id, token);
+    const response = await OrderService.findByIdPengguna({ id, date }, token);
     response.error ?? dispatch(set(response));
   };
 };

@@ -29,7 +29,7 @@ const Riwayat = () => {
     const callback = (user) => {
       const { id, token } = user;
       dispatch(initPengguna(user));
-      dispatch(initOrdersDriver({ id }, token));
+      dispatch(initOrdersDriver({ id, date: 'all' }, token));
       dispatch(initOneDriver(id, token));
       orderService.findByIdPengguna({ id }, token).then((res) => {
         setFilteredOrders(res.filter((f) => f.status === 0));
