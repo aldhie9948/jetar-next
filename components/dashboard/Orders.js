@@ -10,9 +10,9 @@ const Orders = ({ onEdit, orders }) => {
     orders.filter((f) => f.status === status);
 
   const getPersenOrder = ({ status = 0 }) => {
-    const orders = orderByStatus({ status });
-    if (orders.length > 0) {
-      const percentage = (orders.length / orders.length) * 100;
+    const filteredOrders = orderByStatus({ status });
+    if (filteredOrders.length > 0) {
+      const percentage = (filteredOrders.length / orders.length) * 100;
       return { width: `${percentage}%` };
     }
     return { width: '0%' };
@@ -36,7 +36,7 @@ const Orders = ({ onEdit, orders }) => {
       setCurrentItems(items.slice(itemOffset, endOffset));
       setPageCount(Math.ceil(items.length / itemsPerPage));
       // eslint-disable-next-line
-    }, [itemOffset, itemsPerPage]);
+    }, [itemOffset, itemsPerPage, items]);
 
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
