@@ -179,7 +179,7 @@ const Orders = ({ onEdit, orders }) => {
                 </div>
               ))}
           </div>
-          <OrderFinished orders={orders} />
+          <OrderFinished orders={orders.filter((f) => f.status === 0)} />
         </div>
         <div className='mx-5'>
           {/* statistik section */}
@@ -193,14 +193,20 @@ const Orders = ({ onEdit, orders }) => {
                     <FcBarChart className='text-[4rem] mx-auto' />
                     <span className='font-black text-lg'>
                       Rp.{' '}
-                      {localCurrency(orders.reduce((a, b) => a + b.ongkir, 0))}
+                      {localCurrency(
+                        orders
+                          .filter((f) => f.status === 0)
+                          .reduce((a, b) => a + b.ongkir, 0)
+                      )}
                     </span>
                   </div>
                   <div className='text-center'>
                     <span className='text-sm font-black'>Order</span>
                     <FcInTransit className='text-[4rem] mx-auto' />
                     <span className='font-black text-lg'>
-                      {localCurrency(orders.length)}
+                      {localCurrency(
+                        orders.filter((f) => f.status === 0).length
+                      )}
                     </span>
                   </div>
                 </div>
