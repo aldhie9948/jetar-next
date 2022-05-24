@@ -153,9 +153,7 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                  <div className='break-all whitespace-pre'>
-                    {order.pengirim.keterangan}
-                  </div>
+                  <div className='break-all'>{order.pengirim.keterangan}</div>
                 </div>
               </div>
               {/* penerima section */}
@@ -189,9 +187,7 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                  <div className='break-all whitespace-pre'>
-                    {order.penerima.keterangan}
-                  </div>
+                  <div className='break-all'>{order.penerima.keterangan}</div>
                 </div>
               </div>
               {/* quickedit section */}
