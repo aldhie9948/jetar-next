@@ -70,7 +70,7 @@ const Dashboard = () => {
     <>
       <Layout title='Dashboard'>
         <>
-          <div className='w-max mb-4 flex gap-2 items-center mx-5'>
+          <div className='w-max mb-4 flex gap-2 flex-wrap items-center mx-5'>
             <ButtonMenu
               onClick={tambahHandler}
               icon={<FaTruck />}
