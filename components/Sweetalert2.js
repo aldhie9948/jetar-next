@@ -60,7 +60,10 @@ export const verifyUser = (callback) => {
       try {
         if (!pengguna) throw new Error('User tidak ada');
         if (pengguna) {
-          if (id === pengguna.id && pengguna.username === 'aldi') {
+          if (
+            id === 'hapusorder' &&
+            (pengguna.username === 'aldi' || pengguna.username === 'boim')
+          ) {
             return pengguna;
           } else {
             throw new Error('Verifikasi gagal');
