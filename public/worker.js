@@ -10,8 +10,13 @@ if (workbox) {
 // Switch debug logging on/off here. Default is on in dev and off in prod.
 workbox.setConfig({ debug: false });
 
+// workbox.routing.registerRoute(
+//   new RegExp('/.*'),
+//   new workbox.strategies.NetworkFirst()
+// );
+
 workbox.routing.registerRoute(
-  new RegExp('/.*'),
+  ({ request }) => request.destination === 'image',
   new workbox.strategies.NetworkFirst()
 );
 
