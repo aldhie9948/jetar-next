@@ -26,8 +26,8 @@ import {
 import io from 'socket.io-client';
 const socket = io();
 
-const CardOrder = ({ order }) => {
-  const [visibleCard, setVisibleCard] = useState(false);
+const CardOrder = ({ order, open = false }) => {
+  const [visibleCard, setVisibleCard] = useState(open);
   const [visibleMaps, setvisibleMaps] = useState(false);
   const pengguna = useSelector((s) => s.pengguna);
   const dispatch = useDispatch();
@@ -121,9 +121,12 @@ const CardOrder = ({ order }) => {
         </div>
         {visibleCard && (
           <div className='mt-4'>
-            <div className='grid sm:grid-cols-3 grid-cols-2 gap-2 text-xs mb-2'>
+            <div className='grid sm:grid-cols-3 grid-cols-1 gap-2 text-xs mb-2'>
               {/* pengirim section */}
-              <div className='capitalize'>
+              <div className='capitalize sm:col-span-1 col-span-3'>
+                <div className='text-center text-lg uppercase font-black sm:hidden block'>
+                  Pengirim
+                </div>
                 <div className='flex gap-2 items-center w-full font-black mb-3'>
                   <BiStoreAlt className='flex-shrink-0 text-lg' />
                   <span className='block text-xs truncate'>
@@ -141,7 +144,7 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3'>
                   <BiMap className='flex-shrink-0 self-start text-lg' />
-                  <div className='break-all'>
+                  <div className='whitespace-pre-wrap'>
                     <a
                       href={directionLinkBuilder(order.pengirim.alamat)}
                       target='_blank'
@@ -153,13 +156,16 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                  <div className='break-all whitespace-pre-wrap'>
+                  <div className='whitespace-pre-wrap'>
                     {order.pengirim.keterangan}
                   </div>
                 </div>
               </div>
               {/* penerima section */}
-              <div className='capitalize'>
+              <div className='capitalize sm:col-span-1 col-span-3'>
+                <div className='text-center text-lg uppercase font-black sm:hidden block'>
+                  Penerima
+                </div>
                 <div className='flex gap-2 items-center w-full font-black mb-3'>
                   <FaPeopleCarry className='flex-shrink-0 text-lg' />
                   <span className='block text-xs truncate'>
@@ -177,7 +183,7 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3'>
                   <BiMap className='flex-shrink-0 self-start text-lg' />
-                  <div className='break-all whitespace-pre-wrap'>
+                  <div className='whitespace-pre-wrap'>
                     <a
                       href={directionLinkBuilder(order.penerima.alamat)}
                       target='_blank'
@@ -189,7 +195,9 @@ const CardOrder = ({ order }) => {
                 </div>
                 <div className='flex gap-2 items-center mb-3 lowercase'>
                   <BiNotepad className='flex-shrink-0 self-start text-lg' />
-                  <div className='break-all'>{order.penerima.keterangan}</div>
+                  <div className='whitespace-pre-wrap'>
+                    {order.penerima.keterangan}
+                  </div>
                 </div>
               </div>
               {/* quickedit section */}
@@ -271,14 +279,14 @@ const CardOrder = ({ order }) => {
                     <>
                       <div className='group relative flex gap-1 items-center flex-col'>
                         <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                          Driver pickup orderan
+                          Driver mengantarkan orderan
                         </div>
                         <button
                           onClick={() => pickupOrderHandler(order)}
-                          className='py-[0.4rem] px-4 flex justify-center items-center gap-1 font-bold bg-blue-800/90 rounded group-hover:drop-shadow-lg text-white tracking-wider'
+                          className='py-[0.4rem] px-4 flex justify-center items-center gap-1 font-bold bg-green-800/90 rounded group-hover:drop-shadow-lg text-white tracking-wider'
                         >
                           <BiBox className='text-xl' />
-                          <div>Pickup</div>
+                          <div>Pengantaran</div>
                         </button>
                       </div>
                     </>
