@@ -6,14 +6,20 @@ import Head from 'next/head';
 
 const Orders = () => {
   const [order, setOrder] = useState(null);
+
   const router = useRouter();
 
+  const {
+    query: { id, token },
+  } = router;
+
   useEffect(() => {
-    const { id, token } = router.query;
+    if (!router.isReady) return;
     OrderService.find(id, token).then((res) => {
       setOrder(res[0]);
     });
-  });
+    // eslint-disable-next-line
+  }, [router.isReady]);
 
   return (
     <>
@@ -21,7 +27,7 @@ const Orders = () => {
         <title>Orderan JETAR</title>
       </Head>
       <div className='sm:p-10 py-5'>
-        {order && <CardOrder order={order} open={true} />}
+        {order && <CardOrder order={order} open={true} token={token} />}
       </div>
     </>
   );

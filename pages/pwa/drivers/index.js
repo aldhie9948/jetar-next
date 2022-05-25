@@ -107,7 +107,7 @@ const Dashboard = () => {
             {orders.map(
               (order) =>
                 (order.status === 2 || order.status === 3) && (
-                  <CardOrder key={order.id} order={order} />
+                  <CardOrder key={order.id} order={order} pengguna={pengguna} />
                 )
             )}
           </div>

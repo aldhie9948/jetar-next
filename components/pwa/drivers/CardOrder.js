@@ -26,7 +26,7 @@ import {
 import io from 'socket.io-client';
 const socket = io();
 
-const CardOrder = ({ order, open = false }) => {
+const CardOrder = ({ order, token = null, open = false }) => {
   const [visibleCard, setVisibleCard] = useState(open);
   const [visibleMaps, setvisibleMaps] = useState(false);
   const pengguna = useSelector((s) => s.pengguna);
@@ -50,7 +50,7 @@ const CardOrder = ({ order, open = false }) => {
   // fn harus diberikan args "updatedOrder" yang akan dikirim ke api order
   const updateOrderHandler = ({ updatedOrder }) => {
     try {
-      dispatch(updateOrder(updatedOrder, pengguna?.token));
+      dispatch(updateOrder(updatedOrder, token ?? pengguna?.token));
       socket.emit('reload-order');
     } catch (error) {
       console.error(error);
