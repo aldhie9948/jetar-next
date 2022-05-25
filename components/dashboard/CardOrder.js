@@ -369,7 +369,7 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
             {/* button section */}
             <div className='sm:col-span-3 col-span-2 capitalize'>
               <div className='order-last flex justify-end gap-2'>
-                {order.status === 2 && (
+                {order.status !== 1 && (
                   <div className='group relative flex gap-1 items-center flex-col'>
                     <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
                       Share
