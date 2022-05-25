@@ -373,7 +373,7 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                     <BiImage className='group-hover:drop-shadow-lg text-xl text-blue-800' />
                   </button>
                 </div>
-                {order.status !== 0 && (
+                {(order.status !== 0 || pengguna.username === 'aldi') && (
                   <div className='group relative flex gap-1 items-center flex-col'>
                     <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
                       Edit Orderan
