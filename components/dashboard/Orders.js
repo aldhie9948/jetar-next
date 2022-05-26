@@ -214,6 +214,56 @@ const Orders = ({ onEdit, orders, drivers }) => {
               </div>
             </div>
           </div>
+
+          <div className='mb-4'>
+            <strong className={`header-form mb-4`}>
+              {dateFormat(new Date(), 'dd MMMM yyyy')}
+            </strong>
+            <div className='rounded-md shadow-lg bg-gradient-to-br from-blue-100 to-blue-200'>
+              <div className='p-4'>
+                {drivers.map((driver) => (
+                  <div
+                    key={driver.id}
+                    className='flex justify-between text-sm font-bold'
+                  >
+                    <div className='mb-1 w-5/12'>{driver.nama}</div>
+                    <div className='mb-1 w-2/12 text-center'>
+                      {
+                        orders
+                          .filter((f) => f.driver.id === driver.id)
+                          .filter((f) => f.status === 0).length
+                      }
+                    </div>
+                    <div className='mb-1 w-5/12 sm:pl-2 pl-16'>
+                      Rp.{' '}
+                      {localCurrency(
+                        orders
+                          .filter((f) => f.driver.id === driver.id)
+                          .filter((f) => f.status === 0)
+                          .reduce((a, b) => a + b.ongkir, 0)
+                      )}
+                    </div>
+                  </div>
+                ))}
+                <div className='w-full border-b-2 border-slate-500'></div>
+                <div className='flex justify-between text-sm font-bold'>
+                  <div className='mb-1 w-5/12'>Total</div>
+                  <div className='mb-1 w-2/12 text-center'>
+                    {orders.filter((f) => f.status === 0).length}
+                  </div>
+                  <div className='mb-1 w-5/12 sm:pl-2 pl-16'>
+                    Rp.{' '}
+                    {localCurrency(
+                      orders
+                        .filter((f) => f.status === 0)
+                        .reduce((a, b) => a + b.ongkir, 0)
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* ststus section */}
           <div className='mb-4'>
             <strong className={`header-form mb-4`}>Status</strong>
@@ -283,35 +333,6 @@ const Orders = ({ onEdit, orders, drivers }) => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div className='mb-4'>
-            <strong className={`header-form mb-4`}>
-              {dateFormat(new Date(), 'dd MMMM yyyy')}
-            </strong>
-            <div className='rounded-md shadow-lg bg-gradient-to-br from-blue-100 to-blue-200'>
-              <div className='p-4'>
-                {drivers.map((driver) => (
-                  <div
-                    key={driver.id}
-                    className='flex justify-between text-sm font-bold'
-                  >
-                    <div className='mb-1 w-5/12'>{driver.nama}</div>
-                    <div className='mb-1 w-2/12 text-center'>
-                      {orders.filter((f) => f.driver.id === driver.id).length}
-                    </div>
-                    <div className='mb-1 w-5/12 sm:pl-2 pl-16'>
-                      Rp.{' '}
-                      {localCurrency(
-                        orders
-                          .filter((f) => f.driver.id === driver.id)
-                          .filter((f) => f.status === 0)
-                          .reduce((a, b) => a + b.ongkir, 0)
-                      )}
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
