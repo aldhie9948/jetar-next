@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTable } from 'react-table/dist/react-table.development';
 import { removeDriver } from '../../reducers/driverReducer';

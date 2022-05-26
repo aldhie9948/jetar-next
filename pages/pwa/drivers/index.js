@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FcBusinessman, FcBusinesswoman } from 'react-icons/fc';
 import { initOneDriver } from '../../../reducers/driverReducer';
@@ -69,7 +69,7 @@ const Dashboard = () => {
   const driver = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const callback = (user) => {
       const { token, id } = user;
       dispatch(initPengguna(user));

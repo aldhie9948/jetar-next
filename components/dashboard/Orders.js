@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { BsArrowRightCircleFill, BsArrowLeftCircleFill } from 'react-icons/bs';
 import CardOrder from './CardOrder';
@@ -27,11 +27,11 @@ const Orders = ({ onEdit, orders, drivers }) => {
     // following the API or data you're working with.
     const [itemOffset, setItemOffset] = useState(0);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       setCurrentItems(items);
     }, [items]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       // Fetch items from another resources.
       const endOffset = itemOffset + itemsPerPage;
       setCurrentItems(items.slice(itemOffset, endOffset));
@@ -104,7 +104,7 @@ const Orders = ({ onEdit, orders, drivers }) => {
       setKeyword(value);
     };
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       const data = orders.filter((order) => {
         const driver = order.driver.nama
           .toString()

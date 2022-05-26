@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import localStorageService from '../../lib/localStorage';
 import { useRouter } from 'next/router';
@@ -8,7 +8,7 @@ const Logout = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(initPengguna(null));
     localStorageService.clear();
     router.push('/login');

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Layout from '../../components/Layout';
 import FormDriver from '../../components/driver/FormDriver';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,7 +15,7 @@ const Driver = () => {
     return formDriverRef.current.toggle(driver);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     pengguna && dispatch(initDriver(pengguna.token));
     // eslint-disable-next-line
   }, [pengguna]);

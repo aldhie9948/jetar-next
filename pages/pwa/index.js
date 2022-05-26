@@ -1,7 +1,7 @@
 import React from 'react';
 
 const PwaRedirect = () => {
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     router.push('/pwa/drivers');
     // eslint-disable-next-line
   }, []);

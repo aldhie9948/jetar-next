@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BiLogInCircle } from 'react-icons/bi';
 import Button from '../../components/Button';
 import LoginService from '../../services/login';

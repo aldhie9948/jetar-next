@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import OrderService from '../../services/order';
 import CardOrder from '../../components/pwa/drivers/CardOrder';
@@ -13,7 +13,7 @@ const Orders = () => {
     query: { id, token },
   } = router;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!router.isReady) return;
     OrderService.find(id, token).then((res) => {
       setOrder(res[0]);

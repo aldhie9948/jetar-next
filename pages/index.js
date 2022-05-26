@@ -1,10 +1,10 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 const Home = () => {
   const router = useRouter();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     router.push('/dashboard');
     // eslint-disable-next-line
   }, []);

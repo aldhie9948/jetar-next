@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useImperativeHandle } from 'react';
+import React, { useRef, useEffect, useImperativeHandle } from 'react';
 import cekOngkir from '../../lib/cekOngkir';
 
 const MyMapComponent = React.memo(
@@ -105,7 +105,7 @@ const MyMapComponent = React.memo(
           fields: ['place_id', 'name', 'geometry', 'formatted_address'],
         });
       };
-      useLayoutEffect(() => {
+      useEffect(() => {
         main.exec();
         const targetPengirim = document.getElementById('alamatPengirim');
         const targetPenerima = document.getElementById('alamatPenerima');

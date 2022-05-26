@@ -1,9 +1,4 @@
-import React, {
-  useImperativeHandle,
-  useRef,
-  useState,
-  useLayoutEffect,
-} from 'react';
+import React, { useImperativeHandle, useRef, useState, useEffect } from 'react';
 import dateFormat from '../../lib/date';
 import { toast, confirm } from '../Sweetalert2';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
