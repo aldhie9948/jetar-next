@@ -104,17 +104,12 @@ const Dashboard = () => {
           </strong>
 
           <div className='box-border overflow-y-auto'>
-            {pengguna &&
-              orders.map(
-                (order) =>
-                  (order.status === 2 || order.status === 3) && (
-                    <CardOrder
-                      key={order.id}
-                      order={order}
-                      pengguna={pengguna}
-                    />
-                  )
-              )}
+            {orders.map(
+              (order) =>
+                (order.status === 2 || order.status === 3) && (
+                  <CardOrder key={order.id} order={order} />
+                )
+            )}
           </div>
         </div>
       </>
