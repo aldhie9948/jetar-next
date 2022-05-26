@@ -7,10 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initOrdersToday } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
 import { FaTruck, FaRoute, FaUndo } from 'react-icons/fa';
-import io from 'socket.io-client';
 import verifyPengguna from '../../lib/verifyLogin';
 import { initPengguna } from '../../reducers/penggunaReducer';
-const socket = io();
 
 const Dashboard = () => {
   const formOrderRef = useRef();
@@ -18,17 +16,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const drivers = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
-
-  const socketInitializer = async (token) => {
-    await fetch('/api/socket');
-    socket.on('connect', () => {
-      console.log('an user is connected');
-    });
-    socket.on('latest-order', () => {
-      console.log(location.pathname, 'receive emit and reloading latest order');
-      dispatch(initOrdersToday(token));
-    });
-  };
+  const channel = useSelector((s) => s.pusher.channel);
 
   const tambahHandler = () => {
     formOrderRef.current.toggle();
@@ -60,9 +48,15 @@ const Dashboard = () => {
       dispatch(initPengguna(user));
       dispatch(initDriver(token));
       dispatch(initOrdersToday(token));
-      socketInitializer(token);
+      channel.bind('orders', () => {
+        console.log('channel bind orders emitted..');
+        dispatch(initOrdersToday(token));
+      });
     };
     verifyPengguna(callback, 0);
+    return () => {
+      channel.unsubscribe('jetar');
+    };
     // eslint-disable-next-line
   }, []);
 

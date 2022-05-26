@@ -7,9 +7,7 @@ import { localCurrency } from '../../../lib/currency';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import Layout from '../../../components/pwa/drivers/Layout';
 import verifyPengguna from '../../../lib/verifyLogin';
-import io from 'socket.io-client';
 import { initPengguna } from '../../../reducers/penggunaReducer';
-const socket = io();
 
 const CardDriver = ({ orders, driver }) => {
   return (
@@ -66,21 +64,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const driver = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
-
-  const socketInitializer = async (pengguna) => {
-    const { id, token } = pengguna;
-    await fetch('/api/socket');
-    socket.on('connect', () => {
-      console.log('an user is connected');
-    });
-    socket.on('latest-order', () => {
-      console.log(
-        location.pathname,
-        'receiced emit and reloading latest order'
-      );
-      dispatch(initOrdersDriver({ id, date: 'today' }, token));
-    });
-  };
+  const channel = useSelector((s) => s.pusher.channel);
 
   useEffect(() => {
     const callback = (user) => {
@@ -88,9 +72,17 @@ const Dashboard = () => {
       dispatch(initPengguna(user));
       dispatch(initOrdersDriver({ id, date: 'today' }, token));
       dispatch(initOneDriver(id, token));
-      socketInitializer(user);
+      channel.bind('orders', () => {
+        console.log('channel bind orders emitted..');
+        dispatch(initOrdersDriver({ id, date: 'today' }, token));
+      });
     };
     verifyPengguna(callback, 1);
+
+    return () => {
+      channel.unsubscribe('jetar');
+    };
+
     // eslint-disable-next-line
   }, []);
 

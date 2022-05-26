@@ -22,9 +22,7 @@ import {
   getLinkStaticMap,
   directionLinkBuilder,
 } from '../../../lib/getStaticMap';
-
-import io from 'socket.io-client';
-const socket = io();
+import axios from 'axios';
 
 const CardOrder = ({ order, token = null, open = false }) => {
   const [visibleCard, setVisibleCard] = useState(open);
@@ -48,10 +46,10 @@ const CardOrder = ({ order, token = null, open = false }) => {
 
   // fn / handler untuk mengupdate order yang digunakan di card order
   // fn harus diberikan args "updatedOrder" yang akan dikirim ke api order
-  const updateOrderHandler = ({ updatedOrder }) => {
+  const updateOrderHandler = async ({ updatedOrder }) => {
     try {
       dispatch(updateOrder(updatedOrder, token ?? pengguna?.token));
-      socket.emit('reload-order');
+      await axios.post('/api/pusher', { event: 'orders' });
     } catch (error) {
       console.error(error);
     }

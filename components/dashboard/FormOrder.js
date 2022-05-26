@@ -11,7 +11,7 @@ import { createOrder, initOrdersToday } from '../../reducers/orderReducer';
 import styles from '../../styles/Dashboard.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateOrder } from '../../reducers/orderReducer';
-import io from 'socket.io-client';
+import axios from 'axios';
 
 const Input = ({
   label = '',
@@ -60,8 +60,6 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
         return console.log(status);
     }
   };
-
-  const [socket, setSocket] = useState(io());
 
   const dispatch = useDispatch();
 
@@ -129,7 +127,7 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
         dispatch(createOrder(data, pengguna?.token));
       }
       toggle();
-      socket.emit('reload-order');
+      await axios.post('/api/pusher', { event: 'orders' });
     });
   };
 

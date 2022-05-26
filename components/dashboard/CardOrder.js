@@ -23,9 +23,8 @@ import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
 import StatusBadge from '../StatusBadge';
 import { getLinkStaticMap, directionLinkBuilder } from '../../lib/getStaticMap';
-import io from 'socket.io-client';
-const socket = io();
 import { verifyUser } from '../Sweetalert2';
+import axios from 'axios';
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -86,10 +85,10 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
 
   // fn / handler untuk mengupdate order yang digunakan di card order
   // fn harus diberikan args "updatedOrder" yang akan dikirim ke api order
-  const updateOrderHandler = ({ updatedOrder }) => {
+  const updateOrderHandler = async ({ updatedOrder }) => {
     try {
       dispatch(updateOrder(updatedOrder, pengguna.token));
-      socket.emit('reload-order');
+      await axios.post('/api/pusher', { event: 'orders' });
     } catch (error) {
       console.error(error);
     }
@@ -99,9 +98,9 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
   // fn harus memberikan args order sesuai dengan model Order
   const removeOrderHandler = (order) => {
     try {
-      verifyUser(() => {
+      verifyUser(async () => {
         dispatch(removeOrder(order, pengguna.token));
-        socket.emit('reload-order');
+        await axios.post('/api/pusher', { event: 'orders' });
       });
     } catch (error) {
       console.error(location.pathname, error);
