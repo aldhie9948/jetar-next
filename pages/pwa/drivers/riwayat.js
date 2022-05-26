@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Layout from '../../../components/pwa/drivers/Layout';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
@@ -25,7 +25,7 @@ const Riwayat = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const callback = (user) => {
       const { id, token } = user;
       dispatch(initPengguna(user));
@@ -41,7 +41,7 @@ const Riwayat = () => {
 
   // eslint-disable-next-line
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const data = orders.filter((d) => {
       const orderTimeStamp = new Date(d.tanggalOrder);
       const start = new Date(startDate);
@@ -79,7 +79,7 @@ const Riwayat = () => {
     // following the API or data you're working with.
     const [itemOffset, setItemOffset] = useState(0);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       // Fetch items from another resources.
       const endOffset = itemOffset + itemsPerPage;
       setCurrentItems(items.slice(itemOffset, endOffset));

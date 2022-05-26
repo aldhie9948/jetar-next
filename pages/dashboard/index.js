@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useLayoutEffect, useState, useMemo } from 'react';
 import Layout from '../../components/Layout';
 import CekOngkir from '../../components/dashboard/CekOngkir';
 import Orders from '../../components/dashboard/Orders';
@@ -45,7 +45,7 @@ const Dashboard = () => {
     );
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const callback = (user) => {
       const { token } = user;
       dispatch(initPengguna(user));
