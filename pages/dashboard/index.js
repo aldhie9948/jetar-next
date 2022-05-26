@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import Layout from '../../components/Layout';
 import CekOngkir from '../../components/dashboard/CekOngkir';
 import Orders from '../../components/dashboard/Orders';
@@ -9,6 +9,10 @@ import FormOrder from '../../components/dashboard/FormOrder';
 import { FaTruck, FaRoute, FaUndo } from 'react-icons/fa';
 import verifyPengguna from '../../lib/verifyLogin';
 import { initPengguna } from '../../reducers/penggunaReducer';
+import initPusher from '../../lib/pusherConfig';
+
+const pusher = initPusher();
+const channel = pusher.subscribe('jetar');
 
 const Dashboard = () => {
   const formOrderRef = useRef();
@@ -16,7 +20,6 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const drivers = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
-  const channel = useSelector((s) => s.pusher.channel);
 
   const tambahHandler = () => {
     formOrderRef.current.toggle();

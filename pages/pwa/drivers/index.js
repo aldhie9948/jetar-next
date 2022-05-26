@@ -8,6 +8,10 @@ import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import Layout from '../../../components/pwa/drivers/Layout';
 import verifyPengguna from '../../../lib/verifyLogin';
 import { initPengguna } from '../../../reducers/penggunaReducer';
+import initPusher from '../../../lib/pusherConfig';
+
+const pusher = initPusher();
+const channel = pusher.subscribe('jetar');
 
 const CardDriver = ({ orders, driver }) => {
   return (
@@ -64,7 +68,6 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const driver = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
-  const channel = useSelector((s) => s.pusher.channel);
 
   useEffect(() => {
     const callback = (user) => {
