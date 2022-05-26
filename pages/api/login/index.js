@@ -30,9 +30,7 @@ const handler = nc({
       id: pengguna._id,
     };
 
-    const token = jwt.sign(penggunaToken, config.SECRET_KEY, {
-      expiresIn: 60 * 60 * 60,
-    });
+    const token = jwt.sign(penggunaToken, config.SECRET_KEY, {});
 
     res.status(200).json({
       token,
