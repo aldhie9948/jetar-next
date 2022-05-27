@@ -67,7 +67,7 @@ const DriverTable = ({ driver, onUpdate }) => {
     return filteredDrivers.map((d) => ({
       col1: d.nama,
       col2: d.noHP,
-      col3: d.akun?.username,
+      col3: d.pengguna.username,
       col4: <ActionsButton driver={d} />,
     }));
   }, [driver]);

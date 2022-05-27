@@ -21,7 +21,7 @@ const handler = nc({
     try {
       verifyToken(req);
 
-      const driver = await Driver.find({}).populate('akun');
+      const driver = await Driver.find({}).populate('pengguna');
       res.status(200).json(driver);
     } catch (error) {
       console.error(error.toString());
@@ -52,13 +52,13 @@ const handler = nc({
       const driverObj = {
         ...data,
         nama: trimmer(data.nama),
-        akun: savedPengguna._id,
+        pengguna: savedPengguna._id,
         softDelete: false,
       };
 
       const driver = new Driver(driverObj);
       const savedDriver = await driver.save();
-      const populated = await savedDriver.populate('akun');
+      const populated = await savedDriver.populate('pengguna');
       res.status(201).json(populated);
     } catch (error) {
       console.error(error.toString());

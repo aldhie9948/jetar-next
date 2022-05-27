@@ -19,7 +19,7 @@ const handler = nc({
   try {
     verifyToken(req);
     const { id, date } = body;
-    const driver = await Driver.findOne({ akun: id });
+    const driver = await Driver.findOne({ pengguna: id });
     const tanggalOrder = dateFormat(new Date(), 'yyyy-MM-dd');
     if (driver) {
       let orders = [];
@@ -31,7 +31,7 @@ const handler = nc({
         }).populate('driver');
       res.status(200).json(orders);
     } else {
-      res.status(404).json({ error: 'akun pengguna driver tidak ditemukan' });
+      res.status(404).json({ error: 'pengguna driver tidak ditemukan' });
     }
   } catch (error) {
     console.error(error.toString());

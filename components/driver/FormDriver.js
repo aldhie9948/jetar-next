@@ -41,7 +41,7 @@ const FormDriver = React.forwardRef((props, ref) => {
     setNama(driver?.nama || '');
     setNoHP(driver?.noHP || '');
     setGender(driver?.gender || 'pria');
-    setUsername(driver?.akun.username || '');
+    setUsername(driver?.pengguna.username || '');
     setPassword('');
     driver ? setIsUpdate(true) : setIsUpdate(false);
     setVisible(!visible);

@@ -27,7 +27,7 @@ const handler = nc({
       const ObjectID = mongoose.Types.ObjectId;
       const param = new ObjectID(id.length < 12 ? '123456789012' : id);
       const driver = await Driver.findOne({
-        $or: [{ _id: param }, { akun: param }],
+        $or: [{ _id: param }, { pengguna: param }],
       });
       res.status(200).json(driver);
     } catch (error) {
@@ -50,7 +50,7 @@ const handler = nc({
 
       // buat object pengguna untuk di update di database
       const penggunaObj = {
-        ...data.akun,
+        ...data.pengguna,
         username: data.username.trim(),
         nama: trimmer(data.nama),
       };
@@ -61,7 +61,7 @@ const handler = nc({
 
       // update pengguna dan akan mengembalikkan object pengguna yang sudah tersimpan
       const updatedPengguna = await Pengguna.findByIdAndUpdate(
-        oldDriver.akun,
+        oldDriver.pengguna,
         penggunaObj,
         { new: true }
       );
@@ -69,16 +69,16 @@ const handler = nc({
       // buat object driver yang akan disimpan di database
       const driverObj = {
         ...data,
-        akun: updatedPengguna._id,
+        pengguna: updatedPengguna._id,
         nama: trimmer(data.nama),
       };
 
       // update driver dengan data yang baru dan
-      // element akun diisi dengan updatedPengguna ObjectTypeId
+      // element pengguna diisi dengan updatedPengguna ObjectTypeId
       const newDriver = await Driver.findByIdAndUpdate(id, driverObj, {
         new: true,
       });
-      const populated = await newDriver.populate('akun');
+      const populated = await newDriver.populate('pengguna');
 
       res.status(201).json(populated);
     } catch (error) {
@@ -94,21 +94,21 @@ const handler = nc({
       // verifikasi token
       verifyToken(req);
 
-      const oldDriver = await Driver.findById(id).populate('akun');
+      const oldDriver = await Driver.findById(id).populate('pengguna');
       // buat object yang akan diupdate
       // ganti softDelete menjadi "true" untuk indikator agar
       // order yang menggunakan driver tersebut masih ada datanya
-      // ganti elemetn akun menjadi null, agar driver
+      // ganti elemetn pengguna menjadi null, agar driver
       // tidak bisa melakukan login lagi
       const updatedDriver = {
         softDelete: true,
-        akun: null,
+        pengguna: null,
       };
 
       const driver = await Driver.findByIdAndUpdate(id, updatedDriver, {
         new: true,
       });
-      await Pengguna.findByIdAndRemove(oldDriver.akun.id);
+      await Pengguna.findByIdAndRemove(oldDriver.pengguna.id);
       res.status(200).json(driver);
     } catch (error) {
       console.error(error.toString());
