@@ -413,7 +413,10 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                       Edit Orderan
                     </div>
                     <button
-                      onClick={() => onEdit(order)}
+                      onClick={() => {
+                        window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+                        onEdit(order);
+                      }}
                       className='py-[0.4rem] px-2 flex justify-center items-center'
                     >
                       <BiEdit className='group-hover:drop-shadow-lg text-xl text-blue-800' />

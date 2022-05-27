@@ -80,3 +80,11 @@ export const removeOrder = (order, token) => {
     response.error ?? dispatch(remove(response));
   };
 };
+
+export const onGoingOrders = (token) => {
+  return async (dispatch) => {
+    const response = await OrderService.get(token);
+    const filtered = response.filter((f) => f.status !== 0);
+    response.error ?? dispatch(set(filtered));
+  };
+};

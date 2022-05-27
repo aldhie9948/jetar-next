@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTable } from 'react-table/dist/react-table.development';
+import { useTable } from 'react-table';
 import { removeDriver } from '../../reducers/driverReducer';
 import { confirm } from '../Sweetalert2';
 

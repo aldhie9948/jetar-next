@@ -4,7 +4,7 @@ import CekOngkir from '../../components/dashboard/CekOngkir';
 import Orders from '../../components/dashboard/Orders';
 import { initDriver } from '../../reducers/driverReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { initOrdersToday } from '../../reducers/orderReducer';
+import { initOrder } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
 import { FaTruck, FaRoute, FaUndo } from 'react-icons/fa';
 import verifyPengguna from '../../lib/verifyLogin';
@@ -20,6 +20,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const drivers = useSelector((s) => s.driver);
   const orders = useSelector((s) => s.order);
+  const pengguna = useSelector((s) => s.pengguna);
 
   const tambahHandler = () => {
     formOrderRef.current.toggle();
@@ -50,10 +51,10 @@ const Dashboard = () => {
       const { token } = user;
       dispatch(initPengguna(user));
       dispatch(initDriver(token));
-      dispatch(initOrdersToday(token));
+      dispatch(initOrder(token));
       channel.bind('orders', () => {
         console.log('channel bind orders emitted..');
-        dispatch(initOrdersToday(token));
+        dispatch(initOrder(token));
       });
     };
     verifyPengguna(callback, 0);
@@ -94,6 +95,7 @@ const Dashboard = () => {
             }}
             orders={orders}
             drivers={drivers}
+            pengguna={pengguna}
           />
         </>
       </Layout>
