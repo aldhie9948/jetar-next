@@ -54,9 +54,11 @@ const TableOrders = ({ orders, onEdit }) => {
           <button onClick={edit}>
             <BiEdit className='text-blue-500' />
           </button>
-          <button>
-            <BiTrash onClick={remove} className='text-red-800' />
-          </button>
+          {order !== 0 && (
+            <button>
+              <BiTrash onClick={remove} className='text-red-800' />
+            </button>
+          )}
         </div>
       </>
     );
