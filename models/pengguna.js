@@ -6,7 +6,7 @@ const penggunaSchema = new mongoose.Schema({
   nama: { required: true, type: String },
   password: { required: true, type: String },
   level: { required: true, type: Number },
-  subscription: { type: String },
+  subscription: { type: String, default: null },
 });
 
 penggunaSchema.plugin(validator);
