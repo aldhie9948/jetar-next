@@ -21,9 +21,7 @@ const handler = nc({
   const { event } = req.body;
 
   try {
-    if (event === 'orders') {
-      pusher.trigger('jetar', event, { message: 'OK' });
-    }
+    pusher.trigger('jetar', event, req.body);
     res.end();
   } catch (error) {
     console.log(error);

@@ -60,8 +60,9 @@ const CardOrder = ({ order, token = null, open = false }) => {
     updateOrderHandler({ order, status: 3 });
   };
   const finishOrderHandler = (order) => {
-    confirm(() => {
+    confirm(async () => {
       updateOrderHandler({ order, status: 0 });
+      await axios.post('/api/pusher', { event: 'orders-done', order });
     });
   };
 

@@ -26,6 +26,7 @@ import StatusBadge from '../StatusBadge';
 import { getLinkStaticMap, directionLinkBuilder } from '../../lib/getStaticMap';
 import { verifyUser } from '../Sweetalert2';
 import axios from 'axios';
+import { sendNotification } from '../../services/notification';
 
 const selectOptions = {
   components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
@@ -112,19 +113,26 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
 
   // fn untuk mengganti order ke driver
   // atau mengubah status order ke "2" / "jemput oleh driver"
-  const kirimOrderHandler = (order) => {
+  const kirimOrderHandler = async (order) => {
     updateOrderHandler({
       order: { ...order, driver: order.driver.id },
       status: 2,
     });
+    await sendNotification({
+      idPengguna: order.driver.pengguna,
+      token: pengguna.token,
+      title: 'Orderan Baru',
+      body: `Pengambilan di ${order.pengirim.nama.toUpperCase()} dan dikirim ke ${order.penerima.nama.toUpperCase()}`,
+    });
   };
 
   const orderSelesaiHandler = (order) =>
-    confirm(() => {
+    confirm(async () => {
       updateOrderHandler({
         order: { ...order, driver: order.driver.id },
         status: 0,
       });
+      await axios.post('/api/pusher', { event: 'orders-done', order });
     });
 
   return (

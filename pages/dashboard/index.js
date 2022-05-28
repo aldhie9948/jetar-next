@@ -60,8 +60,24 @@ const Dashboard = () => {
         console.log('channel bind orders emitted..');
         dispatch(initOrder(token));
       });
+      channel.bind('orders-done', async (data) => {
+        const { order } = data;
+        console.log('orders-done');
+        if (typeof Notification !== 'undefined') {
+          const permission = await Notification.requestPermission();
+          if (permission === 'granted') {
+            new Notification('Orderan Selesai', {
+              body: `Orderan oleh Driver ${order.driver.nama.toUpperCase()} dari pelanggan ${
+                order.pengirim.nama
+              } ke pelanggan ${order.penerima.nama} telah selesai`,
+              icon: `${location.origin}/assets/image/JETAR.png`,
+            });
+          }
+        }
+      });
     };
     verifyPengguna(callback, 0);
+
     return () => {
       channel.unsubscribe('jetar');
     };

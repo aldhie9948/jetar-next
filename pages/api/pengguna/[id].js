@@ -21,13 +21,12 @@ const handler = nc({
       query: { id },
     } = req;
     try {
-      const token = getToken(req);
-      verifyToken(token);
+      verifyToken(req);
       const pengguna = await Pengguna.findById(id);
       res.status(200).json(pengguna);
     } catch (error) {
       console.error(error.toString());
-      res.status(500).json({ error: 'data tidak ditemukan' });
+      res.status(500).json({ error });
     }
   })
   .put(async (req, res) => {
