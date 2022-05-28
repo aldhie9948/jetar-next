@@ -10,6 +10,7 @@ const PetaOrderanMap = (props) => {
   const [onGoingOrdersByPelanggan, setOnGoingOrdersByPelanggan] = useState([]);
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [pengirimMarker, setPengirimMarker] = useState(null);
   const mapRef = useRef();
   const config = {
     center: { lat: -6.8703952, lng: 109.1256 },
@@ -93,6 +94,7 @@ const PetaOrderanMap = (props) => {
     const marker = new google.maps.Marker({
       position: geocoded?.results[0].geometry.location,
       map,
+      optimized: true,
     });
     setMarkers((curr) => [...curr, marker]);
     const infoWindow = new google.maps.InfoWindow({
@@ -108,14 +110,24 @@ const PetaOrderanMap = (props) => {
       infoWindow.setContent(content);
       infoWindow.open(marker.getMap(), marker);
     });
+    map.setZoom(12);
+  };
+
+  const placeMarkerForPengirim = async (address) => {
+    const geocoded = await geocodeAddress(address);
+    pengirimMarker.setMap(map);
+    pengirimMarker.setPosition(geocoded?.results[0].geometry.location);
+    pengirimMarker.setLabel('P');
   };
 
   useLayoutEffect(() => {
     setMap(new google.maps.Map(mapRef.current, config));
+    setPengirimMarker(new google.maps.Marker());
   }, []);
 
   useLayoutEffect(() => {
     if (onGoingOrdersByPelanggan.length > 0) {
+      placeMarkerForPengirim(onGoingOrdersByPelanggan[0].pengirim.alamat);
       for (let i = 0; i < onGoingOrdersByPelanggan.length; i++) {
         const element = onGoingOrdersByPelanggan[i];
         markers.map((marker) => marker.setMap(null));
