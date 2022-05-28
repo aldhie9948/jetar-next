@@ -13,6 +13,11 @@ import {
 import { localCurrency } from '../../lib/currency';
 import dateFormat from '../../lib/date';
 import { useTable, usePagination } from 'react-table';
+import StatusBadge from '../StatusBadge';
+import { verifyUser } from '../../components/Sweetalert2';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeOrder } from '../../reducers/orderReducer';
+import axios from 'axios';
 
 const sort = (a, b) => {
   const x = dateFormat(`${a.tanggalOrder} ${a.waktuOrder}`, 't');
@@ -20,16 +25,29 @@ const sort = (a, b) => {
   return x > y ? -1 : x < y ? 1 : 0;
 };
 
-const TableOrders = ({ orders, pengguna, onEdit }) => {
+const TableOrders = ({ orders, onEdit }) => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [keyword, setKeyword] = useState('');
+  const dispatch = useDispatch();
 
   const ActionButton = ({ order }) => {
+    const user = useSelector((s) => s.pengguna);
+
     const edit = () => {
       onEdit(order);
       window.scroll({ top: 0, left: 0, behavior: 'smooth' });
     };
 
+    const remove = () => {
+      try {
+        verifyUser(async () => {
+          dispatch(removeOrder(order, user.token));
+          await axios.post('/api/pusher', { event: 'orders' });
+        });
+      } catch (error) {
+        console.error(location.pathname, error);
+      }
+    };
     return (
       <>
         <div className='mx-4 flex gap-4 justify-center'>
@@ -37,7 +55,7 @@ const TableOrders = ({ orders, pengguna, onEdit }) => {
             <BiEdit className='text-blue-500' />
           </button>
           <button>
-            <BiTrash className='text-red-800' />
+            <BiTrash onClick={remove} className='text-red-800' />
           </button>
         </div>
       </>
@@ -59,6 +77,15 @@ const TableOrders = ({ orders, pengguna, onEdit }) => {
         Header: 'Aksi',
         accessor: 'col2',
         Cell: ({ cell: { value } }) => <ActionButton order={value} />,
+      },
+      {
+        Header: 'Status',
+        accessor: 'col12',
+        Cell: ({ cell: { value } }) => (
+          <div className='mx-2'>
+            <StatusBadge status={value} />
+          </div>
+        ),
       },
       { Header: 'Tanggal', accessor: 'col3' },
       { Header: 'Waktu', accessor: 'col4' },
@@ -93,11 +120,12 @@ const TableOrders = ({ orders, pengguna, onEdit }) => {
       col9: order.pengirim.alamat,
       col10: order.penerima.nama,
       col11: order.penerima.alamat,
+      col12: order.status,
     }));
   }, [filteredOrders]);
 
   useEffect(() => {
-    setFilteredOrders(orders);
+    setFilteredOrders([...orders].sort(sort));
   }, [orders]);
 
   useEffect(() => {
@@ -166,7 +194,7 @@ const TableOrders = ({ orders, pengguna, onEdit }) => {
           >
             {[10, 20, 30, 40, filteredOrders.length].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
-                Show {pageSize}
+                Show {pageSize === filteredOrders.length ? 'All' : pageSize}
               </option>
             ))}
           </select>
@@ -199,7 +227,7 @@ const TableOrders = ({ orders, pengguna, onEdit }) => {
                       // eslint-disable-next-line
                       <td
                         className={`${
-                          [0, 1].includes(i) || 'pl-2 pr-10'
+                          [0, 1, 2].includes(i) || 'pl-2 pr-10'
                         } whitespace-nowrap py-1 text-sm border border-slate-500`}
                         {...cell.getCellProps()}
                       >
@@ -255,10 +283,30 @@ const TableOrders = ({ orders, pengguna, onEdit }) => {
   );
 };
 
-const Orders = ({ onEdit, orders, drivers, pengguna }) => {
+const Orders = ({ onEdit }) => {
+  const orders = useSelector((s) => s.order);
+  const drivers = useSelector((s) => s.driver);
   const [ongoingOrders, setOngoingOrders] = useState([]);
   const [todayOrders, setTodayOrders] = useState([]);
-  const [finishedOrders, setFinishedOrders] = useState([]);
+  const [keyword, setKeyword] = useState('');
+
+  useEffect(() => {
+    const data = orders
+      .filter((f) => f.status !== 0)
+      .filter((f) => {
+        const driver = f.driver.nama.toLowerCase().includes(keyword);
+        const pengirim = f.pengirim.nama.toLowerCase().includes(keyword);
+        const penerima = f.penerima.nama.toLowerCase().includes(keyword);
+        const tanggalOrder = f.tanggalOrder.toLowerCase().includes(keyword);
+        return driver || pengirim || penerima || tanggalOrder ? true : false;
+      });
+    const sorted = data.sort(sort);
+    setOngoingOrders(
+      keyword === '' ? orders.filter((f) => f.status !== 0) : sorted
+    );
+    // eslint-disable-next-line
+  }, [keyword]);
+
   useEffect(() => {
     setOngoingOrders(orders.filter((f) => f.status !== 0));
     setTodayOrders(
@@ -266,7 +314,6 @@ const Orders = ({ onEdit, orders, drivers, pengguna }) => {
         (f) => f.tanggalOrder === dateFormat(new Date(), 'yyyy-MM-dd')
       )
     );
-    setFinishedOrders(orders.filter((f) => f.status === 0));
   }, [orders]);
 
   return (
@@ -275,16 +322,23 @@ const Orders = ({ onEdit, orders, drivers, pengguna }) => {
         <div className='col-span-2'>
           <div className='flex justify-between px-5 mb-2 items-center'>
             <strong className={`header-form`}>Orderan</strong>
-            <div></div>
+            <div className='flex gap-2 items-center bg-white rounded p-2 shadow mx'>
+              <BiSearchAlt />
+              <input
+                type='search'
+                className='outline-none placeholder:text-xs text-sm'
+                placeholder='cari driver, pengirim, atau penerima..'
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
+            </div>
           </div>
           <div className='overflow-x-hidden max-h-[40rem] mb-4 overflow-y-auto px-5'>
-            {ongoingOrders
-              .filter((f) => f.status !== 0)
-              .map((order) => (
-                <div key={order.id}>
-                  <CardOrder order={order} onEdit={onEdit} />
-                </div>
-              ))}
+            {ongoingOrders.map((order) => (
+              <div key={order.id}>
+                <CardOrder order={order} onEdit={onEdit} />
+              </div>
+            ))}
           </div>
         </div>
         <div className='mx-5'>
@@ -334,7 +388,6 @@ const Orders = ({ onEdit, orders, drivers, pengguna }) => {
                   <div className='mb-1 w-5/12 sm:pl-2 pl-16'>Ongkir</div>
                 </div>
                 <div className='w-full border-b-2 border-slate-500 my-1'></div>
-
                 {drivers.map((driver) => (
                   <div
                     key={driver.id}
@@ -379,7 +432,7 @@ const Orders = ({ onEdit, orders, drivers, pengguna }) => {
           </div>
         </div>
       </div>
-      <TableOrders orders={orders} pengguna={pengguna} onEdit={onEdit} />
+      <TableOrders orders={orders} onEdit={onEdit} />
     </div>
   );
 };

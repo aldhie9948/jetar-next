@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import Select from 'react-select';
-import { initDriver } from '../../reducers/driverReducer';
 import { borderInputHandler } from '../../lib/handler';
 
 const selectStyles = {
@@ -11,8 +9,6 @@ const selectStyles = {
 
 const SelectDriver = React.forwardRef(
   ({ onChange = null, drivers = [], ...rest }, ref) => {
-    const dispatch = useDispatch();
-    const pengguna = useSelector((s) => s.pengguna);
     const [selectedDriver, setSelectedDriver] = useState('');
     const options = () => {
       // mengembalikan array kosong jika driver belum init

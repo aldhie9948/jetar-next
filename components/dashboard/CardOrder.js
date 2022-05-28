@@ -18,6 +18,7 @@ import {
   BiSend,
   BiShareAlt,
   BiImage,
+  BiCheckDouble,
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
 import Select from 'react-select';
@@ -63,6 +64,7 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
   const openCardHandler = (e) => {
     setVisibleCard(!visibleCard);
   };
+
   // fn untuk membuka / memulai chat whatsapp dengan
   // nomor yang diberikan dei argument
   const whatsappHandler = (phone) => {
@@ -85,8 +87,9 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
 
   // fn / handler untuk mengupdate order yang digunakan di card order
   // fn harus diberikan args "updatedOrder" yang akan dikirim ke api order
-  const updateOrderHandler = async ({ updatedOrder }) => {
+  const updateOrderHandler = async ({ order, status }) => {
     try {
+      const updatedOrder = { ...order, status };
       dispatch(updateOrder(updatedOrder, pengguna.token));
       await axios.post('/api/pusher', { event: 'orders' });
     } catch (error) {
@@ -110,9 +113,20 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
   // fn untuk mengganti order ke driver
   // atau mengubah status order ke "2" / "jemput oleh driver"
   const kirimOrderHandler = (order) => {
-    const updatedOrder = { ...order, driver: order.driver.id, status: 2 };
-    updateOrderHandler({ updatedOrder });
+    updateOrderHandler({
+      order: { ...order, driver: order.driver.id },
+      status: 2,
+    });
   };
+
+  const orderSelesaiHandler = (order) =>
+    confirm(() => {
+      updateOrderHandler({
+        order: { ...order, driver: order.driver.id },
+        status: 0,
+      });
+    });
+
   return (
     <div
       className={`card-order !shadow-lg bg-gradient-green  text-slate-600 transition-all duration-150 overflow-x-hidden`}
@@ -165,7 +179,213 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
       </div>
       {visibleCard && (
         <div className='mt-4'>
-          <div className='grid sm:grid-cols-3 grid-cols-1 gap-2 text-xs mb-2'>
+          <div className='grid sm:grid-cols-2 grid-cols-1 gap-2 text-xs mb-2'>
+            <div className='flex gap-2 sm:flex-nowrap flex-wrap col-span-2 items-center'>
+              {/* quickedit section */}
+              <div className='flex capitalize w-max'>
+                <div className='flex gap-2 w-full font-black mb-2'>
+                  <BiCar className='flex-shrink-0 self-start text-lg' />
+                  <span className='block text-xs flex-grow'>
+                    <div className='mb-1'>Driver</div>
+                    <div className='font-normal'>
+                      <Select
+                        className='w-full'
+                        isDisabled={isFinished}
+                        {...selectOptions}
+                        options={driverOptions}
+                        value={defaultDriver(order.driver.id)}
+                        // ganti driver dan update order
+                        onChange={(v) => {
+                          const updatedOrder = {
+                            ...order,
+                            driver: v.value,
+                          };
+                          updateOrderHandler({
+                            order: updatedOrder,
+                            status: order.status,
+                          });
+                        }}
+                      />
+                    </div>
+                  </span>
+                </div>
+                <div className='flex gap-2 w-full font-black mb-2'>
+                  <BiInfoCircle className='flex-shrink-0 self-start text-lg' />
+                  <span className='block text-xs flex-grow'>
+                    <div className='mb-1'>Talang</div>
+                    <div className='font-normal py-1 flex gap-4 items-center rounded-md'>
+                      <div>Rp.</div>
+                      <input
+                        disabled={isFinished}
+                        type='text'
+                        className='w-full outline-none bg-transparent'
+                        defaultValue={localCurrency(order.talang)}
+                        // ganti uang talangan dan update order
+                        // jika uang talangan sama atau tidak berubah
+                        // maka order tidak akan diupdate
+                        onBlur={(e) => {
+                          const talang = currencyNumber(e.target.value);
+                          const updatedOrder = {
+                            ...order,
+                            talang,
+                            driver: order.driver.id,
+                          };
+                          if (talang !== order.talang)
+                            updateOrderHandler({
+                              updatedOrder,
+                            });
+                        }}
+                        // saat user penginputan, form hanya akan
+                        // menconvert / mengubah ke format currency
+                        onInput={(e) => {
+                          const value = e.target.value;
+                          e.target.value = localCurrency(value);
+                        }}
+                      />
+                    </div>
+                  </span>
+                </div>
+                <div className='flex gap-2 w-full font-black mb-2'>
+                  <BiDollarCircle className='flex-shrink-0 self-start text-lg' />
+                  <span className='block text-xs flex-grow'>
+                    <div className='mb-1'>Ongkir</div>
+                    <div className='font-normal py-1 flex gap-4 items-center rounded-md'>
+                      <div>Rp.</div>
+                      <input
+                        disabled={isFinished}
+                        type='text'
+                        className='w-full outline-none bg-transparent'
+                        defaultValue={localCurrency(order.ongkir)}
+                        // ganti uang ongkir dan update order
+                        // jika uang ongkir sama atau tidak berubah
+                        // maka order tidak akan diupdate
+                        onBlur={(e) => {
+                          const ongkir = currencyNumber(e.target.value);
+                          const updatedOrder = {
+                            ...order,
+                            ongkir,
+                            driver: order.driver.id,
+                          };
+                          if (ongkir !== order.ongkir)
+                            updateOrderHandler({
+                              updatedOrder,
+                            });
+                        }}
+                        // saat user penginputan, form hanya akan
+                        // menconvert / mengubah ke format currency
+                        onInput={(e) => {
+                          const value = e.target.value;
+                          e.target.value = localCurrency(value);
+                        }}
+                      />
+                    </div>
+                  </span>
+                </div>
+              </div>
+              {/* button section */}
+              <div className='capitalize flex sm:justify-end justify-evenly sm:w-max w-full'>
+                {order.status !== 1 && (
+                  <div className='group relative flex gap-1 items-center flex-col'>
+                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                      Share
+                    </div>
+                    <button
+                      onClick={() => {
+                        const params = new URLSearchParams({
+                          id: order.id,
+                          token: pengguna.token,
+                        });
+                        const link = `${
+                          location.origin
+                        }/orders?${params.toString()}`;
+                        window.open(
+                          `whatsapp://send?phone=62${
+                            order.driver.noHP
+                          }&text=${encodeURIComponent(`
+                          Pengirim: *${order.pengirim.nama}*
+                          Penerima: *${order.penerima.nama}*
+                          Klik link di bawah untuk melihat detail orderan\n${link}\n*Generated by JETAR App*`)}`,
+                          '_top'
+                        );
+                      }}
+                      className='py-[0.4rem] px-2 flex justify-center items-center'
+                    >
+                      <BiShareAlt className='group-hover:drop-shadow-lg text-xl text-blue-800' />
+                    </button>
+                  </div>
+                )}
+                <div className='group relative flex gap-1 items-center flex-col'>
+                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                    Maps Orderan
+                  </div>
+                  <button
+                    onClick={() => setvisibleMaps(!visibleMaps)}
+                    className='py-[0.4rem] px-2 flex justify-center items-center'
+                  >
+                    <BiImage className='group-hover:drop-shadow-lg text-xl text-blue-800' />
+                  </button>
+                </div>
+                {(order.status !== 0 || pengguna.username === 'aldi') && (
+                  <div className='group relative flex gap-1 items-center flex-col'>
+                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                      Edit Orderan
+                    </div>
+                    <button
+                      onClick={() => {
+                        window.scroll({
+                          top: 0,
+                          left: 0,
+                          behavior: 'smooth',
+                        });
+                        onEdit(order);
+                      }}
+                      className='py-[0.4rem] px-2 flex justify-center items-center'
+                    >
+                      <BiEdit className='group-hover:drop-shadow-lg text-xl text-blue-800' />
+                    </button>
+                  </div>
+                )}
+                {order.status === 1 && (
+                  <div className='group relative flex gap-1 items-center flex-col'>
+                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                      Kirim Orderan
+                    </div>
+                    <button className='py-[0.4rem] px-2 flex justify-center items-center'>
+                      <BiSend
+                        onClick={() => kirimOrderHandler(order)}
+                        className='group-hover:drop-shadow-lg text-xl text-blue-800'
+                      />
+                    </button>
+                  </div>
+                )}
+
+                {[0, 1].includes(order.status) || (
+                  <div className='group relative flex gap-1 items-center flex-col'>
+                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                      Order Selesai
+                    </div>
+                    <button className='py-[0.4rem] px-2 flex justify-center items-center'>
+                      <BiCheckDouble
+                        onClick={() => orderSelesaiHandler(order)}
+                        className='group-hover:drop-shadow-lg text-xl text-blue-800'
+                      />
+                    </button>
+                  </div>
+                )}
+
+                <div className='group relative flex gap-1 items-center flex-col'>
+                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                    Hapus Orderan
+                  </div>
+                  <button
+                    onClick={() => removeOrderHandler(order)}
+                    className='py-[0.4rem] px-2 flex justify-center items-center'
+                  >
+                    <BiTrash className='group-hover:drop-shadow-lg text-xl text-red-800' />
+                  </button>
+                </div>
+              </div>
+            </div>
             {/* pengirim section */}
             <div className='capitalize sm:col-span-1 col-span-3'>
               <div className='text-center text-lg uppercase font-black sm:hidden block'>
@@ -244,105 +464,8 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                 </div>
               </div>
             </div>
-            {/* quickedit section */}
-            <div className='sm:col-span-1 flex sm:flex-col flex-row col-span-2 capitalize'>
-              <div className='flex gap-2 w-full font-black mb-2'>
-                <BiCar className='flex-shrink-0 self-start text-lg' />
-                <span className='block text-xs flex-grow'>
-                  <div className='mb-1'>Driver</div>
-                  <div className='font-normal'>
-                    <Select
-                      className='w-full'
-                      isDisabled={isFinished}
-                      {...selectOptions}
-                      options={driverOptions}
-                      value={defaultDriver(order.driver.id)}
-                      // ganti driver dan update order
-                      onChange={(v) => {
-                        const updatedOrder = {
-                          ...order,
-                          driver: v.value,
-                        };
-                        updateOrderHandler({ updatedOrder });
-                      }}
-                    />
-                  </div>
-                </span>
-              </div>
-              <div className='flex gap-2 w-full font-black mb-2'>
-                <BiInfoCircle className='flex-shrink-0 self-start text-lg' />
-                <span className='block text-xs flex-grow'>
-                  <div className='mb-1'>Talang</div>
-                  <div className='font-normal py-1 flex gap-4 items-center rounded-md'>
-                    <div>Rp.</div>
-                    <input
-                      disabled={isFinished}
-                      type='text'
-                      className='w-full outline-none bg-transparent'
-                      defaultValue={localCurrency(order.talang)}
-                      // ganti uang talangan dan update order
-                      // jika uang talangan sama atau tidak berubah
-                      // maka order tidak akan diupdate
-                      onBlur={(e) => {
-                        const talang = currencyNumber(e.target.value);
-                        const updatedOrder = {
-                          ...order,
-                          talang,
-                          driver: order.driver.id,
-                        };
-                        if (talang !== order.talang)
-                          updateOrderHandler({
-                            updatedOrder,
-                          });
-                      }}
-                      // saat user penginputan, form hanya akan
-                      // menconvert / mengubah ke format currency
-                      onInput={(e) => {
-                        const value = e.target.value;
-                        e.target.value = localCurrency(value);
-                      }}
-                    />
-                  </div>
-                </span>
-              </div>
-              <div className='flex gap-2 w-full font-black mb-2'>
-                <BiDollarCircle className='flex-shrink-0 self-start text-lg' />
-                <span className='block text-xs flex-grow'>
-                  <div className='mb-1'>Ongkir</div>
-                  <div className='font-normal py-1 flex gap-4 items-center rounded-md'>
-                    <div>Rp.</div>
-                    <input
-                      disabled={isFinished}
-                      type='text'
-                      className='w-full outline-none bg-transparent'
-                      defaultValue={localCurrency(order.ongkir)}
-                      // ganti uang ongkir dan update order
-                      // jika uang ongkir sama atau tidak berubah
-                      // maka order tidak akan diupdate
-                      onBlur={(e) => {
-                        const ongkir = currencyNumber(e.target.value);
-                        const updatedOrder = {
-                          ...order,
-                          ongkir,
-                          driver: order.driver.id,
-                        };
-                        if (ongkir !== order.ongkir)
-                          updateOrderHandler({
-                            updatedOrder,
-                          });
-                      }}
-                      // saat user penginputan, form hanya akan
-                      // menconvert / mengubah ke format currency
-                      onInput={(e) => {
-                        const value = e.target.value;
-                        e.target.value = localCurrency(value);
-                      }}
-                    />
-                  </div>
-                </span>
-              </div>
-            </div>
-            <div className='sm:col-span-3 col-span-2 capitalize'>
+            {/* maps */}
+            <div className='capitalize col-span-2'>
               {visibleMaps && (
                 <>
                   <div className='relative w-full'>
@@ -364,91 +487,6 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                   </div>
                 </>
               )}
-            </div>
-            {/* button section */}
-            <div className='sm:col-span-3 col-span-2 capitalize'>
-              <div className='order-last flex justify-end gap-2'>
-                {order.status !== 1 && (
-                  <div className='group relative flex gap-1 items-center flex-col'>
-                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                      Share
-                    </div>
-                    <button
-                      onClick={() => {
-                        const params = new URLSearchParams({
-                          id: order.id,
-                          token: pengguna.token,
-                        });
-                        const link = `${
-                          location.origin
-                        }/orders?${params.toString()}`;
-                        window.open(
-                          `whatsapp://send?phone=62${
-                            order.driver.noHP
-                          }&text=${encodeURIComponent(`
-                        Klik link di bawah untuk melihat detail orderan\n${link}\n*Generated by JETAR App*`)}`,
-                          '_top'
-                        );
-                      }}
-                      className='py-[0.4rem] px-2 flex justify-center items-center'
-                    >
-                      <BiShareAlt className='group-hover:drop-shadow-lg text-xl text-blue-800' />
-                    </button>
-                  </div>
-                )}
-                <div className='group relative flex gap-1 items-center flex-col'>
-                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                    Maps Orderan
-                  </div>
-                  <button
-                    onClick={() => setvisibleMaps(!visibleMaps)}
-                    className='py-[0.4rem] px-2 flex justify-center items-center'
-                  >
-                    <BiImage className='group-hover:drop-shadow-lg text-xl text-blue-800' />
-                  </button>
-                </div>
-                {(order.status !== 0 || pengguna.username === 'aldi') && (
-                  <div className='group relative flex gap-1 items-center flex-col'>
-                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                      Edit Orderan
-                    </div>
-                    <button
-                      onClick={() => {
-                        window.scroll({ top: 0, left: 0, behavior: 'smooth' });
-                        onEdit(order);
-                      }}
-                      className='py-[0.4rem] px-2 flex justify-center items-center'
-                    >
-                      <BiEdit className='group-hover:drop-shadow-lg text-xl text-blue-800' />
-                    </button>
-                  </div>
-                )}
-                {order.status === 1 && (
-                  <div className='group relative flex gap-1 items-center flex-col'>
-                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                      Kirim Orderan
-                    </div>
-                    <button className='py-[0.4rem] px-2 flex justify-center items-center'>
-                      <BiSend
-                        onClick={() => kirimOrderHandler(order)}
-                        className='group-hover:drop-shadow-lg text-xl text-blue-800'
-                      />
-                    </button>
-                  </div>
-                )}
-
-                <div className='group relative flex gap-1 items-center flex-col'>
-                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                    Hapus Orderan
-                  </div>
-                  <button
-                    onClick={() => removeOrderHandler(order)}
-                    className='py-[0.4rem] px-2 flex justify-center items-center'
-                  >
-                    <BiTrash className='group-hover:drop-shadow-lg text-xl text-red-800' />
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </div>

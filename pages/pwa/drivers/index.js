@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FcBusinessman, FcBusinesswoman } from 'react-icons/fc';
-import { initOneDriver } from '../../../reducers/driverReducer';
-import { initOrdersDriver } from '../../../reducers/orderReducer';
+import { initDriver } from '../../../reducers/driverReducer';
+import { initOrdersByDriver } from '../../../reducers/orderReducer';
 import { localCurrency } from '../../../lib/currency';
 import CardOrder from '../../../components/pwa/drivers/CardOrder';
 import Layout from '../../../components/pwa/drivers/Layout';
@@ -20,7 +20,7 @@ const CardDriver = ({ orders, driver }) => {
         <div className='px-2 py-5'>
           <div className='grid grid-cols-3 gap-2'>
             <div className='place-self-center'>
-              {driver.gender === 'wanita' ? (
+              {driver?.gender === 'wanita' ? (
                 <FcBusinesswoman className='text-[6rem]' />
               ) : (
                 <FcBusinessman className='text-[6rem]' />
@@ -30,7 +30,7 @@ const CardDriver = ({ orders, driver }) => {
               <div>
                 <div className='text-xs'>Nama :</div>
                 <div className='font-black text-lg capitalize'>
-                  {driver.nama}
+                  {driver?.nama}
                 </div>
               </div>
               <div>
@@ -73,11 +73,11 @@ const Dashboard = () => {
     const callback = (user) => {
       const { token, id } = user;
       dispatch(initPengguna(user));
-      dispatch(initOrdersDriver({ id, date: 'today' }, token));
-      dispatch(initOneDriver(id, token));
+      dispatch(initOrdersByDriver({ id, date: 'today' }, token));
+      dispatch(initDriver(id, token));
       channel.bind('orders', () => {
         console.log('channel bind orders emitted..');
-        dispatch(initOrdersDriver({ id, date: 'today' }, token));
+        dispatch(initOrdersByDriver({ id, date: 'today' }, token));
       });
     };
     verifyPengguna(callback, 1);
@@ -92,7 +92,7 @@ const Dashboard = () => {
   return (
     <Layout>
       <>
-        <CardDriver driver={driver} orders={orders} />
+        <CardDriver driver={driver[0]} orders={orders} />
         <div>
           <strong className='header-form my-auto px-5'>
             Orderan Hari Ini..

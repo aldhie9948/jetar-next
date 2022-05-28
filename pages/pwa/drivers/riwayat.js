@@ -7,15 +7,12 @@ import { BsArrowRightCircleFill, BsArrowLeftCircleFill } from 'react-icons/bs';
 import dateFormat from '../../../lib/date';
 import verifyLogin from '../../../lib/verifyLogin';
 import { initPengguna } from '../../../reducers/penggunaReducer';
-import { initOrdersDriver } from '../../../reducers/orderReducer';
-import { initOneDriver } from '../../../reducers/driverReducer';
+import { initOrdersByDriver } from '../../../reducers/orderReducer';
+import { initDriver } from '../../../reducers/driverReducer';
 import orderService from '../../../services/order';
 
 const Riwayat = () => {
-  const orders = useSelector((s) => {
-    const finishedOrders = s.order.filter((f) => f.status === 0);
-    return finishedOrders;
-  });
+  const orders = useSelector((s) => s.order.filter((f) => f.status === 0));
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [itemsCount, setItemsCount] = useState(5);
   const [startDate, setStartDate] = useState(
@@ -29,8 +26,8 @@ const Riwayat = () => {
     const callback = (user) => {
       const { id, token } = user;
       dispatch(initPengguna(user));
-      dispatch(initOrdersDriver({ id, date: 'all' }, token));
-      dispatch(initOneDriver(id, token));
+      dispatch(initOrdersByDriver({ id, date: 'all' }, token));
+      dispatch(initDriver(id, token));
       orderService.findByIdPengguna({ id }, token).then((res) => {
         setFilteredOrders(res.filter((f) => f.status === 0));
       });

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Layout from '../../components/Layout';
 import FormDriver from '../../components/driver/FormDriver';
 import { useSelector, useDispatch } from 'react-redux';
-import { initDriver } from '../../reducers/driverReducer';
+import { initDrivers } from '../../reducers/driverReducer';
 import DriverTable from '../../components/driver/DriverTable';
 
 const Driver = () => {
@@ -16,7 +16,7 @@ const Driver = () => {
   };
 
   useEffect(() => {
-    pengguna && dispatch(initDriver(pengguna.token));
+    pengguna && dispatch(initDrivers(pengguna.token));
     // eslint-disable-next-line
   }, [pengguna]);
 

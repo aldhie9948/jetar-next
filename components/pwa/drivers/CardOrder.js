@@ -46,8 +46,9 @@ const CardOrder = ({ order, token = null, open = false }) => {
 
   // fn / handler untuk mengupdate order yang digunakan di card order
   // fn harus diberikan args "updatedOrder" yang akan dikirim ke api order
-  const updateOrderHandler = async ({ updatedOrder }) => {
+  const updateOrderHandler = async ({ order, status }) => {
     try {
+      const updatedOrder = { ...order, driver: order.driver.id, status };
       dispatch(updateOrder(updatedOrder, token ?? pengguna?.token));
       await axios.post('/api/pusher', { event: 'orders' });
     } catch (error) {
@@ -56,13 +57,11 @@ const CardOrder = ({ order, token = null, open = false }) => {
   };
 
   const pickupOrderHandler = (order) => {
-    const updatedOrder = { ...order, driver: order.driver.id, status: 3 };
-    updateOrderHandler({ updatedOrder });
+    updateOrderHandler({ order, status: 3 });
   };
   const finishOrderHandler = (order) => {
     confirm(() => {
-      const updatedOrder = { ...order, driver: order.driver.id, status: 0 };
-      updateOrderHandler({ updatedOrder });
+      updateOrderHandler({ order, status: 0 });
     });
   };
 

@@ -5,7 +5,7 @@ import dateFormat from '../lib/date';
 const sort = (a, b) => {
   const x = dateFormat(`${a.tanggalOrder} ${a.waktuOrder}`, 't');
   const y = dateFormat(`${b.tanggalOrder} ${b.waktuOrder}`, 't');
-  return x > y ? -1 : x < y ? 1 : 0;
+  return x > y ? 1 : x < y ? -1 : 0;
 };
 
 // ascending
@@ -53,10 +53,20 @@ export const initOrdersToday = (token) => {
   };
 };
 
-export const initOrdersDriver = ({ id, date = 'all' }, token) => {
+export const initOrdersByDriver = ({ id, date = 'all' }, token) => {
   return async (dispatch) => {
-    const response = await OrderService.findByIdPengguna({ id, date }, token);
-    response.error ?? dispatch(set(response));
+    const response = await OrderService.get(token);
+    const filterOrders = response.filter((f) => f.driver.pengguna === id);
+    response.error ??
+      dispatch(
+        set(
+          date === 'today'
+            ? filterOrders.filter(
+                (f) => f.tanggalOrder === dateFormat(new Date(), 'yyyy-MM-dd')
+              )
+            : filterOrders
+        )
+      );
   };
 };
 

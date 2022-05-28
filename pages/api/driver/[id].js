@@ -26,7 +26,7 @@ const handler = nc({
       verifyToken(req);
       const ObjectID = mongoose.Types.ObjectId;
       const param = new ObjectID(id.length < 12 ? '123456789012' : id);
-      const driver = await Driver.findOne({
+      const driver = await Driver.find({
         $or: [{ _id: param }, { pengguna: param }],
       });
       res.status(200).json(driver);

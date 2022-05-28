@@ -27,14 +27,14 @@ const driverSlice = createSlice({
 export default driverSlice.reducer;
 export const { set, create, remove, update } = driverSlice.actions;
 
-export const initDriver = (token) => {
+export const initDrivers = (token) => {
   return async (dispatch) => {
     const driver = await DriverService.get(token);
     driver.error ?? dispatch(set(driver));
   };
 };
 
-export const initOneDriver = (penggunaID, token) => {
+export const initDriver = (penggunaID, token) => {
   return async (dispatch) => {
     const driver = await DriverService.find(penggunaID, token);
     driver.error ?? dispatch(set(driver));

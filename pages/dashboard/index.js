@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import CekOngkir from '../../components/dashboard/CekOngkir';
 import Orders from '../../components/dashboard/Orders';
-import { initDriver } from '../../reducers/driverReducer';
+import { initDrivers } from '../../reducers/driverReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { initOrder } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
@@ -50,7 +50,7 @@ const Dashboard = () => {
     const callback = (user) => {
       const { token } = user;
       dispatch(initPengguna(user));
-      dispatch(initDriver(token));
+      dispatch(initDrivers(token));
       dispatch(initOrder(token));
       channel.bind('orders', () => {
         console.log('channel bind orders emitted..');
@@ -68,7 +68,7 @@ const Dashboard = () => {
     <>
       <Layout title='Dashboard'>
         <>
-          <div className='w-max mb-4 flex gap-2 flex-wrap items-center mx-5'>
+          <div className='mb-4 flex gap-2 flex-wrap items-center mx-5'>
             <ButtonMenu
               onClick={tambahHandler}
               icon={<FaTruck />}
@@ -93,9 +93,6 @@ const Dashboard = () => {
             onEdit={(order) => {
               formOrderRef.current.edit(order);
             }}
-            orders={orders}
-            drivers={drivers}
-            pengguna={pengguna}
           />
         </>
       </Layout>
