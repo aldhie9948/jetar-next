@@ -51,14 +51,14 @@ const TableOrders = ({ orders, onEdit }) => {
     return (
       <>
         <div className='mx-4 flex gap-4 justify-center'>
-          <button onClick={edit}>
-            <BiEdit className='text-blue-500' />
-          </button>
-          {order !== 0 && (
-            <button>
-              <BiTrash onClick={remove} className='text-red-800' />
+          {order.status !== 0 && (
+            <button onClick={edit}>
+              <BiEdit className='text-blue-500' />
             </button>
           )}
+          <button>
+            <BiTrash onClick={remove} className='text-red-800' />
+          </button>
         </div>
       </>
     );
