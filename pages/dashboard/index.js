@@ -6,10 +6,11 @@ import { initDrivers } from '../../reducers/driverReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { initOrder } from '../../reducers/orderReducer';
 import FormOrder from '../../components/dashboard/FormOrder';
-import { FaTruck, FaRoute, FaUndo } from 'react-icons/fa';
+import { FaTruck, FaRoute, FaUndo, FaMapMarked } from 'react-icons/fa';
 import verifyPengguna from '../../lib/verifyLogin';
 import { initPengguna } from '../../reducers/penggunaReducer';
 import initPusher from '../../lib/pusherConfig';
+import PetaOrderan from '../../components/PetaOrderan';
 
 const pusher = initPusher();
 const channel = pusher.subscribe('jetar');
@@ -17,10 +18,9 @@ const channel = pusher.subscribe('jetar');
 const Dashboard = () => {
   const formOrderRef = useRef();
   const cekOngkirRef = useRef();
+  const petaOrderanRef = useRef();
   const dispatch = useDispatch();
   const drivers = useSelector((s) => s.driver);
-  const orders = useSelector((s) => s.order);
-  const pengguna = useSelector((s) => s.pengguna);
 
   const tambahHandler = () => {
     formOrderRef.current.toggle();
@@ -28,6 +28,10 @@ const Dashboard = () => {
 
   const cekOngkirHandler = () => {
     cekOngkirRef.current.toggle();
+  };
+
+  const petaOrderanHandler = () => {
+    petaOrderanRef.current.toggle();
   };
 
   const ButtonMenu = ({ onClick, icon, label }) => {
@@ -80,6 +84,11 @@ const Dashboard = () => {
               label='cek ongkir'
             />
             <ButtonMenu
+              onClick={petaOrderanHandler}
+              icon={<FaMapMarked />}
+              label='Peta Orderan'
+            />
+            <ButtonMenu
               onClick={() => {
                 location.reload();
               }}
@@ -87,6 +96,7 @@ const Dashboard = () => {
               label='Refresh'
             />
           </div>
+          <PetaOrderan ref={petaOrderanRef} />
           <CekOngkir ref={cekOngkirRef} />
           <FormOrder ref={formOrderRef} drivers={drivers} />
           <Orders
