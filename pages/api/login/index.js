@@ -28,13 +28,14 @@ const handler = nc({
       username: pengguna.username,
       level: pengguna.level,
       id: pengguna._id,
+      subscription: pengguna.subscription,
     };
 
     const token = jwt.sign(penggunaToken, config.SECRET_KEY, {});
 
     res.status(200).json({
       token,
-      ...pengguna,
+      ...penggunaToken,
     });
   } catch (error) {
     console.error(error);
