@@ -34,7 +34,7 @@ const handler = nc({
 
     res.status(200).json({
       token,
-      ...penggunaToken,
+      ...pengguna,
     });
   } catch (error) {
     console.error(error);
