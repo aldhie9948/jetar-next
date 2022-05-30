@@ -2,6 +2,7 @@ import connect from '../../../lib/connect';
 import nc from 'next-connect';
 import Pengguna from '../../../models/pengguna';
 import { verifyToken } from '../../../lib/token';
+import mongoose from 'mongoose';
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -34,6 +35,12 @@ const handler = nc({
       } = req;
       const body = req.body;
       verifyToken(req);
+      const checkSubscription = await Pengguna.find({
+        subscription: body.subscription,
+      });
+      checkSubscription.forEach(async (sub) => {
+        await Pengguna.findByIdAndUpdate(sub._id, { subscription: null });
+      });
       const save = await Pengguna.findByIdAndUpdate(id, body, { new: true });
       res.status(201).json({ status: 'OK', data: save });
     } catch (error) {
