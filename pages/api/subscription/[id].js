@@ -35,13 +35,14 @@ const handler = nc({
       } = req;
       const body = req.body;
       verifyToken(req);
+      const save = await Pengguna.findByIdAndUpdate(id, body, { new: true });
       const checkSubscription = await Pengguna.find({
         subscription: body.subscription,
       });
-      checkSubscription.forEach(async (sub) => {
+      const filtered = checkSubscription.filter((f) => f._id.toString() !== id);
+      filtered.forEach(async (sub) => {
         await Pengguna.findByIdAndUpdate(sub._id, { subscription: null });
       });
-      const save = await Pengguna.findByIdAndUpdate(id, body, { new: true });
       res.status(201).json({ status: 'OK', data: save });
     } catch (error) {
       console.error(error);
