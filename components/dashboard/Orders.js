@@ -53,7 +53,7 @@ const TableOrders = ({ orders, onEdit }) => {
     const share = () => {
       const params = new URLSearchParams({
         id: order.id,
-        token: pengguna.token,
+        token: user.token,
       });
       const link = `${location.origin}/orders?${params.toString()}`;
       window.open(
