@@ -79,7 +79,7 @@ const Layout = ({ children }) => {
           <Head>
             <title>JETAR Driver</title>
           </Head>
-          <div className='bg-slate-100 h-screen relative'>
+          <div className='bg-slate-100 h-screen relative overflow-y-auto'>
             <TopBar />
             <NavBar />
             <div className='pt-8 pb-20 text-sm'>{children}</div>

@@ -9,6 +9,7 @@ import {
   BiChevronsRight,
   BiEdit,
   BiTrash,
+  BiShareAlt,
 } from 'react-icons/bi';
 import { localCurrency } from '../../lib/currency';
 import dateFormat from '../../lib/date';
@@ -51,12 +52,16 @@ const TableOrders = ({ orders, onEdit }) => {
     return (
       <>
         <div className='mx-4 flex gap-4 justify-center'>
-          <button onClick={edit}>
+          <button onClick={edit} title='Share'>
+            <BiShareAlt className='text-slate-500' />
+          </button>
+
+          <button onClick={edit} title='Edit'>
             <BiEdit className='text-blue-500' />
           </button>
 
-          <button>
-            <BiTrash onClick={remove} className='text-red-800' />
+          <button title='Hapus' onClick={remove}>
+            <BiTrash className='text-red-800' />
           </button>
         </div>
       </>

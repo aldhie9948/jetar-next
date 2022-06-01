@@ -199,45 +199,26 @@ const CardOrder = ({ order, token = null, open = false }) => {
                 </div>
               </div>
               {/* quickedit section */}
-              <div className='sm:col-span-1 flex sm:flex-col flex-row col-span-2 capitalize'>
-                <div className='flex gap-2 w-full font-black mb-2'>
-                  <BiCar className='flex-shrink-0 self-start text-lg' />
-                  <span className='block text-xs flex-grow'>
-                    <div className='mb-1'>Driver</div>
-                    <div className='font-normal truncate sm:w-full w-20'>
-                      {order.driver.nama}
-                    </div>
-                  </span>
+              <div className='sm:col-span-1 flex sm:flex-col flex-row col-span-2 capitalize text-center'>
+                <div className='w-full font-black mb-2'>
+                  <div className='mb-1'>Talang</div>
+                  <div className='font-normal py-1 rounded-md'>
+                    <span>Rp. {localCurrency(order.talang) ?? 0}</span>
+                  </div>
                 </div>
-                <div className='flex gap-2 w-full font-black mb-2'>
-                  <BiInfoCircle className='flex-shrink-0 self-start text-lg' />
-                  <span className='block text-xs flex-grow'>
-                    <div className='mb-1'>Talang</div>
-                    <div className='font-normal py-1 flex gap-4 items-center rounded-md'>
-                      <div>Rp.</div>
-                      <input
-                        type='text'
-                        className='w-full outline-none bg-transparent'
-                        defaultValue={localCurrency(order.talang)}
-                        readOnly
-                      />
-                    </div>
-                  </span>
+                <div className='w-full font-black mb-2'>
+                  <div className='mb-1'>Ongkir</div>
+                  <div className='font-normal py-1 rounded-md'>
+                    <span>Rp. {localCurrency(order.ongkir) ?? 0}</span>
+                  </div>
                 </div>
-                <div className='flex gap-2 w-full font-black mb-2'>
-                  <BiDollarCircle className='flex-shrink-0 self-start text-lg' />
-                  <span className='block text-xs flex-grow'>
-                    <div className='mb-1'>Ongkir</div>
-                    <div className='font-normal py-1 flex gap-4 items-center rounded-md'>
-                      <div>Rp.</div>
-                      <input
-                        type='text'
-                        className='w-full outline-none bg-transparent'
-                        defaultValue={localCurrency(order.ongkir)}
-                        readOnly
-                      />
-                    </div>
-                  </span>
+                <div className='w-full font-black mb-2'>
+                  <div className='mb-1'>Total</div>
+                  <div className='font-normal py-1 rounded-md'>
+                    <span>
+                      Rp. {localCurrency(order.talang + order.ongkir) ?? 0}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className='sm:col-span-3 col-span-2 capitalize'>

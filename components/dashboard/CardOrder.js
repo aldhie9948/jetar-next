@@ -240,7 +240,8 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                           };
                           if (talang !== order.talang)
                             updateOrderHandler({
-                              updatedOrder,
+                              order: updatedOrder,
+                              status: updatedOrder.status,
                             });
                         }}
                         // saat user penginputan, form hanya akan
@@ -276,7 +277,8 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                           };
                           if (ongkir !== order.ongkir)
                             updateOrderHandler({
-                              updatedOrder,
+                              order: updatedOrder,
+                              status: updatedOrder.status,
                             });
                         }}
                         // saat user penginputan, form hanya akan
