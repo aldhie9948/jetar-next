@@ -203,7 +203,7 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                         options={driverOptions}
                         value={defaultDriver(order.driver.id)}
                         // ganti driver dan update order
-                        onChange={(v) => {
+                        onChange={async (v) => {
                           const updatedOrder = {
                             ...order,
                             driver: v.value,
@@ -212,6 +212,14 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
                             order: updatedOrder,
                             status: order.status,
                           });
+                          if (![0, 1].includes(order.status)) {
+                            await sendNotification({
+                              idPengguna: order.driver.pengguna,
+                              token: pengguna.token,
+                              title: 'Orderan Baru',
+                              body: `Pengambilan di ${order.pengirim.nama.toUpperCase()} dan dikirim ke ${order.penerima.nama.toUpperCase()}`,
+                            });
+                          }
                         }}
                       />
                     </div>
