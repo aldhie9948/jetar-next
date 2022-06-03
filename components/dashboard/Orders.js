@@ -62,16 +62,15 @@ const TableOrders = ({ orders, onEdit }) => {
 Nama: *${order.pengirim.nama}*
 No. HP: *https://wa.me/62${order.pengirim.noHP}*
 Alamat: *${order.pengirim.alamat}*
-Keterangan: ${order.pengirim.keterangan}
-Maps:${directionLinkBuilder(order.pengirim.alamat)}
+*Keterangan*: ${order.pengirim.keterangan}
+*Maps*:${directionLinkBuilder(order.pengirim.alamat)}
 
 *Penerima*
 Nama: *${order.penerima.nama}*
 No. HP: *https://wa.me/62${order.penerima.noHP}*
 Alamat: *${order.penerima.alamat}*
-Keterangan: ${order.penerima.keterangan}
-Penerima: *${order.penerima.nama}*
-Maps: ${directionLinkBuilder(order.penerima.alamat)}
+*Keterangan*: ${order.penerima.keterangan}
+*Maps*: ${directionLinkBuilder(order.penerima.alamat)}
 
 *Biaya*
 Talangan: *Rp. ${localCurrency(order.talang)}*
