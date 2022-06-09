@@ -350,17 +350,30 @@ ${link}
               {/* button section */}
               <div className='capitalize flex sm:justify-end justify-evenly sm:w-max w-full'>
                 {order.status !== 1 && (
-                  <div className='group relative flex gap-1 items-center flex-col'>
-                    <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                      Share
+                  <>
+                    <div className='group relative flex gap-1 items-center flex-col'>
+                      <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                        Share
+                      </div>
+                      <button
+                        onClick={() => share(order)}
+                        className='py-[0.4rem] px-2 flex justify-center items-center'
+                      >
+                        <BiShareAlt className='group-hover:drop-shadow-lg text-xl text-blue-800' />
+                      </button>
                     </div>
-                    <button
-                      onClick={() => share(order)}
-                      className='py-[0.4rem] px-2 flex justify-center items-center'
-                    >
-                      <BiShareAlt className='group-hover:drop-shadow-lg text-xl text-blue-800' />
-                    </button>
-                  </div>
+                    <div className='group relative flex gap-1 items-center flex-col'>
+                      <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
+                        Reset Status Order
+                      </div>
+                      <button
+                        onClick={() => resetStatusHandler(order)}
+                        className='py-[0.4rem] px-2 flex justify-center items-center'
+                      >
+                        <BiReset className='group-hover:drop-shadow-lg text-xl text-blue-800' />
+                      </button>
+                    </div>
+                  </>
                 )}
                 <div className='group relative flex gap-1 items-center flex-col'>
                   <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
@@ -420,18 +433,6 @@ ${link}
                     </button>
                   </div>
                 )}
-
-                <div className='group relative flex gap-1 items-center flex-col'>
-                  <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
-                    Reset Status Order
-                  </div>
-                  <button
-                    onClick={() => resetStatusHandler(order)}
-                    className='py-[0.4rem] px-2 flex justify-center items-center'
-                  >
-                    <BiReset className='group-hover:drop-shadow-lg text-xl text-blue-800' />
-                  </button>
-                </div>
                 <div className='group relative flex gap-1 items-center flex-col'>
                   <div className='group-hover:scale-100 scale-0 transition-all duration-150 absolute right-0 top-[-2rem] whitespace-nowrap z-[9999] py-1 px-2 bg-slate-800 rounded text-white'>
                     Hapus Orderan

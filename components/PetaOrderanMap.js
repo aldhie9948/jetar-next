@@ -174,7 +174,7 @@ const PetaOrderanMap = (props) => {
         </select>
         <div className='flex justify-end'>
           <button
-            // disabled={selectedPelanggan === '' ? true : false}
+            disabled={selectedPelanggan === '' ? true : false}
             onClick={showPetaOrderan}
             className='w-full sm:w-max bg-gradient-green py-1 sm:px-10 rounded text-sm hover:shadow-md font-light disabled:grayscale disabled:hover:shadow-none'
           >
