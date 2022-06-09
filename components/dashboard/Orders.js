@@ -63,14 +63,14 @@ Nama: *${order.pengirim.nama}*
 No. HP: *https://wa.me/62${order.pengirim.noHP}*
 Alamat: *${order.pengirim.alamat}*
 *Keterangan*: ${order.pengirim.keterangan}
-*Maps*:${directionLinkBuilder(order.pengirim.alamat)}
+*Maps*:\n${directionLinkBuilder(order.pengirim.alamat)}
 
 *Penerima*
 Nama: *${order.penerima.nama}*
 No. HP: *https://wa.me/62${order.penerima.noHP}*
 Alamat: *${order.penerima.alamat}*
 *Keterangan*: ${order.penerima.keterangan}
-*Maps*: ${directionLinkBuilder(order.penerima.alamat)}
+*Maps*: \n${directionLinkBuilder(order.penerima.alamat)}
 
 *Biaya*
 Talangan: *Rp. ${localCurrency(order.talang)}*
@@ -366,27 +366,56 @@ const Orders = ({ onEdit }) => {
     <div className='mb-10'>
       <div className='grid grid-cols-1 sm:grid-cols-3 mb-5'>
         <div className='col-span-2'>
-          <div className='flex justify-between px-5 mb-2 items-center'>
-            <strong className={`header-form`}>Orderan</strong>
-            <div className='flex gap-2 items-center bg-white rounded p-2 shadow mx'>
-              <BiSearchAlt />
-              <input
-                type='search'
-                className='outline-none placeholder:text-xs text-sm'
-                placeholder='cari driver, pengirim, atau penerima..'
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-              />
+          <div>
+            <div className='flex justify-between px-5 mb-2 items-center'>
+              <strong className={`header-form`}>
+                Masuk{' : '}
+                <span>
+                  {ongoingOrders.filter((f) => f.status === 1).length}
+                </span>
+              </strong>
+              <div className='flex gap-2 items-center bg-white rounded p-2 shadow mx'>
+                <BiSearchAlt />
+                <input
+                  type='search'
+                  className='outline-none placeholder:text-xs text-sm'
+                  placeholder='cari driver, pengirim, atau penerima..'
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className='overflow-x-hidden max-h-[40rem] mb-4 overflow-y-auto px-5'>
+              {ongoingOrders
+                .filter((f) => f.status === 1)
+                .map((order) => (
+                  <div key={order.id}>
+                    <CardOrder order={order} onEdit={onEdit} />
+                  </div>
+                ))}
             </div>
           </div>
-          <div className='overflow-x-hidden max-h-[40rem] mb-4 overflow-y-auto px-5'>
-            {ongoingOrders.map((order) => (
-              <div key={order.id}>
-                <CardOrder order={order} onEdit={onEdit} />
-              </div>
-            ))}
+          <div>
+            <div className='flex justify-between px-5 mb-2 items-center'>
+              <strong className={`header-form`}>
+                Proses{' : '}
+                <span className='font-black'>
+                  {ongoingOrders.filter((f) => f.status !== 1).length}
+                </span>
+              </strong>
+            </div>
+            <div className='overflow-x-hidden max-h-[40rem] mb-4 overflow-y-auto px-5'>
+              {ongoingOrders
+                .filter((f) => f.status !== 1)
+                .map((order) => (
+                  <div key={order.id}>
+                    <CardOrder order={order} onEdit={onEdit} />
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
+
         <div className='mx-5'>
           {/* statistik section */}
           <div className='mb-4'>

@@ -79,20 +79,9 @@ const PetaOrderanMap = (props) => {
     setOnGoingOrdersByPelanggan(orders);
   };
 
-  const geocodeAddress = async (address) => {
-    const geocoder = new google.maps.Geocoder();
-    try {
-      const results = await geocoder.geocode({ address });
-      return results;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const placeMarker = async (order) => {
-    const geocoded = await geocodeAddress(order.penerima.alamat);
+  const placeMarker = async (order, geocoded) => {
     const marker = new google.maps.Marker({
-      position: geocoded?.results[0].geometry.location,
+      position: geocoded.geometry.location,
       map,
       optimized: true,
     });
@@ -114,10 +103,43 @@ const PetaOrderanMap = (props) => {
   };
 
   const placeMarkerForPengirim = async (address) => {
-    const geocoded = await geocodeAddress(address);
-    pengirimMarker.setMap(map);
-    pengirimMarker.setPosition(geocoded?.results[0].geometry.location);
-    pengirimMarker.setLabel('P');
+    try {
+      const geocoder = new google.maps.Geocoder();
+      const geocoded = await geocoder.geocode({ address });
+      pengirimMarker.setMap(map);
+      pengirimMarker.setPosition(geocoded?.results[0].geometry.location);
+      pengirimMarker.setLabel('P');
+    } catch (error) {
+      console.log('place marker for pengirim error', error);
+    }
+  };
+
+  const mappingOrders = () => {
+    const geocoder = new google.maps.Geocoder();
+    const recursiveGeocode = ({ order }) => {
+      geocoder.geocode(
+        { address: order.penerima.alamat },
+        (results, status) => {
+          if (status === 'OK') {
+            placeMarker(order, results[0]);
+          } else if (status === 'OVER_QUERY_LIMIT') {
+            setTimeout(() => {
+              recursiveGeocode();
+            }, 1000 * i);
+          } else {
+            alert(
+              'Geocode was not successful for the following reason: ' + status
+            );
+          }
+        }
+      );
+    };
+    markers.map((marker) => marker.setMap(null));
+    setMarkers([]);
+    for (let i = 0; i < onGoingOrdersByPelanggan.length; i++) {
+      const order = onGoingOrdersByPelanggan[i];
+      recursiveGeocode({ order });
+    }
   };
 
   useLayoutEffect(() => {
@@ -128,12 +150,7 @@ const PetaOrderanMap = (props) => {
   useLayoutEffect(() => {
     if (onGoingOrdersByPelanggan.length > 0) {
       placeMarkerForPengirim(onGoingOrdersByPelanggan[0].pengirim.alamat);
-      for (let i = 0; i < onGoingOrdersByPelanggan.length; i++) {
-        const element = onGoingOrdersByPelanggan[i];
-        markers.map((marker) => marker.setMap(null));
-        setMarkers([]);
-        placeMarker(element);
-      }
+      mappingOrders();
     }
   }, [onGoingOrdersByPelanggan, map]);
 
@@ -157,7 +174,7 @@ const PetaOrderanMap = (props) => {
         </select>
         <div className='flex justify-end'>
           <button
-            disabled={selectedPelanggan === '' ? true : false}
+            // disabled={selectedPelanggan === '' ? true : false}
             onClick={showPetaOrderan}
             className='w-full sm:w-max bg-gradient-green py-1 sm:px-10 rounded text-sm hover:shadow-md font-light disabled:grayscale disabled:hover:shadow-none'
           >
