@@ -116,29 +116,30 @@ const PetaOrderanMap = (props) => {
 
   const mappingOrders = () => {
     const geocoder = new google.maps.Geocoder();
-    const recursiveGeocode = ({ order }) => {
-      geocoder.geocode(
-        { address: order.penerima.alamat },
-        (results, status) => {
-          if (status === 'OK') {
-            placeMarker(order, results[0]);
-          } else if (status === 'OVER_QUERY_LIMIT') {
-            setTimeout(() => {
-              recursiveGeocode();
-            }, 1000 * i);
-          } else {
-            alert(
-              'Geocode was not successful for the following reason: ' + status
-            );
-          }
-        }
-      );
-    };
+
     markers.map((marker) => marker.setMap(null));
     setMarkers([]);
     for (let i = 0; i < onGoingOrdersByPelanggan.length; i++) {
       const order = onGoingOrdersByPelanggan[i];
-      recursiveGeocode({ order });
+      const recursiveGeocode = () => {
+        geocoder.geocode(
+          { address: order.penerima.alamat },
+          (results, status) => {
+            if (status === 'OK') {
+              placeMarker(order, results[0]);
+            } else if (status === 'OVER_QUERY_LIMIT') {
+              setTimeout(() => {
+                recursiveGeocode();
+              }, 1000 * i);
+            } else {
+              alert(
+                'Geocode was not successful for the following reason: ' + status
+              );
+            }
+          }
+        );
+      };
+      recursiveGeocode();
     }
   };
 
