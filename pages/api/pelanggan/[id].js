@@ -25,8 +25,17 @@ const handler = nc({
           { nama: { $regex: `.*${id}.*`, $options: 'i' } },
           { noHP: { $regex: `.*${id}.*`, $options: 'i' } },
         ],
-      }).limit(10);
-      res.status(200).json(pelanggan);
+      })
+        .sort({ nama: 1 })
+        .limit(10);
+      let lastName = '';
+      const filterPelanggan = pelanggan.filter((f) => {
+        const nama = f.nama.toLowerCase();
+        if (nama === lastName) return false;
+        lastName = nama;
+        return true;
+      });
+      res.status(200).json(filterPelanggan);
     } catch (error) {
       console.error(error.toString());
       res.status(500).json({ error: error.message });

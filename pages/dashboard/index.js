@@ -71,6 +71,7 @@ const Dashboard = () => {
                 order.pengirim.nama
               } ke pelanggan ${order.penerima.nama} telah selesai`,
               icon: `${location.origin}/assets/image/JETAR.png`,
+              tag: `${order.id}${new Date().getTime()}`,
             });
           }
         }

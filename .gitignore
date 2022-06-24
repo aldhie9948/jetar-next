@@ -45,3 +45,6 @@ yarn-error.log*
 
 # mongo
 /temp
+
+# bat
+start.bat

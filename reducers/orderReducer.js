@@ -24,8 +24,13 @@ const orderSlice = createSlice({
     },
     update: (state, action) => {
       const updatedOrder = action.payload;
-      const newOrder = state.filter((f) => f.id !== updatedOrder.id);
-      const sorted = newOrder.concat(updatedOrder).sort(sort).sort(sortStatus);
+      const newOrder = state.map((order) => {
+        if (order.id === updatedOrder.id) {
+          return updatedOrder;
+        }
+        return order;
+      });
+      const sorted = newOrder.sort(sort).sort(sortStatus);
       return sorted;
     },
     remove: (state, action) => {
