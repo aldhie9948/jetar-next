@@ -6,7 +6,7 @@ const PetaOrderanMap = (props) => {
   const onGoingOrders = useSelector((s) =>
     s.order.filter((f) => f.status !== 0)
   );
-  const [selectedPelanggan, setSelectedPelanggan] = useState('');
+  const [selectedPelanggan, setSelectedPelanggan] = useState('all');
   const [onGoingOrdersByPelanggan, setOnGoingOrdersByPelanggan] = useState([]);
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
@@ -73,27 +73,45 @@ const PetaOrderanMap = (props) => {
   };
 
   const showPetaOrderan = () => {
-    const orders = onGoingOrders.filter(
-      (f) => f.pengirim.id === selectedPelanggan
+    const orders = onGoingOrders.filter((f) =>
+      selectedPelanggan === 'all' ? true : f.pengirim.id === selectedPelanggan
     );
     setOnGoingOrdersByPelanggan(orders);
   };
 
   const placeMarker = async (order, geocoded) => {
+    const icon = `favicon-32x32.png`;
     const marker = new google.maps.Marker({
       position: geocoded.geometry.location,
       map,
       optimized: true,
+      icon,
     });
     setMarkers((curr) => [...curr, marker]);
     const infoWindow = new google.maps.InfoWindow({
-      maxWidth: 300,
+      maxWidth: 400,
       minWidth: 0,
     });
     marker.addListener('click', () => {
       const content = `
-          <div class='font-black text-lg capitalize'>${order.penerima.nama}</div>
-          <div class='font-black capitalize'>${order.penerima.alamat}</div>
+      <div class='capitalize'>
+        <div class='grid grid-cols-5 mb-1'>
+          <div class='col-span-1'>Pukul</div>
+          <div class='col-span-4 font-bold'>${order.waktuOrder} WIB</div>
+        </div>
+        <div class='grid grid-cols-5 mb-1'>
+          <div class='col-span-1'>Pengirim</div>
+          <div class='col-span-4 font-bold'>${order.pengirim.nama}</div>
+        </div>
+        <div class='grid grid-cols-5 mb-1'>
+          <div class='col-span-1'>Penerima</div>
+          <div class='col-span-4 font-bold'>${order.penerima.nama}</div>
+        </div>
+        <div class='grid grid-cols-5 mb-1'>
+          <div class='col-span-1'>Alamat</div>
+          <div class='col-span-4'>${order.penerima.alamat}</div>
+        </div>
+      </div>
         `;
       infoWindow.close();
       infoWindow.setContent(content);
@@ -146,13 +164,16 @@ const PetaOrderanMap = (props) => {
   useLayoutEffect(() => {
     setMap(new google.maps.Map(mapRef.current, config));
     setPengirimMarker(new google.maps.Marker());
+    // eslint-disable-next-line
   }, []);
 
   useLayoutEffect(() => {
     if (onGoingOrdersByPelanggan.length > 0) {
-      placeMarkerForPengirim(onGoingOrdersByPelanggan[0].pengirim.alamat);
+      selectedPelanggan !== 'all' &&
+        placeMarkerForPengirim(onGoingOrdersByPelanggan[0].pengirim.alamat);
       mappingOrders();
     }
+    // eslint-disable-next-line
   }, [onGoingOrdersByPelanggan, map]);
 
   return (
@@ -164,9 +185,7 @@ const PetaOrderanMap = (props) => {
           onChange={changePetaOrderan}
           className='outline-none capitalize border p-1 bg-white w-full rounded shadow mb-2'
         >
-          <option value='' selected hidden disabled>
-            Pilih pelanggan..
-          </option>
+          <option value='all'>Semua</option>
           {uniquePelanggans.map((f) => (
             <option value={f.id} key={f.id}>
               {f.nama}
@@ -175,7 +194,6 @@ const PetaOrderanMap = (props) => {
         </select>
         <div className='flex justify-end'>
           <button
-            disabled={selectedPelanggan === '' ? true : false}
             onClick={showPetaOrderan}
             className='w-full sm:w-max bg-gradient-green py-1 sm:px-10 rounded text-sm hover:shadow-md font-light disabled:grayscale disabled:hover:shadow-none'
           >
@@ -185,7 +203,7 @@ const PetaOrderanMap = (props) => {
       </div>
       <div
         ref={mapRef}
-        className='rounded-md sm:col-span-2 col-span-3 h-96 shadow-lg w-full'
+        className='rounded-md sm:col-span-2 col-span-3 h-96 shadow w-full border-2 border-white'
       ></div>
     </div>
   );

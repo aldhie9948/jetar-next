@@ -22,39 +22,12 @@ import {
   BiReset,
 } from 'react-icons/bi';
 import { FaPeopleCarry } from 'react-icons/fa';
-import Select from 'react-select';
 import StatusBadge from '../StatusBadge';
 import { getLinkStaticMap, directionLinkBuilder } from '../../lib/getStaticMap';
 import { verifyUser } from '../Sweetalert2';
 import axios from 'axios';
 import { sendNotification } from '../../services/notification';
 
-const selectOptions = {
-  components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
-  styles: {
-    control: (base) => ({
-      ...base,
-      backgroundColor: 'transparent',
-      height: '1.5rem',
-      minHeight: '1.5rem',
-      border: 'none',
-      boxShadow: 'none',
-    }),
-    dropdownIndicator: (base) => ({
-      ...base,
-      paddingTop: 0,
-      paddingBottom: 0,
-    }),
-    clearIndicator: (base) => ({
-      ...base,
-      paddingTop: 0,
-      paddingBottom: 0,
-    }),
-    valueContainer: (base) => ({ ...base, paddingLeft: 0, paddingRight: 0 }),
-    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-    menu: (base) => ({ ...base, textTransform: 'capitalize' }),
-  },
-};
 const CardOrder = ({ order, onEdit, isFinished = false }) => {
   const [visibleCard, setVisibleCard] = useState(false);
   const [visibleMaps, setvisibleMaps] = useState(false);
@@ -71,20 +44,6 @@ const CardOrder = ({ order, onEdit, isFinished = false }) => {
   // nomor yang diberikan dei argument
   const whatsappHandler = (phone) => {
     window.open(`whatsapp://send?phone=62${phone}`, '_top');
-  };
-
-  // fn untuk membuat array baru dari driver redux
-  // untuk diberikan ke react-select driver
-  const driverOptions = drivers.map((driver) => ({
-    value: driver.id,
-    label: driver.nama,
-    obj: driver,
-  }));
-
-  // fn untuk mengatur default option react-select driver
-  // di card order sesuai dengan id driver yang diberikan di args
-  const defaultDriver = (idDriver) => {
-    return driverOptions?.find((driver) => driver.value === idDriver);
   };
 
   // fn / handler untuk mengupdate order yang digunakan di card order
@@ -184,7 +143,7 @@ ${link}
 
   return (
     <div
-      className={`card-order !shadow-lg bg-gradient-green  text-slate-600 transition-all duration-150 overflow-x-hidden`}
+      className={`card-order !shadow bg-gradient-green  text-slate-600 transition-all duration-150 overflow-x-hidden`}
     >
       <div
         onClick={openCardHandler}
@@ -203,13 +162,13 @@ ${link}
           <div className='font-bold flex flex-col gap-1'>
             <div className='flex gap-2 items-center w-full'>
               <BiStoreAlt className='flex-shrink-0' />
-              <span className='block text-xs truncate w-full'>
+              <span className='block text-xs truncate w-full capitalize'>
                 {order.pengirim.nama}
               </span>
             </div>
             <div className='flex gap-2 items-center w-full'>
               <FaPeopleCarry className='flex-shrink-0' />
-              <span className='block text-xs truncate w-full'>
+              <span className='block text-xs truncate w-full capitalize'>
                 {order.penerima.nama}
               </span>
             </div>
@@ -243,17 +202,11 @@ ${link}
                   <span className='block text-xs flex-grow'>
                     <div className='mb-1'>Driver</div>
                     <div className='font-normal'>
-                      <Select
-                        className='w-full'
-                        isDisabled={isFinished}
-                        {...selectOptions}
-                        options={driverOptions}
-                        value={defaultDriver(order.driver.id)}
-                        // ganti driver dan update order
-                        onChange={async (v) => {
+                      <select
+                        onChange={async (e) => {
                           const updatedOrder = {
                             ...order,
-                            driver: v.value,
+                            driver: e.target.value,
                           };
                           updateOrderHandler({
                             order: updatedOrder,
@@ -268,7 +221,22 @@ ${link}
                             });
                           }
                         }}
-                      />
+                        className='bg-transparent outline-none appearance-none py-1'
+                        disabled={order.status === 0}
+                      >
+                        {drivers
+                          .filter((f) => !f.softDelete)
+                          .map((driver) => (
+                            <option
+                              key={driver.id}
+                              value={driver.id}
+                              selected={driver.id === order.driver.id}
+                              // ganti driver dan update order
+                            >
+                              {driver.nama}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </span>
                 </div>

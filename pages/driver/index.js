@@ -4,6 +4,9 @@ import FormDriver from '../../components/driver/FormDriver';
 import { useSelector, useDispatch } from 'react-redux';
 import { initDrivers } from '../../reducers/driverReducer';
 import DriverTable from '../../components/driver/DriverTable';
+import verifyPengguna from '../../lib/verifyLogin';
+import { initPengguna } from '../../reducers/penggunaReducer';
+import { initOrder } from '../../reducers/orderReducer';
 
 const Driver = () => {
   const dispatch = useDispatch();
@@ -14,20 +17,25 @@ const Driver = () => {
   const updateDriverHandler = (driver) => {
     return formDriverRef.current.toggle(driver);
   };
+  const callback = (user) => {
+    const { token } = user;
+    dispatch(initPengguna(user));
+    dispatch(initDrivers(token));
+    dispatch(initOrder(token));
+  };
 
   useEffect(() => {
-    pengguna && dispatch(initDrivers(pengguna.token));
+    verifyPengguna(callback, 0);
     // eslint-disable-next-line
-  }, [pengguna]);
+  }, []);
 
   return (
     <>
       <Layout title='Driver'>
         <div className='mx-5'>
           <FormDriver ref={formDriverRef} />
-          {driver && (
-            <DriverTable driver={driver} onUpdate={updateDriverHandler} />
-          )}
+
+          <DriverTable driver={driver} onUpdate={updateDriverHandler} />
         </div>
       </Layout>
     </>

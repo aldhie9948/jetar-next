@@ -217,9 +217,9 @@ ${link}
   return (
     <div className='mx-5'>
       <strong className={`header-form`}>Tabel Orderan</strong>
-      <div className='bg-gradient-blue rounded shadow-lg p-4'>
+      <div className='bg-transparent'>
         <div className='flex justify-between mb-2'>
-          <div className='border-b-2 border-slate-500 flex gap-2 items-center'>
+          <div className='flex gap-2 items-center'>
             <BiSearchAlt />
             <input
               type='search'
@@ -236,7 +236,7 @@ ${link}
             onChange={(e) => {
               setPageSize(Number(e.target.value));
             }}
-            className='bg-slate-200 p-1 rounded shadow outline-none'
+            className='bg-transparent p-1 rounded outline-none'
           >
             {[10, 20, 30, 40, filteredOrders.length].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
@@ -374,11 +374,11 @@ const Orders = ({ onEdit }) => {
                   {ongoingOrders.filter((f) => f.status === 1).length}
                 </span>
               </strong>
-              <div className='flex gap-2 items-center bg-white rounded p-2 shadow mx'>
+              <div className='flex gap-2 items-center bg-transparent rounded p-2 border border-slate-400'>
                 <BiSearchAlt />
                 <input
                   type='search'
-                  className='outline-none placeholder:text-xs text-sm'
+                  className='outline-none placeholder:text-xs text-sm bg-transparent'
                   placeholder='cari driver, pengirim, atau penerima..'
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
@@ -420,7 +420,7 @@ const Orders = ({ onEdit }) => {
           {/* statistik section */}
           <div className='mb-4'>
             <strong className={`header-form mb-4`}>Statistik</strong>
-            <div className='rounded-md shadow-lg bg-gradient-to-br from-blue-100 to-blue-200'>
+            <div className='rounded-md shadow bg-gradient-to-br from-blue-100 to-blue-200'>
               <div className='p-4'>
                 <div className='grid grid-cols-2 gap-2 place-items-center'>
                   <div className='text-center'>
@@ -453,7 +453,7 @@ const Orders = ({ onEdit }) => {
             <strong className={`header-form mb-4`}>
               {dateFormat(new Date(), 'dd MMMM yyyy')}
             </strong>
-            <div className='rounded-md shadow-lg bg-gradient-to-br from-blue-100 to-blue-200'>
+            <div className='rounded-md shadow bg-gradient-to-br from-blue-100 to-blue-200'>
               <div className='p-4'>
                 <div className='flex justify-between text-sm font-bold'>
                   <div className='mb-1 w-5/12'>Driver</div>
@@ -462,32 +462,34 @@ const Orders = ({ onEdit }) => {
                   </div>
                   <div className='mb-1 w-5/12 sm:pl-2 pl-16'>Ongkir</div>
                 </div>
-                <div className='w-full border-b-2 border-slate-500 my-1'></div>
-                {drivers.map((driver) => (
-                  <div
-                    key={driver.id}
-                    className='flex justify-between text-sm font-bold'
-                  >
-                    <div className='mb-1 w-5/12'>{driver.nama}</div>
-                    <div className='mb-1 w-2/12 text-center'>
-                      {
-                        todayOrders
-                          .filter((f) => f.driver.id === driver.id)
-                          .filter((f) => f.status === 0).length
-                      }
+                <div className='w-full border-b border-slate-500 my-1'></div>
+                {drivers
+                  .filter((f) => !f.softDelete)
+                  .map((driver) => (
+                    <div
+                      key={driver.id}
+                      className='flex justify-between text-sm font-bold'
+                    >
+                      <div className='mb-1 w-5/12'>{driver.nama}</div>
+                      <div className='mb-1 w-2/12 text-center'>
+                        {
+                          todayOrders
+                            .filter((f) => f.driver.id === driver.id)
+                            .filter((f) => f.status === 0).length
+                        }
+                      </div>
+                      <div className='mb-1 w-5/12 sm:pl-2 pl-16'>
+                        Rp.{' '}
+                        {localCurrency(
+                          todayOrders
+                            .filter((f) => f.driver.id === driver.id)
+                            .filter((f) => f.status === 0)
+                            .reduce((a, b) => a + b.ongkir, 0)
+                        )}
+                      </div>
                     </div>
-                    <div className='mb-1 w-5/12 sm:pl-2 pl-16'>
-                      Rp.{' '}
-                      {localCurrency(
-                        todayOrders
-                          .filter((f) => f.driver.id === driver.id)
-                          .filter((f) => f.status === 0)
-                          .reduce((a, b) => a + b.ongkir, 0)
-                      )}
-                    </div>
-                  </div>
-                ))}
-                <div className='w-full border-b-2 border-slate-500 my-1'></div>
+                  ))}
+                <div className='w-full border-b border-slate-500 my-1'></div>
                 <div className='flex justify-between text-sm font-bold'>
                   <div className='mb-1 w-5/12'>Total</div>
                   <div className='mb-1 w-2/12 text-center'>

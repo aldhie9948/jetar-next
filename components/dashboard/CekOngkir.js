@@ -1,11 +1,11 @@
-import React, { useImperativeHandle, useState, useRef } from 'react';
-
+import React, { useEffect, useImperativeHandle, useState, useRef } from 'react';
 import { BiStoreAlt, BiBox } from 'react-icons/bi';
+import { FaRoute } from 'react-icons/fa';
 import SelectPelanggan from '../../components/dashboard/SelectPelanggan';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
-import CekOngkirMap from './CekOngkirMap';
 import styles from '../../styles/Dashboard.module.css';
 import { localCurrency } from '../../lib/currency';
+import cekOngkir from '../../lib/cekOngkir';
 
 const render = (status) => {
   switch (status) {
@@ -16,25 +16,120 @@ const render = (status) => {
   }
 };
 
-const CekOngkir = React.forwardRef(({}, ref) => {
-  const [visible, setVisible] = useState(false);
+const CekOngkirMapComponent = () => {
+  const config = {
+    center: { lat: -6.8703952, lng: 109.1256 },
+    zoom: 14,
+    disableDefaultUI: true,
+    styles: [
+      {
+        featureType: 'administrative.land_parcel',
+        elementType: 'labels',
+        stylers: [
+          {
+            visibility: 'off',
+          },
+        ],
+      },
+      {
+        featureType: 'poi',
+        elementType: 'labels.text',
+        stylers: [
+          {
+            visibility: 'off',
+          },
+        ],
+      },
+      {
+        featureType: 'poi.business',
+        stylers: [
+          {
+            visibility: 'off',
+          },
+        ],
+      },
+      {
+        featureType: 'poi.park',
+        elementType: 'labels.text',
+        stylers: [
+          {
+            visibility: 'off',
+          },
+        ],
+      },
+      {
+        featureType: 'road.local',
+        elementType: 'labels',
+        stylers: [
+          {
+            visibility: 'off',
+          },
+        ],
+      },
+    ],
+  };
+  const mapRef = useRef();
+  const [map, setMap] = useState(null);
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
-  const [ongkir, setOngkir] = useState(0);
-  const [distance, setDistance] = useState(0);
-
-  const mapRef = useRef();
-
+  const [directionsService, setDirectionsService] = useState(null);
+  const [polyline, setPolyline] = useState(null);
+  const [originMarker, setOriginMarker] = useState(null);
+  const [destinationMarker, setDestinationMarker] = useState(null);
   // handler saat menekan tombol cek ongkir di form
   // handler harus menyediakan origin, destination dan callback/fn
   // dengan argument ongkir & response dari direction maps api
   const cekOngkirHandler = () => {
-    const callback = (args) => {
-      const { ongkir, distance } = args;
-      setDistance(Math.ceil(distance.value / 1000));
-      setOngkir(localCurrency(ongkir));
+    const listRoutes = document.getElementById('list-ongkir');
+    const setDirectionPolylines = ({ route }) => {
+      originMarker.setPosition(route.legs[0].start_location);
+      destinationMarker.setPosition(route.legs[0].end_location);
+      polyline.setPath(route.overview_path);
+      map.fitBounds(route.bounds);
     };
-    mapRef.current.route({ origin, destination, callback });
+    directionsService
+      .route(
+        {
+          origin: { query: origin },
+          destination: { query: destination },
+          travelMode: 'DRIVING',
+          optimizeWaypoints: true,
+          avoidTolls: true,
+          unitSystem: google.maps.UnitSystem.IMPERIAL,
+          provideRouteAlternatives: true,
+        },
+        (response, status) => {
+          if (status === 'OK') {
+            const routes = response.routes;
+            let contentString = `<div class='py-1'>Ongkir:</div>`;
+            listRoutes.innerHTML = '';
+            routes.forEach((route, i) => {
+              const legs = route.legs[0];
+              const distance = legs.distance;
+              const ongkir = cekOngkir(distance.value);
+              const content = `
+                <div class='route bg-gradient-green py-1 px-3 rounded cursor-pointer hover:shadow active:shadow-none'>
+                  Rp. ${localCurrency(ongkir)}
+                </div>
+              `;
+              contentString += content;
+              if (i === 0) {
+                setDirectionPolylines({ route });
+              }
+            });
+            listRoutes.innerHTML = contentString;
+            document.querySelectorAll('.route').forEach((r, i) => {
+              r.addEventListener('click', function (e) {
+                const route = routes[i];
+                setDirectionPolylines({ route });
+              });
+            });
+          }
+        }
+      )
+      .catch((e) => {
+        alert('Directions request failed due to ' + e);
+      });
   };
 
   // update state dengan pelanggan yang terpilih
@@ -49,99 +144,121 @@ const CekOngkir = React.forwardRef(({}, ref) => {
     setter(e.target.value);
   };
 
-  const toggle = () => {
-    setOngkir(0);
-    setOrigin('');
-    setDestination('');
-    setVisible(!visible);
-  };
+  useEffect(() => {
+    const mapsInstance = new google.maps.Map(mapRef.current, config);
+    setMap(mapsInstance);
+    setDirectionsService(new google.maps.DirectionsService());
+    setPolyline(
+      new google.maps.Polyline({
+        strokeColor: '#4ade80', // you might want different colors per suggestion
+        strokeOpacity: 1,
+        strokeWeight: 5,
+        map: mapsInstance,
+      })
+    );
+    const configMarker = { icon: `favicon-32x32.png`, map: mapsInstance };
+    setOriginMarker(new google.maps.Marker(configMarker));
+    setDestinationMarker(new google.maps.Marker(configMarker));
 
-  useImperativeHandle(ref, () => ({
-    toggle,
-  }));
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
-      {visible && (
-        <div className='mb-4 mx-5 bg-white rounded-lg p-5 pb-10'>
-          <strong className='header-form mb-4'>Cek Ongkir</strong>
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
-            <div>
-              <div className='flex gap-2 items-center mb-4'>
-                <div className='text-center'>
-                  <BiStoreAlt className='text-[3rem] w-20 flex-shrink-0' />
-                  <small>Pengirim</small>
-                </div>
-                <div className='flex-grow'>
-                  <span className='font-black text-sm'>Titik Pengambilan</span>
-                  <SelectPelanggan
-                    className='mb-2'
-                    onChange={(pelanggan) =>
-                      onChangePelanggan(pelanggan, setOrigin)
-                    }
-                  />
-                  <input
-                    type='text'
-                    placeholder='Masukkan alamat pengambilan...'
-                    className='outline-none w-full p-2 border border-green-400 focus:shadow-lg'
-                    id='alamat-pengirim-cek-ongkir'
-                    value={origin}
-                    onChange={(e) => onChangeInput(e, setOrigin)}
-                    onBlur={(e) => onBlurInput(e, setOrigin)}
-                  />
-                </div>
-              </div>
-              <div className='flex gap-2 items-center mb-4'>
-                <div className='text-center'>
-                  <BiBox className='text-[3rem] w-20 flex-shrink-0' />
-                  <small>Penerima</small>
-                </div>
-                <div className='flex-grow'>
-                  <span className='font-black text-sm'>Titik Pengiriman</span>
-                  <SelectPelanggan
-                    className='mb-2'
-                    onChange={(pelanggan) =>
-                      onChangePelanggan(pelanggan, setDestination)
-                    }
-                  />
-                  <input
-                    type='text'
-                    placeholder='Masukkan alamat pengambilan...'
-                    className='outline-none w-full p-2 border border-green-400 focus:shadow-lg'
-                    id='alamat-penerima-cek-ongkir'
-                    value={destination}
-                    onChange={(e) => onChangeInput(e, setDestination)}
-                    onBlur={(e) => onBlurInput(e, setDestination)}
-                  />
-                </div>
-              </div>
-              <div className='flex justify-end'>
-                <button
-                  id='cek-ongkir-button'
-                  type='button'
-                  className={`${styles.btn} bg-gradient-green hover:!shadow-green-400/20`}
-                  onClick={() => cekOngkirHandler()}
-                >
-                  Cek Ongkir - Rp. {ongkir} [{distance} KM]
-                </button>
-              </div>
+      <div className='grid sm:grid-cols-2 grid-cols-1 gap-2'>
+        <div>
+          <div className='flex gap-2 items-center mb-4'>
+            <div className='text-center'>
+              <BiStoreAlt className='text-[2.5rem] w-20 flex-shrink-0' />
+              <small>Pengirim</small>
             </div>
-            <div>
-              <Wrapper
-                libraries={['places']}
-                region='ID'
-                language='id'
-                apiKey={process.env.NEXT_PUBLIC_MAPS_API}
-                render={render}
+            <div className='flex-grow'>
+              <span className='font-black text-sm'>Titik Pengambilan</span>
+              <SelectPelanggan
+                className='mb-2'
+                onChange={(pelanggan) =>
+                  onChangePelanggan(pelanggan, setOrigin)
+                }
+              />
+              <input
+                type='text'
+                placeholder='Masukkan alamat pengambilan...'
+                className='outline-none w-full p-2 focus:shadow-lg'
+                id='alamat-pengirim-cek-ongkir'
+                value={origin}
+                onChange={(e) => onChangeInput(e, setOrigin)}
+                onBlur={(e) => onBlurInput(e, setOrigin)}
+              />
+            </div>
+          </div>
+          <div className='flex gap-2 items-center mb-4'>
+            <div className='text-center'>
+              <BiBox className='text-[2.5rem] w-20 flex-shrink-0' />
+              <small>Penerima</small>
+            </div>
+            <div className='flex-grow'>
+              <span className='font-black text-sm'>Titik Pengiriman</span>
+              <SelectPelanggan
+                className='mb-2'
+                onChange={(pelanggan) =>
+                  onChangePelanggan(pelanggan, setDestination)
+                }
+              />
+              <input
+                type='text'
+                placeholder='Masukkan alamat pengambilan...'
+                className='outline-none w-full p-2 focus:shadow-lg'
+                id='alamat-penerima-cek-ongkir'
+                value={destination}
+                onChange={(e) => onChangeInput(e, setDestination)}
+                onBlur={(e) => onBlurInput(e, setDestination)}
+              />
+            </div>
+          </div>
+          <div className='flex justify-between items-center'>
+            <div
+              id='list-ongkir'
+              className='flex gap-2 flex-nowrap font-light text-xs'
+            ></div>
+            <div className='flex-shrink-0'>
+              <button
+                id='cek-ongkir-button'
+                type='button'
+                className={`${styles.btn} !w-max lowercase !font-light p-5 bg-gradient-green hover:!shadow-green-400/20 flex items-center gap-2`}
+                onClick={() => cekOngkirHandler()}
               >
-                <CekOngkirMap ref={mapRef} />
-              </Wrapper>
+                <FaRoute />
+                <span className='block'>Cek Ongkir</span>
+              </button>
             </div>
           </div>
         </div>
-      )}
+        <div
+          ref={mapRef}
+          className='rounded-md w-full sm:h-full h-64 shadow border-2 border-white'
+        ></div>
+      </div>
     </>
   );
-});
+};
 
-CekOngkir.displayName = 'Cek Ongkir';
+const CekOngkir = () => {
+  return (
+    <>
+      <div className='mb-4 mx-5 bg-transparent pb-10'>
+        <strong className='header-form mb-4'>Cek Ongkir</strong>
+        <Wrapper
+          libraries={['places']}
+          region='ID'
+          language='id'
+          apiKey={process.env.NEXT_PUBLIC_MAPS_API}
+          render={render}
+        >
+          <CekOngkirMapComponent />
+        </Wrapper>
+      </div>
+    </>
+  );
+};
+
 export default CekOngkir;

@@ -73,10 +73,23 @@ const NavBar = () => {
   const overlayNavRef = React.useRef();
   return (
     <>
-      <div className='bg-green-200 shadow-md fixed right-0 left-0 top-0 z-10'>
+      <div className='bg-gradient-green shadow-md fixed right-0 left-0 top-0 z-10'>
         <div className='p-4'>
           <div className='flex gap-2 justify-between flex-wrap'>
-            <div className='font-black sm:block'>JETAR Tegal</div>
+            <div className='flex gap-2 items-center'>
+              {/* eslint-disable-next-line */}
+              <img
+                src='/assets/image/new-logo.png'
+                alt='new logo jetar'
+                className='w-5'
+              />
+              <div className='font-black'>
+                <span className='sm:inline hidden'>
+                  Jasa Jemput Antar Barang
+                </span>
+                <span className='sm:hidden inline'>JETAR</span> Tegal
+              </div>
+            </div>
             <div>
               <FaBars
                 onClick={() => overlayNavRef.current.toggle()}

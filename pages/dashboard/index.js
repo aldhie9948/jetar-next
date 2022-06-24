@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import CekOngkir from '../../components/dashboard/CekOngkir';
 import Orders from '../../components/dashboard/Orders';
@@ -17,17 +17,13 @@ const channel = pusher.subscribe('jetar');
 
 const Dashboard = () => {
   const formOrderRef = useRef();
-  const cekOngkirRef = useRef();
   const petaOrderanRef = useRef();
   const dispatch = useDispatch();
   const drivers = useSelector((s) => s.driver);
+  const [visibleCekOngkir, setVisibleCekOngkir] = useState(false);
 
   const tambahHandler = () => {
     formOrderRef.current.toggle();
-  };
-
-  const cekOngkirHandler = () => {
-    cekOngkirRef.current.toggle();
   };
 
   const petaOrderanHandler = () => {
@@ -96,7 +92,7 @@ const Dashboard = () => {
               label='Tambah Order'
             />
             <ButtonMenu
-              onClick={cekOngkirHandler}
+              onClick={() => setVisibleCekOngkir(!visibleCekOngkir)}
               icon={<FaRoute />}
               label='cek ongkir'
             />
@@ -114,7 +110,7 @@ const Dashboard = () => {
             />
           </div>
           <PetaOrderan ref={petaOrderanRef} />
-          <CekOngkir ref={cekOngkirRef} />
+          {visibleCekOngkir && <CekOngkir />}
           <FormOrder ref={formOrderRef} drivers={drivers} />
           <Orders
             onEdit={(order) => {
