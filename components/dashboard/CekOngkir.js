@@ -101,15 +101,17 @@ const CekOngkirMapComponent = () => {
         (response, status) => {
           if (status === 'OK') {
             const routes = response.routes;
-            let contentString = `<div class='py-1'>Ongkir:</div>`;
+            let contentString = ``;
             listRoutes.innerHTML = '';
             routes.forEach((route, i) => {
               const legs = route.legs[0];
               const distance = legs.distance;
               const ongkir = cekOngkir(distance.value);
               const content = `
-                <div class='route bg-gradient-green py-1 px-3 rounded cursor-pointer hover:shadow active:shadow-none'>
-                  Rp. ${localCurrency(ongkir)}
+                <div class='route bg-gradient-green py-2 px-3 mb-2 rounded cursor-pointer hover:shadow-md active:shadow-none duration-150'>
+                  Rp. ${localCurrency(ongkir)} - ${Math.ceil(
+                distance.value / 1000
+              )} km
                 </div>
               `;
               contentString += content;
@@ -215,23 +217,19 @@ const CekOngkirMapComponent = () => {
               />
             </div>
           </div>
-          <div className='flex justify-between items-center'>
-            <div
-              id='list-ongkir'
-              className='flex gap-2 flex-nowrap font-light text-xs'
-            ></div>
-            <div className='flex-shrink-0'>
-              <button
-                id='cek-ongkir-button'
-                type='button'
-                className={`${styles.btn} !w-max lowercase !font-light p-5 bg-gradient-green hover:!shadow-green-400/20 flex items-center gap-2`}
-                onClick={() => cekOngkirHandler()}
-              >
-                <FaRoute />
-                <span className='block'>Cek Ongkir</span>
-              </button>
-            </div>
-          </div>
+          <div
+            id='list-ongkir'
+            className='grid grid-cols-3 gap-2 font-light text-xs'
+          ></div>
+          <button
+            id='cek-ongkir-button'
+            type='button'
+            className={`${styles.btn} !w-full px-10 lowercase !font-light py-5 bg-gradient-green hover:!shadow-green-400/20 flex items-center gap-2 justify-center`}
+            onClick={() => cekOngkirHandler()}
+          >
+            <FaRoute />
+            <span className='block'>Cek Ongkir</span>
+          </button>
         </div>
         <div
           ref={mapRef}

@@ -4,7 +4,6 @@ import { toast, confirm } from '../Sweetalert2';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import SelectPelanggan from './SelectPelanggan';
 import SelectDriver from './SelectDriver';
-import MapComponent from './Map';
 import { onChangeHandler, borderInputHandler } from '../../lib/handler';
 import { currencyNumber, localCurrency } from '../../lib/currency';
 import { createOrder, initOrdersToday } from '../../reducers/orderReducer';
@@ -12,6 +11,7 @@ import styles from '../../styles/Dashboard.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateOrder } from '../../reducers/orderReducer';
 import axios from 'axios';
+import FormOrderMapComponent from './MapComponent';
 
 const Input = ({
   label = '',
@@ -40,7 +40,9 @@ const Textarea = ({ label = '', value, setter, ...rest }) => {
     <div>
       <span className='text-sm capitalize'>{label} :</span>
       <textarea
-        className={`${styles.input} ${borderInputHandler(value)}`}
+        className={`${styles.input} !whitespace-pre-wrap ${borderInputHandler(
+          value
+        )}`}
         required
         autoComplete='off'
         value={value}
@@ -89,7 +91,6 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
   const [talang, setTalang] = useState(0);
   const [visible, setVisible] = useState(false);
   const [defaultDriver, setDefaultDriver] = useState({});
-  const [distance, setDistance] = useState(0);
 
   // handle saat form di submit
   const submitHandler = (e) => {
@@ -178,14 +179,11 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
   // handler harus menyediakan origin, destination dan callback/fn
   // dengan argument ongkir & response dari direction maps api
   const cekOngkirHandler = () => {
-    const origin = alamatPengirim;
-    const destination = alamatPenerima;
-    const callback = (args) => {
-      const { ongkir, distance } = args;
-      setDistance(Math.ceil(distance.value / 1000));
-      setOngkir(localCurrency(ongkir));
-    };
-    mapsRef.current.route({ origin, destination, callback });
+    mapsRef.current.calculate();
+  };
+
+  const ongkirHandler = (ongkir) => {
+    setOngkir(localCurrency(ongkir));
   };
 
   // fn yang akan menampilkan / menutup form order
@@ -375,9 +373,13 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
                         className={`${styles.btn} bg-gradient-green hover:!shadow-green-400/20`}
                         onClick={cekOngkirHandler}
                       >
-                        Cek Ongkir [{distance} KM]
+                        Cek Ongkir
                       </button>
                     </div>
+                    <div
+                      className='col-span-2 grid grid-cols-3 gap-2'
+                      id='list-ongkir-form'
+                    ></div>
                     <Input
                       label='Ongkir'
                       value={ongkir}
@@ -410,7 +412,12 @@ const FormOrder = React.forwardRef(({ drivers }, ref) => {
                     apiKey={process.env.NEXT_PUBLIC_MAPS_API}
                     render={render}
                   >
-                    <MapComponent ref={mapsRef} />
+                    <FormOrderMapComponent
+                      origin={alamatPengirim}
+                      destination={alamatPenerima}
+                      ref={mapsRef}
+                      onClickList={ongkirHandler}
+                    />
                   </Wrapper>
                 </div>
               </div>
