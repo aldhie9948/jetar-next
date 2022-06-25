@@ -73,6 +73,15 @@ const FormOrderMapComponent = React.forwardRef(
       map.fitBounds(route.bounds);
     };
 
+    const setAutoCompletePlaces = (target) => {
+      const config = {
+        types: [],
+        componentRestrictions: { country: ['ID'] },
+        fields: ['place_id', 'name', 'geometry', 'formatted_address'],
+      };
+      return new google.maps.places.Autocomplete(target, config);
+    };
+
     const calculateDirection = () => {
       const listRoutes = document.getElementById('list-ongkir-form');
       directionsService
@@ -136,6 +145,10 @@ const FormOrderMapComponent = React.forwardRef(
       const configMarker = { icon: `favicon-32x32.png`, map: mapInstance };
       setOriginMarker(new google.maps.Marker(configMarker));
       setDestinationMarker(new google.maps.Marker(configMarker));
+      const targetsAutoCompletePlaces = ['alamatPengirim', 'alamatPenerima'];
+      targetsAutoCompletePlaces.forEach((target) => {
+        setAutoCompletePlaces(target);
+      });
       // eslint-disable-next-line
     }, []);
     return (

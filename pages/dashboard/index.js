@@ -21,6 +21,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const drivers = useSelector((s) => s.driver);
   const [visibleCekOngkir, setVisibleCekOngkir] = useState(false);
+  const [visiblePetaOrderan, setVisiblePetaOrderan] = useState(false);
 
   const tambahHandler = () => {
     formOrderRef.current.toggle();
@@ -97,7 +98,7 @@ const Dashboard = () => {
               label='cek ongkir'
             />
             <ButtonMenu
-              onClick={petaOrderanHandler}
+              onClick={() => setVisiblePetaOrderan(!visiblePetaOrderan)}
               icon={<FaMapMarked />}
               label='Peta Orderan'
             />
@@ -109,7 +110,7 @@ const Dashboard = () => {
               label='Refresh'
             />
           </div>
-          <PetaOrderan ref={petaOrderanRef} />
+          {visiblePetaOrderan && <PetaOrderan />}
           {visibleCekOngkir && <CekOngkir />}
           <FormOrder ref={formOrderRef} drivers={drivers} />
           <Orders

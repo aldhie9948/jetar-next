@@ -146,6 +146,15 @@ const CekOngkirMapComponent = () => {
     setter(e.target.value);
   };
 
+  const setAutoCompletePlaces = (target) => {
+    const config = {
+      types: [],
+      componentRestrictions: { country: ['ID'] },
+      fields: ['place_id', 'name', 'geometry', 'formatted_address'],
+    };
+    return new google.maps.places.Autocomplete(target, config);
+  };
+
   useEffect(() => {
     const mapsInstance = new google.maps.Map(mapRef.current, config);
     setMap(mapsInstance);
@@ -161,7 +170,13 @@ const CekOngkirMapComponent = () => {
     const configMarker = { icon: `favicon-32x32.png`, map: mapsInstance };
     setOriginMarker(new google.maps.Marker(configMarker));
     setDestinationMarker(new google.maps.Marker(configMarker));
-
+    const targetsAutoCompletePlaces = [
+      'alamat-penerima-cek-ongkir',
+      'alamat-pengirim-cek-ongkir',
+    ];
+    targetsAutoCompletePlaces.forEach((target) => {
+      setAutoCompletePlaces(target);
+    });
     // eslint-disable-next-line
   }, []);
 
