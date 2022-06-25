@@ -152,7 +152,8 @@ const CekOngkirMapComponent = () => {
       componentRestrictions: { country: ['ID'] },
       fields: ['place_id', 'name', 'geometry', 'formatted_address'],
     };
-    return new google.maps.places.Autocomplete(target, config);
+    const el = document.getElementById(target);
+    return new google.maps.places.Autocomplete(el, config);
   };
 
   useEffect(() => {
