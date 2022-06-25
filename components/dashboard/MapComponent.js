@@ -80,7 +80,7 @@ const FormOrderMapComponent = React.forwardRef(
           {
             origin: { query: origin },
             destination: { query: destination },
-            travelMode: 'DRIVING',
+            travelMode: 'TWO_WHEELER',
             optimizeWaypoints: true,
             avoidTolls: true,
             unitSystem: google.maps.UnitSystem.IMPERIAL,
